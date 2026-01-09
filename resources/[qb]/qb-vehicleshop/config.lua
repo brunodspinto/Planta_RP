@@ -186,8 +186,8 @@ Config.Shops = {
                 vector2(-754.21, -1371.49),
                 vector2(-716.94, -1326.88)
             },
-            ['minZ'] = 0.0,                                            -- min height of the shop zone
-            ['maxZ'] = 5.0,                                            -- max height of the shop zone
+            ['minZ'] = -5.0,                                            -- min height of the shop zone
+            ['maxZ'] = 15.0,                                            -- max height of the shop zone
             ['size'] = 6.2                                             -- size of the vehicles zones
         },
         ['Job'] = 'none',                                              -- Name of job or none
