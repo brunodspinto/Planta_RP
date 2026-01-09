@@ -1,0 +1,95 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta id="viewport" name="viewport" content ="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <link rel="stylesheet" type="text/css" href="styles.css"/>
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.13.0/css/all.css"/>
+        <link href="https://cdn.jsdelivr.net/npm/quasar@2.1.0/dist/quasar.prod.css" rel="stylesheet" type="text/css"/>
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet" type="text/css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/quasar@2.1.0/dist/quasar.umd.prod.js" defer></script>
+        <script src="app.js" defer></script>
+    </head>
+    <audio autoplay loop id="audio" src="/assets/audio/noncopyright.mp3"></audio>
+
+    <body>
+        <div id="loading-main" style="min-height: auto;">
+
+            <q-carousel animated v-model="firstslide" :autoplay="secondap" ref="carousel" infinite>
+                <q-carousel-slide :name="1" img-src="/assets/images/1.png"></q-carousel-slide>
+            </q-carousel>
+
+            <div class="absolute-top q-pa-xl">
+                <q-card flat style="width: auto; background: transparent;">
+                    <q-card-section class="row items-center no-wrap">
+                        <q-space></q-space>
+                    </q-card-section>
+                </q-card>
+            </div>
+
+            <div class="absolute-bottom q-pa-xl" style="bottom: 70px;"> 
+                <q-card flat style="width: auto; background: transparent;">
+                    <q-card-section class="column items-center no-wrap" style="overflow: visible;">
+            
+                        <div id="loading-text-wave" class="text-h4 text-weight-bold">
+                            A CARREGAR PLANTA RP...
+                        </div>
+
+                        <div style="position: absolute; right: 20px; bottom: -50px;">
+                            <q-btn icon="settings_suggest" color="bgbutton" @click="settings = true"></q-btn>
+                        </div>
+            
+                    </q-card-section>
+                </q-card>
+            </div>
+
+            <q-dialog no-shake v-model="settings" position="right">
+                <q-card style="max-width: 300px; margin-right: 3.4vw; top: 20vh!important;">
+                    <q-card-section class="row items-center q-pb-none">
+                        <div style="white-space: pre-wrap;" class="text-h6">
+                            {{ SettingsTitle }}
+                        </div>
+                        <q-space></q-space>
+                        <q-btn icon="close" flat round dense v-close-popup></q-btn>
+                    </q-card-section>
+
+                    <q-card-section style="padding-top: 0px;">
+                        <q-toggle v-model="audioplay" size="lg" checked-icon="headset" keep-color color="togglecolor" label="Audio-track Enabled" unchecked-icon="headset_off" onclick="audiotoggle()"></q-toggle>
+                        <div style="white-space: pre-wrap;" class="text-h7 text-weight-medium q-mb-md-d">
+                            {{ AudioTrackDesc1 }}
+                        </div>
+                        <q-toggle v-model="secondap" size="lg" checked-icon="view_carousel" keep-color color="togglecolor" label="Auto-play Enabled" unchecked-icon="image"></q-toggle>
+                        <div style="white-space: pre-wrap;" class="text-h7 text-weight-medium q-mb-md-d">
+                            {{ AutoPlayDesc2 }}
+                        </div>
+                        <q-toggle v-model="playvideo" size="lg" checked-icon="play_arrow" keep-color color="togglecolor" label="Play-video Enabled" unchecked-icon="play_disabled" onclick="videotoggle()"></q-toggle>
+                        <div style="white-space: pre-wrap;" class="text-h7 text-weight-medium q-mb-md-d">
+                            {{ PlayVideoDesc3 }}
+                        </div>
+                    </q-card-section>
+                </q-card>
+            </q-dialog>
+        </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const textElement = document.getElementById('loading-text-wave');
+                if(textElement) {
+                    const textContent = textElement.textContent.trim();
+                    textElement.textContent = '';
+        
+                    for (let i = 0; i < textContent.length; i++) {
+                        const span = document.createElement('span');
+                        span.textContent = textContent[i];
+                        if (textContent[i] === ' ') {
+                            span.style.marginRight = '0.5em';
+                        }
+                        span.style.animationDelay = (i * 0.05) + 's';
+                        textElement.appendChild(span);
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
