@@ -182,7 +182,8 @@ local function startTestDriveTimer(testDriveTime, prevCoords)
         while inTestDrive do
             if GetGameTimer() < gameTimer + tonumber(1000 * testDriveTime) then
                 local secondsLeft = GetGameTimer() - gameTimer
-                if secondsLeft >= tonumber(1000 * testDriveTime) - 20 or GetPedInVehicleSeat(NetToVeh(testDriveVeh), -1) ~= PlayerPedId() then
+                local veh = NetToVeh(testDriveVeh)
+                if secondsLeft >= tonumber(1000 * testDriveTime) - 20 or (DoesEntityExist(veh) and GetPedInVehicleSeat(veh, -1) ~= PlayerPedId()) then
                     TriggerServerEvent('qb-vehicleshop:server:deleteVehicle', testDriveVeh)
                     testDriveVeh = 0
                     inTestDrive = false
@@ -470,7 +471,10 @@ RegisterNetEvent('qb-vehicleshop:client:TestDrive', function()
             Citizen.InvokeNative(0xAD738C3085FE7E11, veh, true, true)
             SetVehicleNumberPlateText(veh, vehPlate)
             exports['LegacyFuel']:SetFuel(veh, 100)
-            TriggerEvent('vehiclekeys:client:SetOwner', vehPlate)
+            -- AQUI ESTÁ A CORREÇÃO:
+            TriggerEvent('vehiclekeys:client:SetOwner', vehPlate) -- Para scripts antigos
+            TriggerEvent('qb-vehiclekeys:client:AddKeys', vehPlate) -- Para scripts novos
+            -- --------------------
             TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
             SetVehicleEngineOn(veh, true, true, false)
             testDriveVeh = netId
@@ -505,7 +509,10 @@ RegisterNetEvent('qb-vehicleshop:client:customTestDrive', function(data)
             Citizen.InvokeNative(0xAD738C3085FE7E11, veh, true, true)
             SetVehicleNumberPlateText(veh, vehPlate)
             exports['LegacyFuel']:SetFuel(veh, 100)
-            TriggerEvent('vehiclekeys:client:SetOwner', vehPlate)
+            -- AQUI ESTÁ A CORREÇÃO:
+            TriggerEvent('vehiclekeys:client:SetOwner', vehPlate) -- Para scripts antigos
+            TriggerEvent('qb-vehiclekeys:client:AddKeys', vehPlate) -- Para scripts novos
+            -- --------------------
             TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
             SetVehicleEngineOn(veh, true, true, false)
             testDriveVeh = netId
