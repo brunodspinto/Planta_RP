@@ -712,7 +712,7 @@ local Vehicles = {
     { model = 'policet',         name = 'Police Transporter',            brand = 'Vapid',           price = 110000,  category = 'emergency',      type = 'automobile', shop = 'none' },
     { model = 'policeb',         name = 'Police Bike',                   brand = 'Vapid',           price = 110000,  category = 'emergency',      type = 'automobile', shop = 'none' },
     { model = 'polmav',          name = 'Police Maverick',               brand = 'Buckingham',      price = 110000,  category = 'emergency',      type = 'automobile', shop = 'none' },
-    { model = 'ambulance',       name = 'Ambulance',                     brand = 'Brute',           price = 110000,  category = 'emergency',      type = 'automobile', shop = 'none' },
+    { model = 'ambulance',       name = 'Ambulance',                     brand = 'Ford',            price = 110000,  category = 'emergency',      type = 'automobile', shop = 'none' },
     { model = 'firetruk',        name = 'Fire Truck',                    brand = 'MTL',             price = 110000,  category = 'emergency',      type = 'automobile', shop = 'none' },
     { model = 'lguard',          name = 'Lifeguard',                     brand = 'Declasse',        price = 110000,  category = 'emergency',      type = 'automobile', shop = 'none' },
     { model = 'seashark2',       name = 'Seashark Lifeguard',            brand = 'Speedophile',     price = 40000,   category = 'emergency',      type = 'automobile', shop = 'none' },
