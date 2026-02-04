@@ -11,9 +11,10 @@
         <script src="https://cdn.jsdelivr.net/npm/quasar@2.1.0/dist/quasar.umd.prod.js" defer></script>
         <script src="app.js" defer></script>
     </head>
-    <audio autoplay loop id="audio" src="/assets/audio/noncopyright.mp3"></audio>
-
+    
     <body>
+        <audio autoplay loop id="audio" src="/assets/audio/noncopyright.mp3"></audio>
+
         <div id="loading-main" style="min-height: auto;">
 
             <q-carousel animated v-model="firstslide" :autoplay="secondap" ref="carousel" infinite>
@@ -37,40 +38,21 @@
                         </div>
 
                         <div style="position: absolute; right: 20px; bottom: -50px;">
-                            <q-btn icon="settings_suggest" color="bgbutton" @click="settings = true"></q-btn>
+                            <q-btn 
+                                round
+                                size="lg"
+                                :icon="audioplay ? 'volume_up' : 'volume_off'" 
+                                color="bgbutton" 
+                                @click="toggleAudio">
+                                <q-tooltip>Som</q-tooltip>
+                            </q-btn>
                         </div>
             
                     </q-card-section>
                 </q-card>
             </div>
 
-            <q-dialog no-shake v-model="settings" position="right">
-                <q-card style="max-width: 300px; margin-right: 3.4vw; top: 20vh!important;">
-                    <q-card-section class="row items-center q-pb-none">
-                        <div style="white-space: pre-wrap;" class="text-h6">
-                            {{ SettingsTitle }}
-                        </div>
-                        <q-space></q-space>
-                        <q-btn icon="close" flat round dense v-close-popup></q-btn>
-                    </q-card-section>
-
-                    <q-card-section style="padding-top: 0px;">
-                        <q-toggle v-model="audioplay" size="lg" checked-icon="headset" keep-color color="togglecolor" label="Audio-track Enabled" unchecked-icon="headset_off" onclick="audiotoggle()"></q-toggle>
-                        <div style="white-space: pre-wrap;" class="text-h7 text-weight-medium q-mb-md-d">
-                            {{ AudioTrackDesc1 }}
-                        </div>
-                        <q-toggle v-model="secondap" size="lg" checked-icon="view_carousel" keep-color color="togglecolor" label="Auto-play Enabled" unchecked-icon="image"></q-toggle>
-                        <div style="white-space: pre-wrap;" class="text-h7 text-weight-medium q-mb-md-d">
-                            {{ AutoPlayDesc2 }}
-                        </div>
-                        <q-toggle v-model="playvideo" size="lg" checked-icon="play_arrow" keep-color color="togglecolor" label="Play-video Enabled" unchecked-icon="play_disabled" onclick="videotoggle()"></q-toggle>
-                        <div style="white-space: pre-wrap;" class="text-h7 text-weight-medium q-mb-md-d">
-                            {{ PlayVideoDesc3 }}
-                        </div>
-                    </q-card-section>
-                </q-card>
-            </q-dialog>
-        </div>
+            </div>
 
         <script>
             document.addEventListener("DOMContentLoaded", function() {
