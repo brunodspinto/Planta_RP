@@ -1,114 +1,83 @@
 Config = {}
-Config.RequireJob = true                       -- do you need a mech job to use parts?
-Config.FuelResource = 'LegacyFuel'             -- supports any that has a GetFuel() and SetFuel() export
+Config.RequireJob = true                       -- Precisas do emprego para usar as peças?
+Config.FuelResource = 'LegacyFuel'             -- Nome do script de combustível
 
-Config.PaintTime = 5                           -- how long it takes to paint a vehicle in seconds
-Config.ColorFavorites = false                  -- add your own colors to the favorites menu (see bottom of const.lua)
+Config.PaintTime = 5                           -- Tempo em segundos para pintar o veículo
+Config.ColorFavorites = false                  -- Adicionar cores favoritas ao menu
 
-Config.NitrousBoost = 1.8                      -- how much boost nitrous gives (want this above 1.0)
-Config.NitrousUsage = 0.1                      -- how much nitrous is used per frame while holding key
+Config.NitrousBoost = 1.8                      -- Força do Nitro (acima de 1.0)
+Config.NitrousUsage = 0.1                      -- Gasto de Nitro por frame
 
-Config.UseDistance = true                      -- enable/disable saving vehicle distance
-Config.UseDistanceDamage = true                -- damage vehicle engine health based on vehicle distance
-Config.UseWearableParts = true                 -- enable/disable wearable parts
-Config.WearablePartsChance = 1                 -- chance of wearable parts being damaged while driving if enabled
-Config.WearablePartsDamage = math.random(1, 2) -- how much wearable parts are damaged when damaged if enabled
-Config.DamageThreshold = 25                    -- how worn a part needs to be or below to apply an effect if enabled
-Config.WarningThreshold = 50                   -- how worn a part needs to be to show a warning color in toolbox if enabled
+Config.UseDistance = true                      -- Salvar quilometragem do veículo
+Config.UseDistanceDamage = true                -- Danificar motor com base na quilometragem
+Config.UseWearableParts = true                 -- Peças que se desgastam (travões, embraiagem, etc.)
+Config.WearablePartsChance = 1                 -- Probabilidade de desgaste ao conduzir
+Config.WearablePartsDamage = math.random(1, 2) -- Quantidade de dano ao desgastar
+Config.DamageThreshold = 25                    -- Percentagem mínima para começar a sentir efeitos do desgaste
+Config.WarningThreshold = 50                   -- Percentagem para mostrar aviso amarelo na caixa de ferramentas
 
-Config.MinimalMetersForDamage = {              -- unused if Config.UseDistanceDamage is false
+-- Dano baseado na quilometragem (Só funciona se UseDistanceDamage = true)
+Config.MinimalMetersForDamage = {
     { min = 5000,  max = 10000, damage = 10 },
     { min = 15000, max = 20000, damage = 20 },
     { min = 25000, max = 30000, damage = 30 },
 }
 
-Config.WearableParts = { -- unused if Config.UseWearableParts is false (feel free to add/remove parts)
-    radiator = { label = Lang:t('menu.radiator_repair'), maxValue = 100, repair = { steel = 2 } },
-    axle = { label = Lang:t('menu.axle_repair'), maxValue = 100, repair = { aluminum = 2 } },
-    brakes = { label = Lang:t('menu.brakes_repair'), maxValue = 100, repair = { copper = 2 } },
-    clutch = { label = Lang:t('menu.clutch_repair'), maxValue = 100, repair = { copper = 2 } },
-    fuel = { label = Lang:t('menu.fuel_repair'), maxValue = 100, repair = { plastic = 2 } },
+-- Peças de Desgaste (Traduzido)
+Config.WearableParts = {
+    radiator = { label = 'Radiador', maxValue = 100, repair = { steel = 2 } },
+    axle = { label = 'Eixo', maxValue = 100, repair = { aluminum = 2 } },
+    brakes = { label = 'Travões', maxValue = 100, repair = { copper = 2 } },
+    clutch = { label = 'Embraiagem', maxValue = 100, repair = { copper = 2 } },
+    fuel = { label = 'Depósito', maxValue = 100, repair = { plastic = 2 } },
 }
 
+-- CONFIGURAÇÃO DAS OFICINAS
 Config.Shops = {
-    mechanic = { -- City location
+    
+    -- 1. OFICINA LEGAL (Benny's Original)
+    -- Focado em estética e reparações.
+    bennys = {
         managed = true,
-        shopLabel = 'LS Customs',
+        shopLabel = 'Benny\'s Original',
         showBlip = true,
-        blipSprite = 72,
-        blipColor = 46,
-        blipCoords = vector3(-345.63, -131.28, 39.01),
-        duty = vector3(-348.18, -134.55, 39.59),
-        stash = vector3(-346.02, -130.68, 39.02),
-        paint = vector3(-324.11, -147.11, 39.10),
-        vehicles = {
-            withdraw = vector3(-369.30, -104.75, 38.38),
-            spawn = vector4(-369.65, -107.8, 38.65, 70.52),
-            list = { 'flatbed', 'towtruck', 'minivan', 'blista' }
-        },
-    },
-    mechanic2 = { -- Harmony Location
-        managed = true,
-        shopLabel = 'LS Customs',
-        showBlip = true,
-        blipSprite = 72,
-        blipColor = 46,
-        blipCoords = vector3(1174.93, 2639.45, 37.75),
-        duty = vector3(1185.86, 2638.70, 38.93),
-        stash = vector3(1175.11, 2635.375, 37.78),
-        paint = vector3(1181.29, 2634.69, 37.80),
-        vehicles = {
-            withdraw = vector3(1185.63, 2646.01, 37.91),
-            spawn = vector4(1188.18, 2657.56, 37.79, 316.74),
-            list = { 'flatbed', 'towtruck', 'minivan', 'blista' }
-        },
-    },
-    mechanic3 = { -- Airport Location
-        managed = true,
-        shopLabel = 'LS Customs',
-        showBlip = true,
-        blipSprite = 72,
-        blipColor = 46,
-        blipCoords = vector3(-1154.92, -2006.41, 13.18),
-        duty = vector3(-1149.17, -1998.27, 13.91),
-        stash = vector3(-1146.40, -2002.05, 13.19),
-        paint = vector3(-1170.60, -2014.90, 13.23),
-        vehicles = {
-            withdraw = vector3(-1142.04, -1994.58, 13.26),
-            spawn = vector4(-1137.42, -1993.26, 13.14, 226.07),
-            list = { 'flatbed', 'towtruck', 'minivan', 'blista' }
-        },
-    },
-    bennys = { -- Default Bennys Location
-        managed = true,
-        shopLabel = 'Benny\'s Motorworks',
-        showBlip = true,
-        blipSprite = 72,
-        blipColor = 46,
+        blipSprite = 446,
+        blipColor = 3,                 -- Azul (Legal)
         blipCoords = vector3(-211.73, -1325.28, 30.89),
+        
         duty = vector3(-202.92, -1313.74, 31.70),
         stash = vector3(-199.58, -1314.65, 31.08),
         paint = vector3(-202.42, -1322.16, 31.29),
+        
         vehicles = {
-            withdraw = vector3(0, 0, 0),
-            spawn = vector4(-370.51, -107.88, 38.35, 72.56),
+            withdraw = vector3(-203.20, -1300.95, 31.30),
+            spawn = vector4(-198.54, -1297.80, 31.30, 268.64),
             list = { 'flatbed', 'towtruck', 'minivan', 'blista' }
         },
     },
-    beeker = { -- Paleto Location
+
+    -- 2. OFICINA ILEGAL (Tuners Underground)
+    -- Mapa: moreo_illegalmc
+    tuners = {
         managed = true,
-        shopLabel = 'Beeker\'s Garage',
-        showBlip = true,
-        blipSprite = 72,
-        blipColor = 46,
-        blipCoords = vector3(109.95, 6627.34, 31.79),
-        duty = vector3(101.74, 6620.04, 32.95),
-        stash = vector3(107.00, 6629.88, 31.81),
-        paint = vector3(102.17, 6626.08, 31.79),
+        shopLabel = 'Tuners Underground',
+        showBlip = false,              -- Mudei para false para ser secreto (opcional)
+        blipSprite = 446,
+        blipColor = 1,                 -- Vermelho (Ilegal)
+        
+        blipCoords = vector3(-59.97, -1211.09, 30.0), 
+        
+        -- Zonas de Interação (AJUSTAR NO JOGO COM /coords)
+        -- Coloquei tudo perto do centro, tens de separar as pontas
+        duty = vector3(-49.72, -1212.91, 28.77),       -- Ponto de entrar de serviço
+        stash = vector3(-45.99, -1198.38, 28.34),        -- Baú (estimado)
+        paint = vector3(-62.0, -1212.0, 30.0),        -- Pintura (estimado)
+        
+        -- Garagem da Empresa
         vehicles = {
-            withdraw = vector3(107.08, 6614.90, 31.96),
-            spawn = vector4(110.91, 6609.32, 31.81, 315.11),
-            list = { 'flatbed', 'towtruck', 'minivan', 'blista' }
+            withdraw = vector3(-65.0, -1215.0, 30.0), -- Onde escolhem o carro
+            spawn = vector4(-70.0, -1215.0, 30.0, 90.0), -- Onde o carro nasce
+            list = { 'flatbed', 'towtruck', 'sultan', 'futo', 'elegy' }
         },
     },
 }

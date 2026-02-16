@@ -25,6 +25,7 @@ ui_page 'html/index.html'
 
 files {
     'html/*',
+    'locales/pt.lua',
     'carcols_gen9.meta',
     'carmodcols_gen9.meta'
 }

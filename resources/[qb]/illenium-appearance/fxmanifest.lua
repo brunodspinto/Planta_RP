@@ -72,25 +72,15 @@ shared_scripts {
   "shared/framework/framework.lua",
   "shared/framework/esx/util.lua",
   "locales/locales.lua",
-  "locales/ar.lua",
-  "locales/bg.lua",
-  "locales/cs.lua",
-  "locales/de.lua",
-  "locales/en.lua",
-  "locales/es-ES.lua",
-  "locales/fr.lua",
-  "locales/hu.lua",
-  "locales/it.lua",
-  "locales/nl.lua",
-  "locales/pt-BR.lua",
-  "locales/ro-RO.lua",
-  "locales/id.lua",
+  'locales/pt-PT.lua',
+  'locales/en.lua',
   "@ox_lib/init.lua"
 }
 
 files {
   "web/dist/index.html",
-  "web/dist/assets/*.js"
+  "web/dist/assets/*.js",
+  'locales/*.lua'
 }
 
 ui_page "web/dist/index.html"
