@@ -1,5 +1,7 @@
 Config = {}
 
+Config.Locale = 'pt-PT'
+
 Config.Debug = false
 
 Config.ClothingCost = 100

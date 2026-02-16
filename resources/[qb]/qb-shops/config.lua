@@ -1,7 +1,7 @@
 Config = {}
 Config.UseTarget = GetConvar('UseTarget', 'false') == 'true'
 
--- Deliveries
+-- Entregas
 Config.ShopsInvJsonFile = './json/shops-inventory.json'
 Config.TruckDeposit = 125
 Config.MaxDeliveries = 20
@@ -10,18 +10,18 @@ Config.RewardItem = 'cryptostick'
 Config.Fuel = 'LegacyFuel'
 
 Config.DeliveryLocations = {
-    ['main'] = { label = 'GO Postal', coords = vector4(69.0862, 127.6753, 79.2123, 156.7736) },
+    ['main'] = { label = 'GO Postal (CTT)', coords = vector4(69.0862, 127.6753, 79.2123, 156.7736) },
     ['vehicleWithdraw'] = vector4(71.9318, 120.8389, 79.0823, 160.5110),
     ['vehicleDeposit'] = vector3(62.7282, 124.9846, 79.0926),
-    ['stores'] = {} -- auto generated
+    ['stores'] = {} -- gerado automaticamente
 }
 
 Config.Vehicles = {
-    ['boxville2'] = { ['label'] = 'Boxville StepVan', ['cargodoors'] = { [0] = 2, [1] = 3 }, ['trunkpos'] = 1.5 },
+    ['boxville2'] = { ['label'] = 'Carrinha de Entregas', ['cargodoors'] = { [0] = 2, [1] = 3 }, ['trunkpos'] = 1.5 },
 }
 
 Config.Products = {
-    ['normal'] = {
+    ['normal'] = { -- Supermercado
         { name = 'tosti',         price = 2,   amount = 50 },
         { name = 'water_bottle',  price = 2,   amount = 50 },
         { name = 'kurkakola',     price = 2,   amount = 50 },
@@ -35,16 +35,16 @@ Config.Products = {
         { name = 'lighter',       price = 2,   amount = 50 },
         { name = 'rolling_paper', price = 2,   amount = 5000 },
     },
-    ['liquor'] = {
+    ['liquor'] = { -- Bebidas
         { name = 'beer',    price = 7,  amount = 50 },
         { name = 'whiskey', price = 10, amount = 50 },
         { name = 'vodka',   price = 12, amount = 50 },
     },
-    ['hardware'] = {
+    ['hardware'] = { -- Ferramentas
         { name = 'lockpick',          price = 200, amount = 50 },
         { name = 'weapon_wrench',     price = 250, amount = 250 },
         { name = 'weapon_hammer',     price = 250, amount = 250 },
-        { name = 'repairkit',         price = 250, amount = 50, requiredJob = { 'mechanic', 'police' } },
+        { name = 'repairkit',         price = 250, amount = 50, requiredJob = { 'mechanic', 'police', 'bennys', 'tuners' } },
         { name = 'screwdriverset',    price = 350, amount = 50 },
         { name = 'phone',             price = 850, amount = 50 },
         { name = 'radio',             price = 250, amount = 50 },
@@ -55,26 +55,26 @@ Config.Products = {
         { name = 'firework4',         price = 50,  amount = 50 },
         { name = 'fitbit',            price = 400, amount = 150 },
         { name = 'cleaningkit',       price = 150, amount = 150 },
-        { name = 'advancedrepairkit', price = 500, amount = 50, requiredJob = 'mechanic' },
+        { name = 'advancedrepairkit', price = 500, amount = 50, requiredJob = { 'mechanic', 'bennys', 'tuners' } },
     },
-    ['weedshop'] = {
+    ['weedshop'] = { -- Dispensário
         { name = 'joint',          price = 10,  amount = 50 },
         { name = 'weapon_poolcue', price = 100, amount = 50 },
         { name = 'weed_nutrition', price = 20,  amount = 50 },
         { name = 'empty_weed_bag', price = 2,   amount = 1000 },
         { name = 'rolling_paper',  price = 2,   amount = 1000 },
     },
-    ['gearshop'] = {
+    ['gearshop'] = { -- Mergulho
         { name = 'diving_gear', price = 2500, amount = 10 },
         { name = 'jerry_can',   price = 200,  amount = 50 },
     },
-    ['leisureshop'] = {
+    ['leisureshop'] = { -- Lazer
         { name = 'parachute',   price = 2500, amount = 10 },
         { name = 'binoculars',  price = 50,   amount = 50 },
         { name = 'diving_gear', price = 2500, amount = 10 },
         { name = 'diving_fill', price = 500,  amount = 10 },
     },
-    ['weapons'] = {
+    ['weapons'] = { -- Armeiro
         { name = 'weapon_knife',         price = 250,  amount = 250 },
         { name = 'weapon_bat',           price = 250,  amount = 250 },
         { name = 'weapon_hatchet',       price = 250,  amount = 250 },
@@ -83,7 +83,7 @@ Config.Products = {
         { name = 'weapon_snspistol',     price = 1500, amount = 5,   requiredLicense = 'weapon' },
         { name = 'weapon_vintagepistol', price = 4000, amount = 5,   requiredLicense = 'weapon' },
     },
-    ['blackmarket'] = {
+    ['blackmarket'] = { -- Mercado Negro
         { name = 'security_card_01',  price = 5000, amount = 50 },
         { name = 'security_card_02',  price = 5000, amount = 50 },
         { name = 'advanced_lockpick', price = 5000, amount = 50 },
@@ -111,16 +111,16 @@ Config.Products = {
         { name = 'weed_ak47',         price = 5000, amount = 50 },
         { name = 'markedbills',       price = 5000, amount = 50, info = { worth = 5000 } },
     },
-    ['prison'] = {
+    ['prison'] = { -- Prisão
         { name = 'sandwich',     price = 4, amount = 50 },
         { name = 'water_bottle', price = 4, amount = 50 },
     },
-    ['police'] = {
-        { name = 'weapon_pistol',       price = 0, amount = 50, info = { attachments = { { component = 'COMPONENT_AT_PI_FLSH', label = 'Flashlight' } } } },
-        { name = 'weapon_stungun',      price = 0, amount = 50, info = { attachments = { { component = 'COMPONENT_AT_AR_FLSH', label = 'Flashlight' } } } },
-        { name = 'weapon_pumpshotgun',  price = 0, amount = 50, info = { attachments = { { component = 'COMPONENT_AT_AR_FLSH', label = 'Flashlight' } } } },
-        { name = 'weapon_smg',          price = 0, amount = 50, info = { attachments = { { component = 'COMPONENT_AT_SCOPE_MACRO_02', label = '1x Scope' }, { component = 'COMPONENT_AT_AR_FLSH', label = 'Flashlight' } } } },
-        { name = 'weapon_carbinerifle', price = 0, amount = 50, info = { attachments = { { component = 'COMPONENT_AT_AR_FLSH', label = 'Flashlight' }, { component = 'COMPONENT_AT_SCOPE_MEDIUM', label = '3x Scope' } } } },
+    ['police'] = { -- Polícia
+        { name = 'weapon_pistol',       price = 0, amount = 50, info = { attachments = { { component = 'COMPONENT_AT_PI_FLSH', label = 'Lanterna' } } } },
+        { name = 'weapon_stungun',      price = 0, amount = 50, info = { attachments = { { component = 'COMPONENT_AT_AR_FLSH', label = 'Lanterna' } } } },
+        { name = 'weapon_pumpshotgun',  price = 0, amount = 50, info = { attachments = { { component = 'COMPONENT_AT_AR_FLSH', label = 'Lanterna' } } } },
+        { name = 'weapon_smg',          price = 0, amount = 50, info = { attachments = { { component = 'COMPONENT_AT_SCOPE_MACRO_02', label = 'Mira 1x' }, { component = 'COMPONENT_AT_AR_FLSH', label = 'Lanterna' } } } },
+        { name = 'weapon_carbinerifle', price = 0, amount = 50, info = { attachments = { { component = 'COMPONENT_AT_AR_FLSH', label = 'Lanterna' }, { component = 'COMPONENT_AT_SCOPE_MEDIUM', label = 'Mira 3x' } } } },
         { name = 'weapon_nightstick',   price = 0, amount = 50 },
         { name = 'weapon_flashlight',   price = 0, amount = 50 },
         { name = 'pistol_ammo',         price = 0, amount = 50 },
@@ -134,47 +134,73 @@ Config.Products = {
         { name = 'radio',               price = 0, amount = 50 },
         { name = 'heavyarmor',          price = 0, amount = 50 },
     },
-    ['ambulance'] = {
-        { name = 'radio',                   price = 0, amount = 50 },
-        { name = 'bandage',                 price = 0, amount = 50 },
-        { name = 'painkillers',             price = 0, amount = 50 },
-        { name = 'firstaid',                price = 0, amount = 50 },
-        { name = 'weapon_flashlight',       price = 0, amount = 50 },
+    ['ambulance'] = { -- INEM
+        { name = 'radio',                 price = 0, amount = 50 },
+        { name = 'bandage',               price = 0, amount = 50 },
+        { name = 'painkillers',           price = 0, amount = 50 },
+        { name = 'firstaid',              price = 0, amount = 50 },
+        { name = 'weapon_flashlight',     price = 0, amount = 50 },
         { name = 'weapon_fireextinguisher', price = 0, amount = 50 },
     },
-    ['mechanic'] = {
-        { name = 'veh_toolbox',       price = 5000, amount = 50 },
-        { name = 'veh_armor',         price = 5000, amount = 50 },
-        { name = 'veh_brakes',        price = 5000, amount = 50 },
-        { name = 'veh_engine',        price = 5000, amount = 50 },
-        { name = 'veh_suspension',    price = 5000, amount = 50 },
-        { name = 'veh_transmission',  price = 5000, amount = 50 },
-        { name = 'veh_turbo',         price = 5000, amount = 50 },
-        { name = 'veh_interior',      price = 5000, amount = 50 },
-        { name = 'veh_exterior',      price = 5000, amount = 50 },
-        { name = 'veh_wheels',        price = 5000, amount = 50 },
-        { name = 'veh_neons',         price = 5000, amount = 50 },
-        { name = 'veh_xenons',        price = 5000, amount = 50 },
-        { name = 'veh_tint',          price = 5000, amount = 50 },
-        { name = 'veh_plates',        price = 5000, amount = 50 },
-        { name = 'nitrous',           price = 5000, amount = 50 },
-        { name = 'tunerlaptop',       price = 5000, amount = 50 },
-        { name = 'repairkit',         price = 5000, amount = 50 },
-        { name = 'advancedrepairkit', price = 5000, amount = 50 },
-        { name = 'tirerepairkit',     price = 5000, amount = 50 },
+    
+    -- === CONFIGURAÇÃO DOS MECÂNICOS (SEPARADO) === --
+    
+    -- Produtos Benny's (LEGAL: Só Estética e Manutenção)
+    ['bennys_products'] = {
+        { name = 'veh_toolbox',       price = 200, amount = 50 },
+        { name = 'repairkit',         price = 100, amount = 50 },
+        { name = 'advancedrepairkit', price = 250, amount = 50 },
+        { name = 'cleaningkit',       price = 50,  amount = 50 },
+        { name = 'tirerepairkit',     price = 100, amount = 50 },
+        { name = 'veh_tint',          price = 500, amount = 50 },
+        { name = 'veh_wheels',        price = 500, amount = 50 },
+        { name = 'veh_plates',        price = 500, amount = 50 },
+        { name = 'veh_neons',         price = 300, amount = 50 },
+        { name = 'veh_xenons',        price = 300, amount = 50 },
+        { name = 'veh_interior',      price = 400, amount = 50 },
+        { name = 'veh_exterior',      price = 400, amount = 50 },
+        -- Itens de Segurança Permitidos
+        { name = 'veh_brakes',        price = 600, amount = 50 },
+        { name = 'veh_suspension',    price = 600, amount = 50 },
+        { name = 'veh_armor',         price = 1000, amount = 50 },
+    },
+
+    -- Produtos Tuners (ILEGAL: Performance e Modificações)
+    ['tuners_products'] = {
+        -- O Básico
+        { name = 'repairkit',         price = 100, amount = 50 },
+        { name = 'advancedrepairkit', price = 250, amount = 50 },
+        { name = 'cleaningkit',       price = 50,  amount = 50 },
+        
+        -- A Carne (Performance)
+        { name = 'tunerlaptop',       price = 5000, amount = 5 },  -- O Portátil!
+        { name = 'nitrous',           price = 2000, amount = 20 }, -- Nitro
+        { name = 'veh_turbo',         price = 3000, amount = 20 },
+        { name = 'veh_engine',        price = 2500, amount = 20 },
+        { name = 'veh_transmission',  price = 1500, amount = 20 },
+        
+        -- Luzes (ADICIONADO)
+        { name = 'veh_neons',         price = 300, amount = 50 },
+        { name = 'veh_xenons',        price = 300, amount = 50 },
+
+        -- Extras
+        { name = 'veh_wheels',        price = 500, amount = 50 },
+        { name = 'veh_brakes',        price = 600, amount = 50 },
+        { name = 'veh_suspension',    price = 600, amount = 50 },
+        { name = 'veh_armor',         price = 1000, amount = 50 },
     }
 }
 
 Config.Locations = {
-    -- 24/7 Locations
+    -- Supermercados 24/7
     ['247supermarket'] = {
-        ['label'] = '24/7 Supermarket',
+        ['label'] = 'Supermercado 24/7',
         ['coords'] = vector4(24.47, -1346.62, 29.5, 271.66),
         ['ped'] = 'mp_m_shopkeep_01',
         ['scenario'] = 'WORLD_HUMAN_STAND_MOBILE',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-shopping-basket',
-        ['targetLabel'] = 'Open Shop',
+        ['targetLabel'] = 'Abrir Loja',
         ['products'] = Config.Products['normal'],
         ['showblip'] = true,
         ['blipsprite'] = 52,
@@ -185,13 +211,13 @@ Config.Locations = {
     },
 
     ['247supermarket2'] = {
-        ['label'] = '24/7 Supermarket',
+        ['label'] = 'Supermercado 24/7',
         ['coords'] = vector4(-3039.54, 584.38, 7.91, 17.27),
         ['ped'] = 'mp_m_shopkeep_01',
         ['scenario'] = 'WORLD_HUMAN_STAND_MOBILE',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-shopping-basket',
-        ['targetLabel'] = 'Open Shop',
+        ['targetLabel'] = 'Abrir Loja',
         ['products'] = Config.Products['normal'],
         ['showblip'] = true,
         ['blipsprite'] = 52,
@@ -201,13 +227,13 @@ Config.Locations = {
     },
 
     ['247supermarket3'] = {
-        ['label'] = '24/7 Supermarket',
+        ['label'] = 'Supermercado 24/7',
         ['coords'] = vector4(-3242.97, 1000.01, 12.83, 357.57),
         ['ped'] = 'mp_m_shopkeep_01',
         ['scenario'] = 'WORLD_HUMAN_STAND_MOBILE',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-shopping-basket',
-        ['targetLabel'] = 'Open Shop',
+        ['targetLabel'] = 'Abrir Loja',
         ['products'] = Config.Products['normal'],
         ['showblip'] = true,
         ['blipsprite'] = 52,
@@ -217,13 +243,13 @@ Config.Locations = {
     },
 
     ['247supermarket4'] = {
-        ['label'] = '24/7 Supermarket',
+        ['label'] = 'Supermercado 24/7',
         ['coords'] = vector4(1728.07, 6415.63, 35.04, 242.95),
         ['ped'] = 'mp_m_shopkeep_01',
         ['scenario'] = 'WORLD_HUMAN_STAND_MOBILE',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-shopping-basket',
-        ['targetLabel'] = 'Open Shop',
+        ['targetLabel'] = 'Abrir Loja',
         ['products'] = Config.Products['normal'],
         ['showblip'] = true,
         ['blipsprite'] = 52,
@@ -233,13 +259,13 @@ Config.Locations = {
     },
 
     ['247supermarket5'] = {
-        ['label'] = '24/7 Supermarket',
+        ['label'] = 'Supermercado 24/7',
         ['coords'] = vector4(1959.82, 3740.48, 32.34, 301.57),
         ['ped'] = 'mp_m_shopkeep_01',
         ['scenario'] = 'WORLD_HUMAN_STAND_MOBILE',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-shopping-basket',
-        ['targetLabel'] = 'Open Shop',
+        ['targetLabel'] = 'Abrir Loja',
         ['products'] = Config.Products['normal'],
         ['showblip'] = true,
         ['blipsprite'] = 52,
@@ -249,13 +275,13 @@ Config.Locations = {
     },
 
     ['247supermarket6'] = {
-        ['label'] = '24/7 Supermarket',
+        ['label'] = 'Supermercado 24/7',
         ['coords'] = vector4(549.13, 2670.85, 42.16, 99.39),
         ['ped'] = 'mp_m_shopkeep_01',
         ['scenario'] = 'WORLD_HUMAN_STAND_MOBILE',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-shopping-basket',
-        ['targetLabel'] = 'Open Shop',
+        ['targetLabel'] = 'Abrir Loja',
         ['products'] = Config.Products['normal'],
         ['showblip'] = true,
         ['blipsprite'] = 52,
@@ -265,13 +291,13 @@ Config.Locations = {
     },
 
     ['247supermarket7'] = {
-        ['label'] = '24/7 Supermarket',
+        ['label'] = 'Supermercado 24/7',
         ['coords'] = vector4(2677.47, 3279.76, 55.24, 335.08),
         ['ped'] = 'mp_m_shopkeep_01',
         ['scenario'] = 'WORLD_HUMAN_STAND_MOBILE',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-shopping-basket',
-        ['targetLabel'] = 'Open Shop',
+        ['targetLabel'] = 'Abrir Loja',
         ['products'] = Config.Products['normal'],
         ['showblip'] = true,
         ['blipsprite'] = 52,
@@ -281,13 +307,13 @@ Config.Locations = {
     },
 
     ['247supermarket8'] = {
-        ['label'] = '24/7 Supermarket',
+        ['label'] = 'Supermercado 24/7',
         ['coords'] = vector4(2556.66, 380.84, 108.62, 356.67),
         ['ped'] = 'mp_m_shopkeep_01',
         ['scenario'] = 'WORLD_HUMAN_STAND_MOBILE',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-shopping-basket',
-        ['targetLabel'] = 'Open Shop',
+        ['targetLabel'] = 'Abrir Loja',
         ['products'] = Config.Products['normal'],
         ['showblip'] = true,
         ['blipsprite'] = 52,
@@ -297,13 +323,13 @@ Config.Locations = {
     },
 
     ['247supermarket9'] = {
-        ['label'] = '24/7 Supermarket',
+        ['label'] = 'Supermercado 24/7',
         ['coords'] = vector4(372.66, 326.98, 103.57, 253.73),
         ['ped'] = 'mp_m_shopkeep_01',
         ['scenario'] = 'WORLD_HUMAN_STAND_MOBILE',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-shopping-basket',
-        ['targetLabel'] = 'Open Shop',
+        ['targetLabel'] = 'Abrir Loja',
         ['products'] = Config.Products['normal'],
         ['showblip'] = true,
         ['blipsprite'] = 52,
@@ -312,15 +338,15 @@ Config.Locations = {
         ['delivery'] = vector4(379.97, 357.3, 102.56, 26.42)
     },
 
-    -- LTD Gasoline Locations
+    -- Bombas LTD
     ['ltdgasoline'] = {
-        ['label'] = 'LTD Gasoline',
+        ['label'] = 'Bombas LTD',
         ['coords'] = vector4(-47.02, -1758.23, 29.42, 45.05),
         ['ped'] = 'mp_m_shopkeep_01',
         ['scenario'] = 'WORLD_HUMAN_STAND_MOBILE',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-shopping-basket',
-        ['targetLabel'] = 'Open Shop',
+        ['targetLabel'] = 'Abrir Loja',
         ['products'] = Config.Products['normal'],
         ['showblip'] = true,
         ['blipsprite'] = 52,
@@ -330,13 +356,13 @@ Config.Locations = {
     },
 
     ['ltdgasoline2'] = {
-        ['label'] = 'LTD Gasoline',
+        ['label'] = 'Bombas LTD',
         ['coords'] = vector4(-706.06, -913.97, 19.22, 88.04),
         ['ped'] = 'mp_m_shopkeep_01',
         ['scenario'] = 'WORLD_HUMAN_STAND_MOBILE',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-shopping-basket',
-        ['targetLabel'] = 'Open Shop',
+        ['targetLabel'] = 'Abrir Loja',
         ['products'] = Config.Products['normal'],
         ['showblip'] = true,
         ['blipsprite'] = 52,
@@ -346,13 +372,13 @@ Config.Locations = {
     },
 
     ['ltdgasoline3'] = {
-        ['label'] = 'LTD Gasoline',
+        ['label'] = 'Bombas LTD',
         ['coords'] = vector4(-1820.02, 794.03, 138.09, 135.45),
         ['ped'] = 'mp_m_shopkeep_01',
         ['scenario'] = 'WORLD_HUMAN_STAND_MOBILE',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-shopping-basket',
-        ['targetLabel'] = 'Open Shop',
+        ['targetLabel'] = 'Abrir Loja',
         ['products'] = Config.Products['normal'],
         ['showblip'] = true,
         ['blipsprite'] = 52,
@@ -362,13 +388,13 @@ Config.Locations = {
     },
 
     ['ltdgasoline4'] = {
-        ['label'] = 'LTD Gasoline',
+        ['label'] = 'Bombas LTD',
         ['coords'] = vector4(1164.71, -322.94, 69.21, 101.72),
         ['ped'] = 'mp_m_shopkeep_01',
         ['scenario'] = 'WORLD_HUMAN_STAND_MOBILE',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-shopping-basket',
-        ['targetLabel'] = 'Open Open Shop',
+        ['targetLabel'] = 'Abrir Loja',
         ['products'] = Config.Products['normal'],
         ['showblip'] = true,
         ['blipsprite'] = 52,
@@ -378,13 +404,13 @@ Config.Locations = {
     },
 
     ['ltdgasoline5'] = {
-        ['label'] = 'LTD Gasoline',
+        ['label'] = 'Bombas LTD',
         ['coords'] = vector4(1697.87, 4922.96, 42.06, 324.71),
         ['ped'] = 'mp_m_shopkeep_01',
         ['scenario'] = 'WORLD_HUMAN_STAND_MOBILE',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-shopping-basket',
-        ['targetLabel'] = 'Open Shop',
+        ['targetLabel'] = 'Abrir Loja',
         ['products'] = Config.Products['normal'],
         ['showblip'] = true,
         ['blipsprite'] = 52,
@@ -393,15 +419,15 @@ Config.Locations = {
         ['delivery'] = vector4(1702.68, 4917.28, 42.22, 139.27)
     },
 
-    -- Rob's Liquor Locations
+    -- Garrafeiras (Rob's Liquor)
     ['robsliquor'] = {
-        ['label'] = 'Rob\'s Liqour',
+        ['label'] = 'Garrafeira do Rob',
         ['coords'] = vector4(-1221.58, -908.15, 12.33, 35.49),
         ['ped'] = 'mp_m_shopkeep_01',
         ['scenario'] = 'WORLD_HUMAN_STAND_MOBILE',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-shopping-basket',
-        ['targetLabel'] = 'Open Shop',
+        ['targetLabel'] = 'Abrir Loja',
         ['products'] = Config.Products['liquor'],
         ['showblip'] = true,
         ['blipsprite'] = 52,
@@ -411,13 +437,13 @@ Config.Locations = {
     },
 
     ['robsliquor2'] = {
-        ['label'] = 'Rob\'s Liqour',
+        ['label'] = 'Garrafeira do Rob',
         ['coords'] = vector4(-1486.59, -377.68, 40.16, 139.51),
         ['ped'] = 'mp_m_shopkeep_01',
         ['scenario'] = 'WORLD_HUMAN_STAND_MOBILE',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-shopping-basket',
-        ['targetLabel'] = 'Open Shop',
+        ['targetLabel'] = 'Abrir Loja',
         ['products'] = Config.Products['liquor'],
         ['showblip'] = true,
         ['blipsprite'] = 52,
@@ -427,13 +453,13 @@ Config.Locations = {
     },
 
     ['robsliquor3'] = {
-        ['label'] = 'Rob\'s Liqour',
+        ['label'] = 'Garrafeira do Rob',
         ['coords'] = vector4(-2966.39, 391.42, 15.04, 87.48),
         ['ped'] = 'mp_m_shopkeep_01',
         ['scenario'] = 'WORLD_HUMAN_STAND_MOBILE',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-shopping-basket',
-        ['targetLabel'] = 'Open Shop',
+        ['targetLabel'] = 'Abrir Loja',
         ['products'] = Config.Products['liquor'],
         ['showblip'] = true,
         ['blipsprite'] = 52,
@@ -443,13 +469,13 @@ Config.Locations = {
     },
 
     ['robsliquor4'] = {
-        ['label'] = 'Rob\'s Liqour',
+        ['label'] = 'Garrafeira do Rob',
         ['coords'] = vector4(1165.17, 2710.88, 38.16, 179.43),
         ['ped'] = 'mp_m_shopkeep_01',
         ['scenario'] = 'WORLD_HUMAN_STAND_MOBILE',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-shopping-basket',
-        ['targetLabel'] = 'Open Shop',
+        ['targetLabel'] = 'Abrir Loja',
         ['products'] = Config.Products['liquor'],
         ['showblip'] = true,
         ['blipsprite'] = 52,
@@ -459,13 +485,13 @@ Config.Locations = {
     },
 
     ['robsliquor5'] = {
-        ['label'] = 'Rob\'s Liqour',
+        ['label'] = 'Garrafeira do Rob',
         ['coords'] = vector4(1134.2, -982.91, 46.42, 277.24),
         ['ped'] = 'mp_m_shopkeep_01',
         ['scenario'] = 'WORLD_HUMAN_STAND_MOBILE',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-shopping-basket',
-        ['targetLabel'] = 'Open Shop',
+        ['targetLabel'] = 'Abrir Loja',
         ['products'] = Config.Products['liquor'],
         ['showblip'] = true,
         ['blipsprite'] = 52,
@@ -474,15 +500,15 @@ Config.Locations = {
         ['delivery'] = vector4(1129.73, -989.27, 45.97, 280.98)
     },
 
-    -- Hardware Store Locations
+    -- Lojas de Ferramentas
     ['hardware'] = {
-        ['label'] = 'Hardware Store',
+        ['label'] = 'Loja de Ferramentas',
         ['coords'] = vector4(45.68, -1749.04, 29.61, 53.13),
         ['ped'] = 'mp_m_waremech_01',
         ['scenario'] = 'WORLD_HUMAN_CLIPBOARD',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-wrench',
-        ['targetLabel'] = 'Open Hardware Store',
+        ['targetLabel'] = 'Abrir Loja de Ferramentas',
         ['products'] = Config.Products['hardware'],
         ['showblip'] = true,
         ['blipsprite'] = 402,
@@ -492,13 +518,13 @@ Config.Locations = {
     },
 
     ['hardware2'] = {
-        ['label'] = 'Hardware Store',
+        ['label'] = 'Loja de Ferramentas',
         ['coords'] = vector4(2747.71, 3472.85, 55.67, 255.08),
         ['ped'] = 'mp_m_waremech_01',
         ['scenario'] = 'WORLD_HUMAN_CLIPBOARD',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-wrench',
-        ['targetLabel'] = 'Open Hardware Store',
+        ['targetLabel'] = 'Abrir Loja de Ferramentas',
         ['products'] = Config.Products['hardware'],
         ['showblip'] = true,
         ['blipsprite'] = 402,
@@ -508,13 +534,13 @@ Config.Locations = {
     },
 
     ['hardware3'] = {
-        ['label'] = 'Hardware Store',
+        ['label'] = 'Loja de Ferramentas',
         ['coords'] = vector4(-421.83, 6136.13, 31.88, 228.2),
         ['ped'] = 'mp_m_waremech_01',
         ['scenario'] = 'WORLD_HUMAN_CLIPBOARD',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-wrench',
-        ['targetLabel'] = 'Hardware Store',
+        ['targetLabel'] = 'Abrir Loja de Ferramentas',
         ['products'] = Config.Products['hardware'],
         ['showblip'] = true,
         ['blipsprite'] = 402,
@@ -523,7 +549,7 @@ Config.Locations = {
         ['delivery'] = vector4(-438.25, 6146.9, 31.48, 136.99)
     },
 
-    -- Ammunation Locations
+    -- Ammunation (Armeiros)
     ['ammunation'] = {
         ['label'] = 'Ammunation',
         ['type'] = 'weapon',
@@ -532,7 +558,7 @@ Config.Locations = {
         ['scenario'] = 'WORLD_HUMAN_COP_IDLES',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-gun',
-        ['targetLabel'] = 'Open Ammunation',
+        ['targetLabel'] = 'Abrir Armeiro',
         ['products'] = Config.Products['weapons'],
         ['showblip'] = true,
         ['blipsprite'] = 110,
@@ -548,7 +574,7 @@ Config.Locations = {
         ['scenario'] = 'WORLD_HUMAN_COP_IDLES',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-gun',
-        ['targetLabel'] = 'Open Ammunation',
+        ['targetLabel'] = 'Abrir Armeiro',
         ['products'] = Config.Products['weapons'],
         ['showblip'] = true,
         ['blipsprite'] = 110,
@@ -564,7 +590,7 @@ Config.Locations = {
         ['scenario'] = 'WORLD_HUMAN_COP_IDLES',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-gun',
-        ['targetLabel'] = 'Open Ammunation',
+        ['targetLabel'] = 'Abrir Armeiro',
         ['products'] = Config.Products['weapons'],
         ['showblip'] = true,
         ['blipsprite'] = 110,
@@ -580,7 +606,7 @@ Config.Locations = {
         ['scenario'] = 'WORLD_HUMAN_COP_IDLES',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-gun',
-        ['targetLabel'] = 'Open Ammunation',
+        ['targetLabel'] = 'Abrir Armeiro',
         ['products'] = Config.Products['weapons'],
         ['showblip'] = true,
         ['blipsprite'] = 110,
@@ -596,7 +622,7 @@ Config.Locations = {
         ['scenario'] = 'WORLD_HUMAN_COP_IDLES',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-gun',
-        ['targetLabel'] = 'Open Ammunation',
+        ['targetLabel'] = 'Abrir Armeiro',
         ['products'] = Config.Products['weapons'],
         ['showblip'] = true,
         ['blipsprite'] = 110,
@@ -612,7 +638,7 @@ Config.Locations = {
         ['scenario'] = 'WORLD_HUMAN_COP_IDLES',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-gun',
-        ['targetLabel'] = 'Open Ammunation',
+        ['targetLabel'] = 'Abrir Armeiro',
         ['products'] = Config.Products['weapons'],
         ['showblip'] = true,
         ['blipsprite'] = 110,
@@ -628,7 +654,7 @@ Config.Locations = {
         ['scenario'] = 'WORLD_HUMAN_COP_IDLES',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-gun',
-        ['targetLabel'] = 'Open Ammunation',
+        ['targetLabel'] = 'Abrir Armeiro',
         ['products'] = Config.Products['weapons'],
         ['showblip'] = true,
         ['blipsprite'] = 110,
@@ -644,7 +670,7 @@ Config.Locations = {
         ['scenario'] = 'WORLD_HUMAN_COP_IDLES',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-gun',
-        ['targetLabel'] = 'Open Ammunation',
+        ['targetLabel'] = 'Abrir Armeiro',
         ['products'] = Config.Products['weapons'],
         ['showblip'] = true,
         ['blipsprite'] = 110,
@@ -660,7 +686,7 @@ Config.Locations = {
         ['scenario'] = 'WORLD_HUMAN_COP_IDLES',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-gun',
-        ['targetLabel'] = 'Open Ammunation',
+        ['targetLabel'] = 'Abrir Armeiro',
         ['products'] = Config.Products['weapons'],
         ['showblip'] = true,
         ['blipsprite'] = 110,
@@ -676,7 +702,7 @@ Config.Locations = {
         ['scenario'] = 'WORLD_HUMAN_COP_IDLES',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-gun',
-        ['targetLabel'] = 'Open Ammunation',
+        ['targetLabel'] = 'Abrir Armeiro',
         ['products'] = Config.Products['weapons'],
         ['showblip'] = true,
         ['blipsprite'] = 110,
@@ -692,7 +718,7 @@ Config.Locations = {
         ['scenario'] = 'WORLD_HUMAN_COP_IDLES',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-gun',
-        ['targetLabel'] = 'Open Ammunation',
+        ['targetLabel'] = 'Abrir Armeiro',
         ['products'] = Config.Products['weapons'],
         ['showblip'] = true,
         ['blipsprite'] = 110,
@@ -701,7 +727,7 @@ Config.Locations = {
         ['delivery'] = vector4(-3183.6, 1084.35, 20.84, 68.13)
     },
 
-    -- Weedshop Locations
+    -- Weedshop
     ['weedshop'] = {
         ['label'] = 'Smoke On The Water',
         ['coords'] = vector4(-1168.26, -1573.2, 4.66, 105.24),
@@ -709,7 +735,7 @@ Config.Locations = {
         ['scenario'] = 'WORLD_HUMAN_AA_SMOKE',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-cannabis',
-        ['targetLabel'] = 'Open Weed Shop',
+        ['targetLabel'] = 'Abrir Dispensário',
         ['products'] = Config.Products['weedshop'],
         ['showblip'] = true,
         ['blipsprite'] = 140,
@@ -718,7 +744,7 @@ Config.Locations = {
         ['delivery'] = vector4(-1162.13, -1568.57, 4.39, 328.52)
     },
 
-    -- Sea Word Locations
+    -- Sea Word
     ['seaword'] = {
         ['label'] = 'Sea Word',
         ['coords'] = vector4(-1687.03, -1072.18, 13.15, 52.93),
@@ -726,7 +752,7 @@ Config.Locations = {
         ['scenario'] = 'WORLD_HUMAN_STAND_IMPATIENT',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-fish',
-        ['targetLabel'] = 'Sea Word',
+        ['targetLabel'] = 'Loja de Mergulho',
         ['products'] = Config.Products['gearshop'],
         ['showblip'] = true,
         ['blipsprite'] = 52,
@@ -735,15 +761,15 @@ Config.Locations = {
         ['delivery'] = vector4(-1674.18, -1073.7, 13.15, 333.56)
     },
 
-    -- Leisure Shop Locations
+    -- Loja de Lazer
     ['leisureshop'] = {
-        ['label'] = 'Leisure Shop',
+        ['label'] = 'Loja de Lazer',
         ['coords'] = vector4(-1505.91, 1511.95, 115.29, 257.13),
         ['ped'] = 'a_m_y_beach_01',
         ['scenario'] = 'WORLD_HUMAN_STAND_MOBILE_CLUBHOUSE',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-leaf',
-        ['targetLabel'] = 'Open Leisure Shop',
+        ['targetLabel'] = 'Abrir Loja de Lazer',
         ['products'] = Config.Products['leisureshop'],
         ['showblip'] = true,
         ['blipsprite'] = 52,
@@ -752,74 +778,67 @@ Config.Locations = {
         ['delivery'] = vector4(-1507.64, 1505.52, 115.29, 262.2)
     },
 
+    -- Polícia
     ['police'] = {
-        ['label'] = 'Police Shop',
+        ['label'] = 'Armeiro da Polícia',
         ['coords'] = vector4(461.8498, -981.0677, 30.6896, 91.5892),
         ['ped'] = 'mp_m_securoguard_01',
         ['scenario'] = 'WORLD_HUMAN_COP_IDLES',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-gun',
-        ['targetLabel'] = 'Open Armory',
+        ['targetLabel'] = 'Abrir Armeiro',
         ['products'] = Config.Products['police'],
         ['delivery'] = vector4(459.0441, -1008.0366, 28.2627, 271.4695),
         ['requiredJob'] = 'police',
     },
 
+    -- INEM
     ['ambulance'] = {
-        ['label'] = 'Ambulance Shop',
+        ['label'] = 'Farmácia do INEM',
         ['coords'] = vector4(309.93, -602.94, 43.29, 71.0820),
         ['ped'] = 's_m_m_doctor_01',
         ['scenario'] = 'WORLD_HUMAN_STAND_MOBILE',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-hand',
-        ['targetLabel'] = 'Open Armory',
+        ['targetLabel'] = 'Abrir Farmácia',
         ['products'] = Config.Products['ambulance'],
         ['delivery'] = vector4(283.5821, -614.8570, 43.3792, 159.2903),
         ['requiredJob'] = 'ambulance'
     },
 
-    ['mechanic'] = {
-        ['label'] = 'Mechanic Shop',
-        ['coords'] = vector4(-343.66, -140.78, 39.02, 0),
-        ['products'] = Config.Products['mechanic'],
-        ['delivery'] = vector4(-354.3936, -128.2882, 39.4307, 251.4931),
-        ['requiredJob'] = 'mechanic',
-    },
+    -- === LOJAS DE MECÂNICO CONFIGURADAS === --
 
-    ['mechanic2'] = {
-        ['label'] = 'Mechanic Shop',
-        ['coords'] = vector4(1189.36, 2641.00, 38.44, 0),
-        ['products'] = Config.Products['mechanic'],
-        ['delivery'] = vector4(1189.9852, 2651.1873, 37.8351, 317.7137),
-        ['requiredJob'] = 'mechanic2'
-    },
-
-    ['mechanic3'] = {
-        ['label'] = 'Mechanic Shop',
-        ['coords'] = vector4(-1156.56, -1999.85, 13.19, 0),
-        ['products'] = Config.Products['mechanic'],
-        ['delivery'] = vector4(-1131.9661, -1972.0144, 13.1603, 358.8637),
-        ['requiredJob'] = 'mechanic3'
-    },
-
-    ['bennys'] = {
-        ['label'] = 'Mechanic Shop',
-        ['coords'] = vector4(-195.80, -1318.24, 31.08, 0),
-        ['products'] = Config.Products['mechanic'],
+    -- Loja Benny's (Legal)
+    ['bennys_store'] = {
+        ['label'] = 'Armazém Benny\'s',
+        ['coords'] = vector4(-195.42, -1320.77, 31.09, 75.95),
+        ['ped'] = 's_m_m_autoshop_01',
+        ['scenario'] = 'WORLD_HUMAN_CLIPBOARD',
+        ['radius'] = 1.5,
+        ['targetIcon'] = 'fas fa-wrench',
+        ['targetLabel'] = 'Comprar Peças',
+        ['products'] = Config.Products['bennys_products'],
         ['delivery'] = vector4(-232.5028, -1311.7202, 31.2960, 180.3716),
         ['requiredJob'] = 'bennys'
     },
 
-    ['beeker'] = {
-        ['label'] = 'Mechanic Shop',
-        ['coords'] = vector4(100.92, 6616.00, 32.47, 0),
-        ['products'] = Config.Products['mechanic'],
-        ['delivery'] = vector4(119.3033, 6626.7358, 31.9558, 46.1566),
-        ['requiredJob'] = 'beeker'
+    -- Loja Tuners (Ilegal)
+    ['tuners_store'] = {
+        ['label'] = 'Fornecedor Underground',
+        ['coords'] = vector4(-45.29, -1207.31, 28.77, 30.19),
+        ['ped'] = 'g_m_y_salvagoon_01',
+        ['scenario'] = 'WORLD_HUMAN_LEANING',
+        ['radius'] = 1.5,
+        ['targetIcon'] = 'fas fa-microchip',
+        ['targetLabel'] = 'Mercado Negro',
+        ['products'] = Config.Products['tuners_products'],
+        ['delivery'] = vector4(-60.0, -1215.0, 30.0, 0.0),
+        ['requiredJob'] = 'tuners'
     },
 
+    -- Cantina da Prisão
     ['prison'] = {
-        ['label'] = 'Canteen Shop',
+        ['label'] = 'Cantina',
         ['coords'] = vector4(1777.59, 2560.52, 44.62, 187.83),
         ['ped'] = false,
         ['products'] = Config.Products['prison'],
@@ -830,14 +849,15 @@ Config.Locations = {
         ['delivery'] = vector4(1845.8175, 2585.9312, 45.6721, 96.7577)
     },
 
+    -- Mercado Negro
     ['blackmarket'] = {
-        ['label'] = 'Black Market',
+        ['label'] = 'Mercado Negro',
         ['coords'] = vector4(-594.7032, -1616.3647, 33.0105, 170.6846),
         ['ped'] = 'a_m_y_smartcaspat_01',
         ['scenario'] = 'WORLD_HUMAN_AA_SMOKE',
         ['radius'] = 1.5,
         ['targetIcon'] = 'fas fa-clipboard',
-        ['targetLabel'] = 'Open Shop',
+        ['targetLabel'] = 'Abrir Loja',
         ['products'] = Config.Products['blackmarket'],
         ['delivery'] = vector4(-428.6385, -1728.1962, 19.7838, 75.6646)
     },
