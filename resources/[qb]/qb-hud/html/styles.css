@@ -194,7 +194,7 @@ div#q-loading-bar {
 /* Vehicle HUD */
 
 speed:after {
-    content: "MPH"; /* If using KPH change this content from MPH */
+    content: "HM/H"; /* If using KPH change this content from MPH */
     display: block;
     padding-top: 3px;
     padding-left: 2px;
@@ -376,4 +376,9 @@ altitude {
     text-transform: none;
     font-weight: 600;
     text-shadow: 0 0 1px rgba(0, 0, 0, 0.6), 0 0 1px rgba(0, 0, 0, 0.6), 0 0 1px rgba(0, 0, 0, 0.6), 0 0 1px rgba(0, 0, 0, 0.6);
+}
+
+/* Esconder o velocímetro antigo do qb-hud */
+.speedometer-container, .car-stats, .vehicle-container {
+    display: none !important;
 }
