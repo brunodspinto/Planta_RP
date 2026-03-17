@@ -16,24 +16,27 @@ end)
 
 -- 2. FINALIZAR: Remover o item e aplicar reparação
 RegisterNetEvent('simple-repair:server:CobrarEFinalizar')
-AddEventHandler('simple-repair:server:CobrarEFinalizar', function()
+AddEventHandler('simple-repair:server:CobrarEFinalizar', function(vehicleNetId)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
-
-    -- Remover o item do inventário (Consumo)
-    if Config.ConsumirItem then
-        -- Verifica se ele ainda tem o item (para evitar batotas de dropar a meio)
-        if Player.Functions.GetItemByName(Config.ItemNecessario) then
-            Player.Functions.RemoveItem(Config.ItemNecessario, 1)
-            TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items[Config.ItemNecessario], "remove")
-            
-            -- Aplicar a reparação
-            TriggerClientEvent('simple-repair:client:AplicarFix', src)
-        else
-            TriggerClientEvent('QBCore:Notify', src, "Não tens o kit de reparação!", "error")
-        end
-    else
-        -- Se o item for infinito (como uma ferramenta fixa)
-        TriggerClientEvent('simple-repair:client:AplicarFix', src)
+    
+    if not Player then
+        TriggerClientEvent('QBCore:Notify', src, "Erro ao reparar!", "error")
+        return
     end
+
+    -- Validar item ANTES de fazer qualquer coisa
+    if Config.ConsumirItem then
+        if not Player.Functions.GetItemByName(Config.ItemNecessario) then
+            TriggerClientEvent('QBCore:Notify', src, "Não tens o kit de reparação!", "error")
+            return
+        end
+        
+        -- Remover item
+        Player.Functions.RemoveItem(Config.ItemNecessario, 1)
+        TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items[Config.ItemNecessario], "remove")
+    end
+    
+    -- SÓ DEPOIS confirmar a reparação
+    TriggerClientEvent('simple-repair:client:AplicarFix', src)
 end)
