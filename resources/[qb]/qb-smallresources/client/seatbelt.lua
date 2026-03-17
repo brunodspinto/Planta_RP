@@ -96,9 +96,11 @@ exports("HasSeatbeltOn", hasSeatbeltOn)
 RegisterNetEvent('QBCore:Client:EnteredVehicle', function()
     local ped = PlayerPedId()
     while IsPedInAnyVehicle(ped, false) do
-        Wait(0)
+        Wait(50)
+        ped = PlayerPedId()
+        if not DoesEntityExist(ped) then break end
         local currVehicle = GetVehiclePedIsIn(ped, false)
-        if currVehicle and currVehicle ~= false and currVehicle ~= 0 then
+        if currVehicle and currVehicle ~= false and currVehicle ~= 0 and DoesEntityExist(currVehicle) then
             SetPedHelmet(ped, false)
             lastVeh = GetVehiclePedIsIn(ped, false)
             if GetVehicleEngineHealth(currVehicle) < 0.0 then

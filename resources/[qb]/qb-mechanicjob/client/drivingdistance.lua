@@ -69,7 +69,7 @@ end
 local function TrackDistance()
     CreateThread(function()
         while true do
-            Wait(0)
+            Wait(1)
             if not vehicle then break end
 
             local ped = PlayerPedId()

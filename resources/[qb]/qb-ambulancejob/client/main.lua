@@ -130,11 +130,15 @@ end
 local function ProcessRunStuff(ped)
     if IsInjuryCausingLimp() then
         RequestAnimSet('move_m@injured')
-        while not HasAnimSetLoaded('move_m@injured') do
-            Wait(0)
+        local animTimeout = 0
+        while not HasAnimSetLoaded('move_m@injured') and animTimeout < 100 do
+            Wait(10)
+            animTimeout = animTimeout + 1
         end
-        SetPedMovementClipset(ped, 'move_m@injured', 1)
-        SetPlayerSprint(PlayerId(), false)
+        if HasAnimSetLoaded('move_m@injured') then
+            SetPedMovementClipset(ped, 'move_m@injured', 1)
+            SetPlayerSprint(PlayerId(), false)
+        end
     end
 end
 

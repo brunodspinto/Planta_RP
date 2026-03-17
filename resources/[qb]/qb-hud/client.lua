@@ -766,7 +766,7 @@ CreateThread(function()
                 end
                 wasInVehicle = true
                 local engineHealth = GetVehicleEngineHealth(vehicle)
-                if engineHealth ~= engineHealth then -- This checks for NaN, as any NaN value is not equal to itself
+                if not engineHealth or engineHealth ~= engineHealth then -- This checks for NaN, as any NaN value is not equal to itself
                     engineHealth = 0
                 end
                 updatePlayerHud({

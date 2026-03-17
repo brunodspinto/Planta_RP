@@ -26,11 +26,17 @@ local function spawnHousePlants()
             }
 
             local plantProp = CreateObject(plantData['plantProp'], plantData['plantCoords'].x, plantData['plantCoords'].y, plantData['plantCoords'].z, false, false, false)
-            while not plantProp do Wait(0) end
-            PlaceObjectOnGroundProperly(plantProp)
-            Wait(10)
-            FreezeEntityPosition(plantProp, true)
-            SetEntityAsMissionEntity(plantProp, false, false)
+            local timeout = 0
+            while not plantProp and timeout < 100 do
+                Wait(10)
+                timeout = timeout + 1
+            end
+            if plantProp then
+                PlaceObjectOnGroundProperly(plantProp)
+                Wait(10)
+                FreezeEntityPosition(plantProp, true)
+                SetEntityAsMissionEntity(plantProp, false, false)
+            end
         end
         plantSpawned = true
     end)
