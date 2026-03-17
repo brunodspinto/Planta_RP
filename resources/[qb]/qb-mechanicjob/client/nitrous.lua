@@ -7,7 +7,7 @@ local nitrousVehicles = {}
 local function ListenForNitrous()
     CreateThread(function()
         while true do
-            Wait(0)
+            Wait(1)
             if not vehicle then break end
             local ped = PlayerPedId()
             local isDriver = GetPedInVehicleSeat(vehicle, -1) == ped

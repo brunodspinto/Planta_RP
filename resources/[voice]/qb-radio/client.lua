@@ -11,8 +11,10 @@ local radioProp = nil
 local function LoadAnimDic(dict)
     if not HasAnimDictLoaded(dict) then
         RequestAnimDict(dict)
-        while not HasAnimDictLoaded(dict) do
-            Wait(0)
+        local timeout = 0
+        while not HasAnimDictLoaded(dict) and timeout < 100 do
+            Wait(10)
+            timeout = timeout + 1
         end
     end
 end
@@ -29,7 +31,14 @@ local function SplitStr(inputstr, sep)
 end
 
 local function connecttoradio(channel)
-    if channel > Config.MaxFrequency or channel <= 0 then QBCore.Functions.Notify(Lang:t('restricted_channel_error'), 'error') return false end
+    if not PlayerData or not PlayerData.job then
+        QBCore.Functions.Notify(Lang:t('error'), 'error')
+        return false
+    end
+    if channel > Config.MaxFrequency or channel <= 0 then
+        QBCore.Functions.Notify(Lang:t('restricted_channel_error'), 'error')
+        return false
+    end
     if Config.RestrictedChannels[channel] ~= nil then
         if not Config.RestrictedChannels[channel][PlayerData.job.name] or not PlayerData.job.onduty then
             QBCore.Functions.Notify(Lang:t('restricted_channel_error'), 'error')
@@ -237,10 +246,16 @@ end)
 CreateThread(function()
     while true do
         Wait(1000)
-        if LocalPlayer.state.isLoggedIn and onRadio then
-            if not hasRadio or PlayerData.metadata.isdead or PlayerData.metadata.inlaststand then
-                if RadioChannel ~= 0 then
-                    leaveradio()
+        if LocalPlayer.state.isLoggedIn then
+            if onRadio then
+                if not PlayerData or not PlayerData.metadata then
+                    if RadioChannel ~= 0 then
+                        leaveradio()
+                    end
+                elseif not hasRadio or PlayerData.metadata.isdead or PlayerData.metadata.inlaststand then
+                    if RadioChannel ~= 0 then
+                        leaveradio()
+                    end
                 end
             end
         end

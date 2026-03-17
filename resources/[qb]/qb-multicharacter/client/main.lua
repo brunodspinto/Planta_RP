@@ -12,8 +12,10 @@ local randommodels = { -- models possible to load when choosing empty slot
 -- Main Thread
 
 CreateThread(function()
-    while true do
-        Wait(0)
+    local sessionTimeout = 0
+    while sessionTimeout < 300 do
+        Wait(10)
+        sessionTimeout = sessionTimeout + 1
         if NetworkIsSessionStarted() then
             TriggerEvent('qb-multicharacter:client:chooseChar')
             return
@@ -25,8 +27,10 @@ end)
 
 local function loadModel(model)
     RequestModel(model)
-    while not HasModelLoaded(model) do
-        Wait(0)
+    local timeout = 0
+    while not HasModelLoaded(model) and timeout < 100 do
+        Wait(10)
+        timeout = timeout + 1
     end
 end
 

@@ -43,8 +43,10 @@ RegisterNetEvent('QBCore:Command:GoToMarker', function()
 
     -- Fade screen to hide how clients get teleported.
     DoScreenFadeOut(650)
-    while not IsScreenFadedOut() do
-        Wait(0)
+    local fadeTimeout = 0
+    while not IsScreenFadedOut() and fadeTimeout < 100 do
+        Wait(10)
+        fadeTimeout = fadeTimeout + 1
     end
 
     local ped, coords <const> = PlayerPedId(), GetBlipInfoIdCoord(blipMarker)
@@ -69,31 +71,35 @@ RegisterNetEvent('QBCore:Command:GoToMarker', function()
 
         NewLoadSceneStart(x, y, z, x, y, z, 50.0, 0)
         local curTime = GetGameTimer()
-        while IsNetworkLoadingScene() do
+        local sceneTimeout = 0
+        while IsNetworkLoadingScene() and sceneTimeout < 100 do
             if GetGameTimer() - curTime > 1000 then
                 break
             end
-            Wait(0)
+            Wait(10)
+            sceneTimeout = sceneTimeout + 1
         end
         NewLoadSceneStop()
         SetPedCoordsKeepVehicle(ped, x, y, z)
 
-        while not HasCollisionLoadedAroundEntity(ped) do
+        local collisionTimeout = 0
+        while not HasCollisionLoadedAroundEntity(ped) and collisionTimeout < 100 do
             RequestCollisionAtCoord(x, y, z)
             if GetGameTimer() - curTime > 1000 then
                 break
             end
-            Wait(0)
+            Wait(10)
+            collisionTimeout = collisionTimeout + 1
         end
 
         -- Get ground coord. As mentioned in the natives, this only works if the client is in render distance.
         found, groundZ = GetGroundZFor_3dCoord(x, y, z, false);
         if found then
-            Wait(0)
+            Wait(10)
             SetPedCoordsKeepVehicle(ped, x, y, groundZ)
             break
         end
-        Wait(0)
+        Wait(10)
     end
 
     -- Remove black screen once the loop has ended.

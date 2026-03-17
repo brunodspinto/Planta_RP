@@ -207,11 +207,12 @@ if not Config.useTarget then
                 exports['qb-core']:DrawText('Open Bank')
                 CreateThread(function()
                     while isPlayerInsideBankZone do
-                        Wait(0)
+                        Wait(50)
                         if IsControlJustPressed(0, 38) then
                             OpenBank()
                         end
                     end
+                    exports['qb-core']:HideText()
                 end)
             else
                 exports['qb-core']:HideText()

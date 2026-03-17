@@ -185,8 +185,10 @@ CreateThread(function()
                                 blackoutTimer = 0
                             else
                                 DoScreenFadeOut(500)
-                                while not IsScreenFadedOut() do
-                                    Wait(0)
+                                local fadeTimeout2 = 0
+                                while not IsScreenFadedOut() and fadeTimeout2 < 50 do
+                                    Wait(10)
+                                    fadeTimeout2 = fadeTimeout2 + 1
                                 end
                                 DoScreenFadeIn(500)
 

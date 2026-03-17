@@ -709,13 +709,19 @@ end)
 if UseTarget then
     CreateThread(function()
         local sleep = 5000
-        while not LocalPlayer.state.isLoggedIn do
-            -- do nothing
-            Wait(sleep)
+        while true do
+            if not LocalPlayer.state.isLoggedIn then
+                Wait(sleep)
+            else
+                break
+            end
         end
 
         while true do
             sleep = 1000
+            if not LocalPlayer or not LocalPlayer.state or not LocalPlayer.state.isLoggedIn then
+                break
+            end
 
             if not InApartment then
                 SetClosestApartment()
@@ -729,27 +735,33 @@ if UseTarget then
 else
     CreateThread(function()
         local sleep = 5000
-        while not LocalPlayer.state.isLoggedIn do
-            -- do nothing
-            Wait(sleep)
+        while true do
+            if not LocalPlayer.state.isLoggedIn then
+                Wait(sleep)
+            else
+                break
+            end
         end
 
         while true do
             sleep = 1000
+            if not LocalPlayer or not LocalPlayer.state or not LocalPlayer.state.isLoggedIn then
+                break
+            end
 
             if not InApartment then
                 SetClosestApartment()
                 SetApartmentsEntranceTargets()
 
                 if IsInsideEntranceZone then
-                    sleep = 0
+                    sleep = 50
                     if IsControlJustPressed(0, 38) then
                         OpenEntranceMenu()
                         exports['qb-core']:HideText()
                     end
                 end
             elseif InApartment then
-                sleep = 0
+                sleep = 50
 
                 SetInApartmentTargets()
 

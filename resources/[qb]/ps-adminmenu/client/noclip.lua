@@ -188,12 +188,14 @@ local function ToggleNoclip()
         SetupCam()
         ToggleBehavior(true)
         while noclip do
-            Wait(0)
+            Wait(1)
+            if not noclip then break end
             UpdateCameraRotation()
             DisabledControls()
             UpdateSpeed()
             UpdateMovement()
         end
+        StopNoclip()
     else
         StopNoclip()
     end
