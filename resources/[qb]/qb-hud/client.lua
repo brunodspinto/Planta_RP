@@ -138,6 +138,18 @@ end)
 
 RegisterKeyMapping('menu', 'Open Menu', 'keyboard', config.OpenMenu)
 
+CreateThread(function()
+    while true do
+        Wait(0)
+        if LocalPlayer.state.isLoggedIn and not IsPauseMenuActive() then
+            local ped = PlayerPedId()
+            if IsPedArmed(ped, 4) and IsControlPressed(0, 25) then
+                DrawRect(0.5, 0.5, 0.0025, 0.0045, 255, 255, 255, 220)
+            end
+        end
+    end
+end)
+
 -- Reset hud
 local function restartHud()
     TriggerEvent('hud:client:playResetHudSounds')

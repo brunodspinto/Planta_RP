@@ -774,6 +774,7 @@ const playerHud = {
             healthColor: "",
             thirstColor: "",
             radioActive: false,
+            showCrosshair: false,
         };
     },
 
@@ -784,6 +785,9 @@ const playerHud = {
         this.listener = window.addEventListener("message", (event) => {
             if (event.data.action === "hudtick") {
                 this.hudTick(event.data);
+            }
+            if (event.data.action === "crosshair") {
+                this.showCrosshair = event.data.show;
             }
             // else if(event.data.update) {
             //   eval(event.data.action + "(" + event.data.show + ')')
@@ -1163,3 +1167,27 @@ const baseplateHud = {
 const app4 = Vue.createApp(baseplateHud);
 app4.use(Quasar);
 app4.mount("#baseplate-container");
+
+// CROSSHAIR HUD
+
+const crosshairHud = {
+    data() {
+        return {
+            showCrosshair: false,
+        };
+    },
+    destroyed() {
+        window.removeEventListener("message", this.listener);
+    },
+    mounted() {
+        this.listener = window.addEventListener("message", (event) => {
+            if (event.data.action === "crosshair") {
+                this.showCrosshair = event.data.show === true;
+            }
+        });
+    },
+};
+
+const app5 = Vue.createApp(crosshairHud);
+app5.use(Quasar);
+app5.mount("#crosshair-root");

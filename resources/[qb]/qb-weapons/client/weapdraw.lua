@@ -319,7 +319,6 @@ RegisterNetEvent('qb-weapons:client:DrawWeapon', function()
                 end
             end
         end
-            end
             Wait(sleep)
             threadTimeout = threadTimeout + 1
             if currWeap == nil or currWeap == `WEAPON_UNARMED` then
@@ -328,7 +327,9 @@ RegisterNetEvent('qb-weapons:client:DrawWeapon', function()
                     break
                 end
             end
-        end\n    end)\nend)
+        end
+    end)
+end)
 
 function CeaseFire()
     CreateThread(function()
