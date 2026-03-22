@@ -1,5 +1,5 @@
-Planta rp
+Planta RP
 
-Servidor de Gta RP
+Servidor de GTA RP
 
-A ideia seria colocar o servidor top e totalmente funcional
+A ideia e deixar o servidor ao mais alto nivel e totalmente funcional

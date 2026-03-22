@@ -1,21 +1,21 @@
 local Translations = {
     notify = {
-        ["hud_settings_loaded"] = "Definições Do HUD Carregadas!",
-        ["hud_restart"] = "O HUD Está A Reiniciar!",
-        ["hud_start"] = "O HUD Está Agora Iniciada!",
-        ["hud_command_info"] = "Este comando reseta as definições do teu HUD!",
-        ["load_square_map"] = "A Carregar Mapa Quadrado...",
-        ["loaded_square_map"] = "Mapa Quadrado Carregado!",
-        ["load_circle_map"] = "A Carregar Mapa Redondo...",
-        ["loaded_circle_map"] = "Mapa Redondo Carregado!",
-        ["cinematic_on"] = "Modo Cinematic Ativado!",
-        ["cinematic_off"] = "Modo Cinematic Desativado!",
-        ["engine_on"] = "Motor Ligado!",
-        ["engine_off"] = "Motor Desligado!",
-        ["low_fuel"] = "Nível Do Combustivel Em Baixo!",
-        ["access_denied"] = "Não Estás Autorizado!",
-        ["stress_gain"] = "A Sentir-me Mais Stressado(a)!",
-        ["stress_removed"] = "A Sentir-me Mais Calmo(a)!"
+        ["hud_settings_loaded"] = "Definições do HUD carregadas!",
+        ["hud_restart"] = "O HUD está a reiniciar!",
+        ["hud_start"] = "O HUD foi iniciado!",
+        ["hud_command_info"] = "Este comando redefine as definições do HUD!",
+        ["load_square_map"] = "A carregar mapa quadrado...",
+        ["loaded_square_map"] = "Mapa quadrado carregado!",
+        ["load_circle_map"] = "A carregar mapa redondo...",
+        ["loaded_circle_map"] = "Mapa redondo carregado!",
+        ["cinematic_on"] = "Modo cinemático ativado!",
+        ["cinematic_off"] = "Modo cinemático desativado!",
+        ["engine_on"] = "Motor ligado!",
+        ["engine_off"] = "Motor desligado!",
+        ["low_fuel"] = "Nível de combustível baixo!",
+        ["access_denied"] = "Não estás autorizado!",
+        ["stress_gain"] = "Estou a sentir-me mais stressado(a)!",
+        ["stress_removed"] = "Estou a sentir-me mais calmo(a)!"
     }
 }
 
