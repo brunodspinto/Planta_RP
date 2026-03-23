@@ -1,0 +1,17 @@
+﻿[INFO] Syntax scan progress: 200/1394
+[INFO] Syntax scan progress: 400/1394
+[INFO] Syntax scan progress: 600/1394
+[INFO] Syntax scan progress: 800/1394
+[INFO] Syntax scan progress: 1000/1394
+[INFO] Syntax scan progress: 1200/1394
+[INFO] Syntax scan progress: 1394/1394
+[INFO] Syntax scan completed in 10.38s
+[INFO] Known Cfx parser mismatches skipped: 14
+[PASS] compiles all resource lua files after FiveM hash literal sanitization
+[PASS] shows crosshair when player starts aiming with weapon
+[PASS] does not trigger event when aim state is unchanged
+[PASS] forces hide crosshair while paused if it was visible
+[PASS] keeps idle sleep when player has no weapon
+
+Result: 5 passed, 0 failed
+EXIT_CODE=0

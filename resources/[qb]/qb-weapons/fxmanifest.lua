@@ -16,6 +16,7 @@ client_scripts {
     'client/main.lua',
     'client/recoil.lua',
     'client/weapdraw.lua',
+    'client/aiming_logic.lua',
     'client/aiming.lua',
 }
 
