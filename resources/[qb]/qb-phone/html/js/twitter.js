@@ -1,4 +1,4 @@
-var CurrentTwitterTab = "twitter-home"
+﻿var CurrentTwitterTab = "twitter-home"
 var HashtagOpen = false;
 var MinimumTrending = 100;
 
@@ -228,7 +228,7 @@ $(document).on('click', '#send-tweet', function(e){
         })
         QB.Phone.Animations.TopSlideUp(".twitter-new-tweet-tab", 450, -120);
     } else {
-        QB.Phone.Notifications.Add("fab fa-twitter", "Twitter", "Fill a message!", "#1DA1F2");
+        QB.Phone.Notifications.Add("fab fa-twitter", "Twitter", "Preenche a mensagem!", "#1DA1F2");
     };
     $('#tweet-new-url').val("");
     $("#tweet-new-message").val("");
@@ -281,7 +281,7 @@ function CopyMentionTag(elem) {
     var $temp = $("<input>");
     $("body").append($temp);
     $temp.val($(elem).data('mentiontag')).select();
-    QB.Phone.Notifications.Add("fab fa-twitter", "Twitter", $(elem).data('mentiontag')+ " copied!", "rgb(27, 149, 224)", 1250);
+    QB.Phone.Notifications.Add("fab fa-twitter", "Twitter", $(elem).data('mentiontag')+ " copiado!", "rgb(27, 149, 224)", 1250);
     document.execCommand("copy");
     $temp.remove();
 }
@@ -358,3 +358,4 @@ $(document).on('click', '.twitter-hashtag', function(event){
     });
     HashtagOpen = true;
 });
+

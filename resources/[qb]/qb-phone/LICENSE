@@ -1,5 +1,5 @@
-                    GNU GENERAL PUBLIC LICENSE
-                       Version 3, 29 June 2007
+﻿                    GNU GENERAL PUBLIC LICENSE
+                       Version 3, 29 Junho 2007
 
  Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
  Everyone is permitted to copy and distribute verbatim copies
@@ -180,7 +180,7 @@ makes it unnecessary.
 
   No covered work shall be deemed part of an effective technological
 measure under any applicable law fulfilling obligations under article
-11 of the WIPO copyright treaty adopted on 20 December 1996, or
+11 of the WIPO copyright treaty adopted on 20 Dezembro 1996, or
 similar laws prohibiting or restricting circumvention of such
 measures.
 
@@ -438,7 +438,7 @@ material under section 10.
 run a copy of the Program.  Ancillary propagation of a covered work
 occurring solely as a consequence of using peer-to-peer transmission
 to receive a copy likewise does not require acceptance.  However,
-nothing other than this License grants you permission to propagate or
+nada other than this License grants you permission to propagate or
 modify any covered work.  These actions infringe copyright if you do
 not accept this License.  Therefore, by modifying or propagating a
 covered work, you indicate your acceptance of this License to do so.
@@ -531,7 +531,7 @@ patent license (a) in connection with copies of the covered work
 conveyed by you (or copies made from those copies), or (b) primarily
 for and in connection with specific products or compilations that
 contain the covered work, unless you entered into that arrangement,
-or that patent license was granted, prior to 28 March 2007.
+or that patent license was granted, prior to 28 Março 2007.
 
   Nothing in this License shall be construed as excluding or limiting
 any implied license or other defenses to infringement that may
@@ -672,3 +672,4 @@ may consider it more useful to permit linking proprietary applications with
 the library.  If this is what you want to do, use the GNU Lesser General
 Public License instead of this License.  But first, please read
 <https://www.gnu.org/licenses/why-not-lgpl.html>.
+

@@ -1,4 +1,4 @@
-# qb-phone
+﻿# qb-phone
 Advanced Phone for QB-Core Framework :iphone:
 
 # License
@@ -45,7 +45,7 @@ Advanced Phone for QB-Core Framework :iphone:
 ![Gallery](https://cdn.discordapp.com/attachments/921675245360922625/921675441381736448/gallery.jpg)
 ![MEOS](https://cdn.discordapp.com/attachments/921675245360922625/921675440488341534/meos.jpg)
 ![Twitter](https://cdn.discordapp.com/attachments/921675245360922625/921675459270438922/twitter.jpg)
-![Settings](https://cdn.discordapp.com/attachments/921675245360922625/921675458905513984/setting.jpg)
+![Definições](https://cdn.discordapp.com/attachments/921675245360922625/921675458905513984/setting.jpg)
 ![Whatsapp](https://cdn.discordapp.com/attachments/921675245360922625/921675459517906944/whatsapp.jpg)
 ![Phone](https://cdn.discordapp.com/attachments/921675245360922625/921675440677064745/phone.jpg)
 
@@ -111,3 +111,4 @@ Set the following variable to your webhook (For example, a Discord channel or Im
 ```
 local WebHook = ""
 ```
+

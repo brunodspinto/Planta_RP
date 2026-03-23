@@ -1,4 +1,4 @@
-var SelectedHousesTab = "myhouses";
+﻿var SelectedHousesTab = "myhouses";
 var CurrentHouseData = {};
 var HousesData = {};
 
@@ -149,7 +149,7 @@ $(document).on('click', '#myhouse-option-transfer-confirm', function(e){
                 });
             }, 100);
         } else {
-            QB.Phone.Notifications.Add("fas fa-home", "Houses", "This is an invalid CSN-number", "#27ae60", 2500);
+            QB.Phone.Notifications.Add("fas fa-home", "Houses", "Este número CSN é inválido", "#27ae60", 2500);
             shakeElement(".myhouse-option-transfer-container");
             $(".myhouse-option-transfer-container-citizenid").val("");
         }
@@ -178,3 +178,4 @@ $(document).on('click', '#myhouse-option-keys-back', function(e){
         left: 35+"vw"
     }, AnimationDuration);
 });
+

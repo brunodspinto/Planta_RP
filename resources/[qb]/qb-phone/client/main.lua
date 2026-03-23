@@ -26,6 +26,8 @@ PhoneData = {
     Images = {},
 }
 
+local LocalGalleryImages = {}
+
 -- Functions
 
 function string:split(delimiter)
@@ -245,8 +247,11 @@ local function LoadPhone()
         if pData.CryptoTransactions ~= nil and next(pData.CryptoTransactions) ~= nil then
             PhoneData.CryptoTransactions = pData.CryptoTransactions
         end
-        if pData.Images ~= nil and next(pData.Images) ~= nil then
+
+        if pData.Images ~= nil then
             PhoneData.Images = pData.Images
+        else
+            PhoneData.Images = {}
         end
 
         SendNUIMessage({
@@ -295,7 +300,7 @@ local function OpenPhone()
                 PhoneData.GarageVehicles = vehicles
             end)
         else
-            QBCore.Functions.Notify("You don't have a phone", 'error')
+            QBCore.Functions.Notify('Não tens um telemóvel', 'error')
         end
     end)
 end
@@ -436,7 +441,7 @@ local function AnswerCall()
             action = 'PhoneNotification',
             PhoneNotify = {
                 title = 'Phone',
-                text = "You don't have a incoming call...",
+                text = "Não tens nenhuma chamada recebida...",
                 icon = 'fas fa-phone',
                 color = '#e84118',
             },
@@ -456,12 +461,12 @@ RegisterCommand('phone', function()
         if not PlayerData.metadata['ishandcuffed'] and not PlayerData.metadata['inlaststand'] and not PlayerData.metadata['isdead'] and not IsPauseMenuActive() then
             OpenPhone()
         else
-            QBCore.Functions.Notify('Action not available at the moment..', 'error')
+            QBCore.Functions.Notify('Ação não disponível neste momento..', 'error')
         end
     end
 end)
 
-RegisterKeyMapping('phone', 'Open Phone', 'keyboard', Config.OpenPhone)
+RegisterKeyMapping('phone', 'Abrir Telemóvel', 'keyboard', Config.OpenPhone)
 
 -- NUI Callbacks
 
@@ -835,14 +840,37 @@ RegisterNUICallback('GetTruckerData', function(_, cb)
 end)
 
 RegisterNUICallback('GetGalleryData', function(_, cb)
-    local data = PhoneData.Images
+    local data = PhoneData.Images or {}
     cb(data)
 end)
 
 RegisterNUICallback('DeleteImage', function(image, cb)
-    TriggerServerEvent('qb-phone:server:RemoveImageFromGallery', image)
-    Wait(400)
-    TriggerServerEvent('qb-phone:server:getImageFromGallery')
+    if image and image.image then
+        if IsDataUriImage(image.image) then
+            for i = #LocalGalleryImages, 1, -1 do
+                if LocalGalleryImages[i] and LocalGalleryImages[i].image == image.image then
+                    table.remove(LocalGalleryImages, i)
+                end
+            end
+
+            for i = #PhoneData.Images, 1, -1 do
+                if PhoneData.Images[i] and PhoneData.Images[i].image == image.image then
+                    table.remove(PhoneData.Images, i)
+                end
+            end
+
+            SendNUIMessage({
+                action = 'RefreshGallery',
+                Images = PhoneData.Images
+            })
+            cb(true)
+            return
+        end
+
+        TriggerServerEvent('qb-phone:server:RemoveImageFromGallery', image)
+        Wait(400)
+        TriggerServerEvent('qb-phone:server:getImageFromGallery')
+    end
     cb(true)
 end)
 
@@ -981,7 +1009,7 @@ RegisterNUICallback('FetchVehicleScan', function(_, cb)
             if QBCore.Shared.Vehicles[vehname] ~= nil then
                 result.label = QBCore.Shared.Vehicles[vehname]['name']
             else
-                result.label = 'Unknown brand..'
+                result.label = 'Marca desconhecida..'
             end
             cb(result)
         end, plate)
@@ -1194,7 +1222,7 @@ RegisterNUICallback('CanTransferMoney', function(data, cb)
             if Transferd then
                 cb({ TransferedMoney = true, NewBalance = (PlayerData.money.bank - amount) })
             else
-                SendNUIMessage({ action = 'PhoneNotification', PhoneNotify = { timeout = 3000, title = 'Bank', text = 'Account does not exist!', icon = 'fas fa-university', color = '#ff0000', }, })
+                SendNUIMessage({ action = 'PhoneNotification', PhoneNotify = { timeout = 3000, title = 'Banco', text = 'A conta não existe!', icon = 'fas fa-university', color = '#ff0000', }, })
                 cb({ TransferedMoney = false })
             end
         end, amount, iban)
@@ -1248,7 +1276,7 @@ RegisterNUICallback('SendMessage', function(data, cb)
                 }
             elseif ChatType == 'location' then
                 PhoneData.Chats[NumberKey].messages[ChatKey].messages[#PhoneData.Chats[NumberKey].messages[ChatKey].messages + 1] = {
-                    message = 'Shared Location',
+                    message = 'Localização partilhada',
                     time = ChatTime,
                     sender = PhoneData.PlayerData.citizenid,
                     type = ChatType,
@@ -1287,7 +1315,7 @@ RegisterNUICallback('SendMessage', function(data, cb)
                 }
             elseif ChatType == 'location' then
                 PhoneData.Chats[NumberKey].messages[ChatDate].messages[#PhoneData.Chats[NumberKey].messages[ChatDate].messages + 1] = {
-                    message = 'Shared Location',
+                    message = 'Localização partilhada',
                     time = ChatTime,
                     sender = PhoneData.PlayerData.citizenid,
                     type = ChatType,
@@ -1333,7 +1361,7 @@ RegisterNUICallback('SendMessage', function(data, cb)
             }
         elseif ChatType == 'location' then
             PhoneData.Chats[NumberKey].messages[ChatKey].messages[#PhoneData.Chats[NumberKey].messages[ChatKey].messages + 1] = {
-                message = 'Shared Location',
+                message = 'Localização partilhada',
                 time = ChatTime,
                 sender = PhoneData.PlayerData.citizenid,
                 type = ChatType,
@@ -1374,6 +1402,34 @@ local function SaveToInternalGallery()
     FreeMemoryForHighQualityPhoto()
 end
 
+local function IsDataUriImage(image)
+    return type(image) == 'string' and image:find('^data:image/') ~= nil
+end
+
+local function SyncImageToGallery(image)
+    if not image or image == '' then return end
+
+    if IsDataUriImage(image) then
+        local citizenId = QBCore.Functions.GetPlayerData().citizenid or 'local'
+        local newImage = {
+            citizenid = citizenId,
+            image = image,
+            date = GetGameTimer()
+        }
+        table.insert(LocalGalleryImages, 1, newImage)
+        table.insert(PhoneData.Images, 1, newImage)
+        SendNUIMessage({
+            action = 'RefreshGallery',
+            Images = PhoneData.Images
+        })
+        return
+    end
+
+    TriggerServerEvent('qb-phone:server:addImageToGallery', image)
+    Wait(400)
+    TriggerServerEvent('qb-phone:server:getImageFromGallery')
+end
+
 RegisterNUICallback('TakePhoto', function(_, cb)
     SetNuiFocus(false, false)
     CreateMobilePhone(1)
@@ -1402,27 +1458,57 @@ RegisterNUICallback('TakePhoto', function(_, cb)
                     local imageData = json.decode(fivemerrData)
                     DestroyMobilePhone()
                     CellCamActivate(false, false)
-                    TriggerServerEvent('qb-phone:server:addImageToGallery', imageData.url)
-                    Wait(400)
-                    TriggerServerEvent('qb-phone:server:getImageFromGallery')
+                    SyncImageToGallery(imageData.url)
                     cb(json.encode(imageData.url))
                 end)
             end
 
             QBCore.Functions.TriggerCallback('qb-phone:server:GetWebhook', function(hook)
-                if not hook then
-                    QBCore.Functions.Notify('Camera not setup', 'error')
+                if not hook or type(hook) ~= 'string' or not hook:find('^https?://') then
+                    -- Fallback: capture locally as a data URI so the camera still works without a webhook.
+                    exports['screenshot-basic']:requestScreenshot(function(data)
+                        if not data then
+                            QBCore.Functions.Notify('Camera not setup', 'error')
+                            DestroyMobilePhone()
+                            CellCamActivate(false, false)
+                            takePhoto = false
+                            return
+                        end
+
+                        SaveToInternalGallery()
+                        DestroyMobilePhone()
+                        CellCamActivate(false, false)
+                        SyncImageToGallery(data)
+                        cb(json.encode(data))
+                        takePhoto = false
+                    end)
                     return
                 end
 
                 exports['screenshot-basic']:requestScreenshotUpload(tostring(hook), 'files[]', function(data)
                     SaveToInternalGallery()
                     local image = json.decode(data)
+                    if not image or not image.attachments or not image.attachments[1] then
+                        exports['screenshot-basic']:requestScreenshot(function(localData)
+                            if not localData then
+                                QBCore.Functions.Notify('Falha ao enviar imagem', 'error')
+                                DestroyMobilePhone()
+                                CellCamActivate(false, false)
+                                takePhoto = false
+                                return
+                            end
+
+                            DestroyMobilePhone()
+                            CellCamActivate(false, false)
+                            SyncImageToGallery(localData)
+                            cb(json.encode(localData))
+                            takePhoto = false
+                        end)
+                        return
+                    end
                     DestroyMobilePhone()
                     CellCamActivate(false, false)
-                    TriggerServerEvent('qb-phone:server:addImageToGallery', image.attachments[1].proxy_url)
-                    Wait(400)
-                    TriggerServerEvent('qb-phone:server:getImageFromGallery')
+                    SyncImageToGallery(image.attachments[1].proxy_url)
                     cb(json.encode(image.attachments[1].proxy_url))
                     takePhoto = false
                 end)
@@ -1494,7 +1580,7 @@ end)
 
 RegisterNetEvent('qb-phone:client:TransferMoney', function(amount, newmoney)
     PhoneData.PlayerData.money.bank = newmoney
-    SendNUIMessage({ action = 'PhoneNotification', PhoneNotify = { title = 'QBank', text = '&#36;' .. amount .. ' has been added to your account!', icon = 'fas fa-university', color = '#8c7ae6', }, })
+    SendNUIMessage({ action = 'PhoneNotification', PhoneNotify = { title = 'QBank', text = '&#36;' .. amount .. ' foi adicionado à tua conta!', icon = 'fas fa-university', color = '#8c7ae6', }, })
     SendNUIMessage({ action = 'UpdateBank', NewBalance = PhoneData.PlayerData.money.bank })
 end)
 
@@ -1520,8 +1606,8 @@ RegisterNetEvent('qb-phone:client:UpdateTweets', function(src, Tweets, NewTweetD
             SendNUIMessage({
                 action = 'PhoneNotification',
                 PhoneNotify = {
-                    title = 'New Tweet (@' .. NewTweetData.firstName .. ' ' .. NewTweetData.lastName .. ')',
-                    text = 'A new tweet as been posted.',
+                    title = 'Novo Tweet (@' .. NewTweetData.firstName .. ' ' .. NewTweetData.lastName .. ')',
+                    text = 'Foi publicado um novo tweet.',
                     icon = 'fab fa-twitter',
                     color = '#1DA1F2',
                 },
@@ -1535,7 +1621,7 @@ RegisterNetEvent('qb-phone:client:UpdateTweets', function(src, Tweets, NewTweetD
                 action = 'PhoneNotification',
                 PhoneNotify = {
                     title = 'Twitter',
-                    text = 'The Tweet has been posted!',
+                    text = 'O tweet foi publicado!',
                     icon = 'fab fa-twitter',
                     color = '#1DA1F2',
                     timeout = 1000,
@@ -1595,7 +1681,7 @@ RegisterNetEvent('qb-phone-new:client:BankNotify', function(text)
     SendNUIMessage({
         action = 'PhoneNotification',
         NotifyData = {
-            title = 'Bank',
+            title = 'Banco',
             content = text,
             icon = 'fas fa-university',
             timeout = 3500,
@@ -1608,8 +1694,8 @@ RegisterNetEvent('qb-phone:client:NewMailNotify', function(MailData)
     SendNUIMessage({
         action = 'PhoneNotification',
         PhoneNotify = {
-            title = 'Mail',
-            text = 'You received a new mail from ' .. MailData.sender,
+            title = 'Correio',
+            text = 'Recebeste um novo e-mail de ' .. MailData.sender,
             icon = 'fas fa-envelope',
             color = '#ff002f',
             timeout = 1500,
@@ -1640,7 +1726,7 @@ RegisterNetEvent('qb-phone:client:UpdateAdverts', function(Adverts, LastAd)
     SendNUIMessage({
         action = 'PhoneNotification',
         PhoneNotify = {
-            title = 'Advertisement',
+            title = 'Anúncio',
             text = 'A new ad has been posted by ' .. LastAd,
             icon = 'fas fa-ad',
             color = '#ff8f1a',
@@ -1656,15 +1742,15 @@ end)
 RegisterNetEvent('qb-phone:client:BillingEmail', function(data, paid, name)
     if paid then
         TriggerServerEvent('qb-phone:server:sendNewMail', {
-            sender = 'Billing Department',
-            subject = 'Invoice Paid',
-            message = 'Invoice Has Been Paid From ' .. name .. ' In The Amount Of $' .. data.amount,
+            sender = 'Departamento de faturação',
+            subject = 'Fatura paga',
+            message = 'A fatura foi paga por ' .. name .. ' no valor de $' .. data.amount,
         })
     else
         TriggerServerEvent('qb-phone:server:sendNewMail', {
-            sender = 'Billing Department',
-            subject = 'Invoice Declined',
-            message = 'Invoice Has Been Declined From ' .. name .. ' In The Amount Of $' .. data.amount,
+            sender = 'Departamento de faturação',
+            subject = 'Fatura recusada',
+            message = 'A fatura foi recusada por ' .. name .. ' no valor de $' .. data.amount,
         })
     end
 end)
@@ -1735,7 +1821,7 @@ RegisterNetEvent('qb-phone:client:GetCalled', function(CallerNumber, CallId, Ano
     }
 
     if AnonymousCall then
-        CallData.name = 'Anonymous'
+        CallData.name = 'Anónimo'
     end
 
     PhoneData.CallData.CallType = 'incoming'
@@ -1828,7 +1914,7 @@ RegisterNetEvent('qb-phone:client:UpdateMessages', function(ChatMessages, Sender
                     action = 'PhoneNotification',
                     PhoneNotify = {
                         title = 'Whatsapp',
-                        text = 'New message from ' .. IsNumberInContacts(SenderNumber) .. '!',
+                        text = 'Nova mensagem de ' .. IsNumberInContacts(SenderNumber) .. '!',
                         icon = 'fab fa-whatsapp',
                         color = '#25D366',
                         timeout = 1500,
@@ -1839,7 +1925,7 @@ RegisterNetEvent('qb-phone:client:UpdateMessages', function(ChatMessages, Sender
                     action = 'PhoneNotification',
                     PhoneNotify = {
                         title = 'Whatsapp',
-                        text = 'Messaged yourself',
+                        text = 'Mensagem enviada para ti próprio',
                         icon = 'fab fa-whatsapp',
                         color = '#25D366',
                         timeout = 4000,
@@ -1864,7 +1950,7 @@ RegisterNetEvent('qb-phone:client:UpdateMessages', function(ChatMessages, Sender
                 action = 'PhoneNotification',
                 PhoneNotify = {
                     title = 'Whatsapp',
-                    text = 'New message from ' .. IsNumberInContacts(SenderNumber) .. '!',
+                    text = 'Nova mensagem de ' .. IsNumberInContacts(SenderNumber) .. '!',
                     icon = 'fab fa-whatsapp',
                     color = '#25D366',
                     timeout = 3500,
@@ -1888,7 +1974,7 @@ RegisterNetEvent('qb-phone:client:UpdateMessages', function(ChatMessages, Sender
                     action = 'PhoneNotification',
                     PhoneNotify = {
                         title = 'Whatsapp',
-                        text = 'New message from ' .. IsNumberInContacts(SenderNumber) .. '!',
+                        text = 'Nova mensagem de ' .. IsNumberInContacts(SenderNumber) .. '!',
                         icon = 'fab fa-whatsapp',
                         color = '#25D366',
                         timeout = 1500,
@@ -1899,7 +1985,7 @@ RegisterNetEvent('qb-phone:client:UpdateMessages', function(ChatMessages, Sender
                     action = 'PhoneNotification',
                     PhoneNotify = {
                         title = 'Whatsapp',
-                        text = 'Messaged yourself',
+                        text = 'Mensagem enviada para ti próprio',
                         icon = 'fab fa-whatsapp',
                         color = '#25D366',
                         timeout = 4000,
@@ -1924,7 +2010,7 @@ RegisterNetEvent('qb-phone:client:UpdateMessages', function(ChatMessages, Sender
                 action = 'PhoneNotification',
                 PhoneNotify = {
                     title = 'Whatsapp',
-                    text = 'New message from ' .. IsNumberInContacts(SenderNumber) .. '!',
+                    text = 'Nova mensagem de ' .. IsNumberInContacts(SenderNumber) .. '!',
                     icon = 'fab fa-whatsapp',
                     color = '#25D366',
                     timeout = 3500,
@@ -2065,7 +2151,7 @@ RegisterNetEvent('qb-phone:client:AnswerCall', function()
             action = 'PhoneNotification',
             PhoneNotify = {
                 title = 'Phone',
-                text = "You don't have a incoming call...",
+                text = "Não tens nenhuma chamada recebida...",
                 icon = 'fas fa-phone',
                 color = '#e84118',
             },
@@ -2101,7 +2187,7 @@ end)
 
 RegisterNetEvent('qb-phone:client:GetMentioned', function(TweetMessage, AppAlerts)
     Config.PhoneApplications['twitter'].Alerts = AppAlerts
-    SendNUIMessage({ action = 'PhoneNotification', PhoneNotify = { title = 'You have been mentioned in a Tweet!', text = TweetMessage.message, icon = 'fab fa-twitter', color = '#1DA1F2', }, })
+    SendNUIMessage({ action = 'PhoneNotification', PhoneNotify = { title = 'Foste mencionado num Tweet!', text = TweetMessage.message, icon = 'fab fa-twitter', color = '#1DA1F2', }, })
     TweetMessage = { firstName = TweetMessage.firstName, lastName = TweetMessage.lastName, message = escape_str(TweetMessage.message), time = TweetMessage.time, picture = TweetMessage.picture }
     PhoneData.MentionedTweets[#PhoneData.MentionedTweets + 1] = TweetMessage
     SendNUIMessage({ action = 'RefreshAppAlerts', AppData = Config.PhoneApplications })
@@ -2109,7 +2195,16 @@ RegisterNetEvent('qb-phone:client:GetMentioned', function(TweetMessage, AppAlert
 end)
 
 RegisterNetEvent('qb-phone:refreshImages', function(images)
-    PhoneData.Images = images
+    PhoneData.Images = images or {}
+    if LocalGalleryImages[1] ~= nil then
+        for i = #LocalGalleryImages, 1, -1 do
+            table.insert(PhoneData.Images, 1, LocalGalleryImages[i])
+        end
+    end
+    SendNUIMessage({
+        action = 'RefreshGallery',
+        Images = PhoneData.Images
+    })
 end)
 
 RegisterNetEvent('qb-phone:client:CustomNotification', function(title, text, icon, color, timeout) -- Send a PhoneNotification to the phone from anywhere
@@ -2160,3 +2255,5 @@ CreateThread(function()
         end
     end
 end)
+
+

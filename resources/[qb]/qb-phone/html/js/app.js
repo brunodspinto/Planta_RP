@@ -1,4 +1,4 @@
-QB = {}
+﻿QB = {}
 QB.Phone = {}
 QB.Screen = {}
 QB.Phone.Functions = {}
@@ -197,7 +197,7 @@ $(document).on('click', '.phone-application', function(e){
                         $(".house-app-mykeys-container").html("");
                         if (Keys.length > 0) {
                             $.each(Keys, function(i, key){
-                                var elem = '<div class="mykeys-key" id="keyid-'+i+'"><span class="mykeys-key-label">' + key.HouseData.adress + '</span> <span class="mykeys-key-sub">Click to set GPS</span> </div>';
+                                var elem = '<div class="mykeys-key" id="keyid-'+i+'"><span class="mykeys-key-label">' + key.HouseData.adress + '</span> <span class="mykeys-key-sub">Clique para definir GPS</span> </div>';
                                 $(".house-app-mykeys-container").append(elem);
                                 $("#keyid-"+i).data('KeyData', key);
                             });
@@ -235,7 +235,7 @@ $(document).on('click', '.phone-application', function(e){
         }
     } else {
         if (PressedApplication != null){
-            QB.Phone.Notifications.Add("fas fa-exclamation-circle", "System", QB.Phone.Data.Applications[PressedApplication].tooltipText+" is not available!")
+            QB.Phone.Notifications.Add("fas fa-exclamation-circle", "System", QB.Phone.Data.Applications[PressedApplication].tooltipText+" não está disponível!")
         }
     }
 });
@@ -680,9 +680,15 @@ $(document).ready(function(){
                     SetupRaces(Races);
                 });
                 break;
+            case "RefreshGallery":
+                if (QB.Phone.Data.currentApplication == "gallery") {
+                    setUpGalleryData(event.data.Images);
+                }
+                break;
             case "RefreshAlerts":
                 QB.Phone.Functions.SetupAppWarnings(event.data.AppData);
                 break;
         }
     })
 });
+

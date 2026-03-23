@@ -1,8 +1,8 @@
-QB.Phone.Settings = {};
+﻿QB.Phone.Settings = {};
 QB.Phone.Settings.Background = "background"; // AQUI ESTAVA O ERRO (Tem de ser igual ao nome do ficheiro)
 QB.Phone.Settings.OpenedTab = null;
 QB.Phone.Settings.Backgrounds = {
-    'background': { // AQUI TAMBÉM
+    'background': { // AQUI TAMBÃ‰M
         label: "Fundo Planta RP"
     }
 };
@@ -28,9 +28,9 @@ $(document).on('click', '.settings-app-tab', function(e){
         checkBoxes.prop("checked", QB.Phone.Data.AnonymousCall);
 
         if (!QB.Phone.Data.AnonymousCall) {
-            $("#numberrecognition > p").html('Off');
+            $("#numberrecognition > p").html('Desligado');
         } else {
-            $("#numberrecognition > p").html('On');
+            $("#numberrecognition > p").html('Ligado');
         }
     }
 });
@@ -43,9 +43,9 @@ $(document).on(
         // Get the title of the clicked element
         var title = "";
         if ($(this).attr("id") == "phoneNumberSelect") {
-            title = "Phone Number";
+            title = "Número de telemóvel";
         } else {
-            title = "Serial Number";
+            title = "Número de série";
         }
 
         // get the result id of myPhoneNumber or mySerialNumber
@@ -59,7 +59,7 @@ $(document).on(
             text: function () {
                 QB.Phone.Notifications.Add(
                     "fas fa-phone",
-                    "Copied " + title + "!",
+                    "Copiado " + title + "!",
                     textToCopy
                 );
                 return textToCopy;
@@ -73,11 +73,11 @@ $(document).on('click', '#accept-background', function(e){
     var hasCustomBackground = QB.Phone.Functions.IsBackgroundCustom();
 
     if (hasCustomBackground === false) {
-        QB.Phone.Notifications.Add("fas fa-paint-brush", "Settings", QB.Phone.Settings.Backgrounds[QB.Phone.Settings.Background].label+" is set!")
+        QB.Phone.Notifications.Add("fas fa-paint-brush", "Definições", QB.Phone.Settings.Backgrounds[QB.Phone.Settings.Background].label+" definido!")
         QB.Phone.Animations.TopSlideUp(".settings-"+QB.Phone.Settings.OpenedTab+"-tab", 200, -100);
         $(".phone-background").css({"background-image":"url('/html/img/backgrounds/"+QB.Phone.Settings.Background+".png')"})
     } else {
-        QB.Phone.Notifications.Add("fas fa-paint-brush", "Settings", "Personal background set!")
+        QB.Phone.Notifications.Add("fas fa-paint-brush", "Definições", "Fundo personalizado definido!")
         QB.Phone.Animations.TopSlideUp(".settings-"+QB.Phone.Settings.OpenedTab+"-tab", 200, -100);
         $(".phone-background").css({"background-image":"url('"+QB.Phone.Settings.Background+"')"});
     }
@@ -91,7 +91,7 @@ QB.Phone.Functions.LoadMetaData = function(MetaData) {
     if (MetaData.background !== null && MetaData.background !== undefined) {
         QB.Phone.Settings.Background = MetaData.background;
     } else {
-        QB.Phone.Settings.Background = "background"; // AQUI TAMBÉM (Fallback se não houver meta)
+        QB.Phone.Settings.Background = "background"; // AQUI TAMBÃ‰M (Fallback se nÃ£o houver meta)
     }
 
     var hasCustomBackground = QB.Phone.Functions.IsBackgroundCustom();
@@ -172,11 +172,11 @@ $(document).on('click', '#accept-profilepicture', function(e){
     e.preventDefault();
     var ProfilePicture = QB.Phone.Data.MetaData.profilepicture;
     if (ProfilePicture === "default") {
-        QB.Phone.Notifications.Add("fas fa-paint-brush", "Settings", "Standard avatar set!")
+        QB.Phone.Notifications.Add("fas fa-paint-brush", "Definições", "Avatar padrão definido!")
         QB.Phone.Animations.TopSlideUp(".settings-"+QB.Phone.Settings.OpenedTab+"-tab", 200, -100);
         $("[data-settingstab='profilepicture']").find('.settings-tab-icon').html('<img src="./img/default.png">');
     } else {
-        QB.Phone.Notifications.Add("fas fa-paint-brush", "Settings", "Personal avatar set!")
+        QB.Phone.Notifications.Add("fas fa-paint-brush", "Definições", "Avatar personalizado definido!")
         QB.Phone.Animations.TopSlideUp(".settings-"+QB.Phone.Settings.OpenedTab+"-tab", 200, -100);
         $("[data-settingstab='profilepicture']").find('.settings-tab-icon').html('<img src="'+ProfilePicture+'">');
     }
@@ -224,3 +224,4 @@ $(document).on('click', '#cancel-custom-profilepicture', function(e){
     e.preventDefault();
     QB.Phone.Animations.TopSlideUp(".profilepicture-custom", 200, -23);
 });
+

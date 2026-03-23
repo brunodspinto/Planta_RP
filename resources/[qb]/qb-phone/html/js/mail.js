@@ -1,4 +1,4 @@
-var OpenedMail = null;
+﻿var OpenedMail = null;
 
 $(document).on('click', '.mail', function(e){
     e.preventDefault();
@@ -92,7 +92,7 @@ QB.Phone.Functions.SetupMails = function(Mails) {
     }
 }
 
-var MonthFormatting = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+var MonthFormatting = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
 QB.Phone.Functions.SetupMail = function(MailData) {
     var date = new Date(MailData.date);
@@ -180,7 +180,7 @@ $(document).on('click', '#new-advert-submit', function(e){
         $('#advert-new-url').val("")
         $(".new-advert-textarea").val("");
     } else {
-        QB.Phone.Notifications.Add("fas fa-ad", "Advertisement", "You can\'t post an empty ad!", "#ff8f1a", 2000);
+        QB.Phone.Notifications.Add("fas fa-ad", "Anúncio", "Não podes publicar um anúncio vazio!", "#ff8f1a", 2000);
     }
 });
 
@@ -194,7 +194,7 @@ QB.Phone.Functions.RefreshAdverts = function(Adverts) {
                 ALLOWED_ATTR: []
             });
 
-            if (clean == '') { clean = 'I\'m a silly goose :/' }
+            if (clean == '') { clean = 'Mensagem inválida' }
 
             if (advert.url) {
                 var element = `<div class="advert"><span class="advert-sender">${advert.name} | ${advert.number}</span><p>${clean}</p></br><img class="advimage" src=`+advert.url +` style=" border-radius:4px; width: 95%; position:relative; z-index: 1; right:1px;height: auto; bottom:1vh;"></br><span><div class="adv-icon"></div> </span></div>`;
@@ -210,7 +210,7 @@ QB.Phone.Functions.RefreshAdverts = function(Adverts) {
         });
     } else {
         $(".advert-list").html("");
-        var element = '<div class="advert"><span class="advert-sender">There are no advertisements yet!</span></div>';
+        var element = '<div class="advert"><span class="advert-sender">Ainda não existem anúncios!</span></div>';
         $(".advert-list").append(element);
     }
 }
@@ -219,7 +219,8 @@ $(document).on('click','#adv-delete',function(e){
     e.preventDefault();
     $.post('https://qb-phone/DeleteAdvert', function(){
         setTimeout(function(){
-            QB.Phone.Notifications.Add("fas fa-ad", "Advertisement", "The ad was deleted", "#ff8f1a", 2000);
+            QB.Phone.Notifications.Add("fas fa-ad", "Anúncio", "O anúncio foi apagado", "#ff8f1a", 2000);
         },400)
     });
 })
+
