@@ -1363,6 +1363,9 @@ resources\[standalone]\PolyZone\fxmanifest.lua
 resources\[standalone]\PolyZone\server.lua
 resources\[standalone]\progressbar\client.lua
 resources\[standalone]\progressbar\fxmanifest.lua
+resources\[standalone]\prp-anticheat\config.lua
+resources\[standalone]\prp-anticheat\fxmanifest.lua
+resources\[standalone]\prp-anticheat\server\main.lua
 resources\[standalone]\safecracker\client.lua
 resources\[standalone]\safecracker\config.lua
 resources\[standalone]\safecracker\fxmanifest.lua
