@@ -9,29 +9,29 @@ local Translations = {
         no_deposit = '$%{value} Depósito necessário',
         cancelled = 'Cancelado',
         vehicle_not_correct = 'Este não é um veículo comercial!',
-        no_driver = 'Você deve ser o condutor para fazer isso...',
-        no_work_done = 'Você ainda não fez nada...',
+        no_driver = 'Tens de ser o condutor para fazer isso...',
+        no_work_done = 'Ainda não fizeste nada...',
         backdoors_not_open = 'As portas traseiras do veículo não estão abertas',
-        get_out_vehicle = 'Você deve sair do veículo para executar esta ação',
-        too_far_from_trunk = 'Você deve pegar as caixas do porta-malas do seu veículo',
-        too_far_from_delivery = 'Você deve estar mais perto do ponto de entrega'
+        get_out_vehicle = 'Tens de sair do veículo para executar esta ação',
+        too_far_from_trunk = 'Tens de pegar nas caixas da bagageira do teu veículo',
+        too_far_from_delivery = 'Tens de estar mais perto do ponto de entrega'
     },
     success = {
-        dealer_verify = 'O concessionário verifica sua licença',
-        paid_with_cash = '$%{value} Depósito pago em espécie',
+        dealer_verify = 'O concessionário verifica a tua licença',
+        paid_with_cash = '$%{value} Depósito pago em numerário',
         paid_with_bank = '$%{value} Depósito pago via banco',
-        refund_to_cash = '$%{value} Depósito pago em espécie',
-        you_earned = 'Você ganhou $%{value}',
-        payslip_time = 'Você visitou todas as lojas... É hora de seu holerite!',
+        refund_to_cash = '$%{value} Depósito devolvido em numerário',
+        you_earned = 'Ganhaste $%{value}',
+        payslip_time = 'Visitaste todas as lojas... Está na hora do teu recibo de vencimento!',
     },
     mission = {
-        store_reached = 'Loja alcançada, pegue um cofre com [E] e entregue ao marcador',
-        take_box = 'Pegue um cofre de produtos',
-        deliver_box = 'Entregue um cofre de produtos',
-        another_box = 'Pegue outro cofre de produtos',
-        goto_next_point = 'Você entregou todos os produtos, vá para o próximo ponto',
-        return_to_station = 'Você entregou todos os produtos, retorne à estação',
-        job_completed = 'Você completou sua rota'
+        store_reached = 'Loja alcançada, pega numa caixa com [E] e entrega no marcador',
+        take_box = 'Pega numa caixa de produtos',
+        deliver_box = 'Entrega uma caixa de produtos',
+        another_box = 'Pega noutra caixa de produtos',
+        goto_next_point = 'Entregaste todos os produtos, vai para o próximo ponto',
+        return_to_station = 'Entregaste todos os produtos, regressa à estação',
+        job_completed = 'Concluíste a tua rota'
     },
 }
 
