@@ -1,0 +1,2 @@
+tests\lua\unit\all-resources\lua_syntax_spec.lua
+tests\lua\unit\qb-weapons\aiming_logic_spec.lua
