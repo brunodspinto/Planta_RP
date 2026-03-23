@@ -1,9 +1,9 @@
 Config = {}
-Config.minEarn = 100
-Config.maxEarn = 450
+Config.minEarn = 450
+Config.maxEarn = 1200
 Config.RegisterEarnings = math.random(Config.minEarn, Config.maxEarn)
-Config.MinimumStoreRobberyPolice = 2
-Config.resetTime = (60 * 1000) * 30
+Config.MinimumStoreRobberyPolice = 3
+Config.resetTime = (60 * 1000) * 45
 Config.tickInterval = 1000
 Config.stickyNoteChance = 10 -- Percent chance to get the safe code from a cash register
 
