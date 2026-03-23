@@ -86,7 +86,7 @@ Config.Products = {
     ['blackmarket'] = { -- Mercado Negro
         { name = 'security_card_01',  price = 18000, amount = 50 },
         { name = 'security_card_02',  price = 23000, amount = 50 },
-        { name = 'advanced_lockpick', price = 7500,  amount = 50 },
+        { name = 'advancedlockpick', price = 7500,  amount = 50 },
         { name = 'electronickit',     price = 14000, amount = 50 },
         { name = 'gatecrack',         price = 16000, amount = 50 },
         { name = 'thermite',          price = 17500, amount = 50 },
