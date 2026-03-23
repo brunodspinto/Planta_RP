@@ -154,7 +154,7 @@ Locales["pt-PT"] = {
     outfitManagement = {
         title = "Gestão de Conjuntos",
         jobText = "Gerir conjuntos de Trabalho",
-        gangText = "Gerir conjuntos de Gangue"
+        gangText = "Gerir conjuntos de Gang"
     },
     cancelled = {
         title = "Personalização Cancelada",
@@ -313,7 +313,7 @@ Locales["pt-PT"] = {
             title = "Abre o menu de roupas de trabalho"
         },
         gangoutfits = {
-            title = "Abre o menu de roupas de gangue"
+            title = "Abre o menu de roupa de gang"
         },
         bossmanagedoutfits = {
             title = "Abre o menu de gestão de roupas de chefe"
@@ -321,7 +321,7 @@ Locales["pt-PT"] = {
     },
     textUI = {
         clothing = "Loja de Roupa - Preço: %d€",
-        barber = "Barbeiro - Preço: %d€",
+        barber = "Barbearia - Preço: %d€",
         tattoo = "Loja de Tatuagens - Preço: %d€",
         surgeon = "Cirurgião Plástico - Preço: %d€",
         clothingRoom = "Vestiário",
