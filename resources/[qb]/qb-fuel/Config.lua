@@ -8,9 +8,9 @@ Config.SyncFuelBetweenPlayers = true         -- Sync fuel between players
 Config.FuelSyncTime = 10                     -- Time between syncs in seconds
 
 Config.MoneyType = 'cash'       -- Money type to use for the fuel transactions
-Config.FuelPrice = 5            -- Price of the fuel per litre
+Config.FuelPrice = 11           -- Price of the fuel per litre
 
-Config.JerryCanCost = 100                                                   -- Cost of the Jerry Can
+Config.JerryCanCost = 450                                                   -- Cost of the Jerry Can
 Config.JerryCanLitre = 40                                                   -- Litres of the Jerry Can
 Config.JerryCanRefillCost = Config.FuelPrice * Config.JerryCanLitre         -- Cost of the Jerry Can Rifill
 

@@ -14,9 +14,9 @@ Config.NavWeap = `WEAPON_MICROSMG` -- Weapon for navigator to spawn with
 Config.TimeToBlow = 30 -- bomb detonation time after planting, in seconds
 Config.ActivePolice = 2 -- needed policemen to activate the mission
 Config.Payout = {
-    Min = 250, -- Min reward payout
-    Max = 450 -- Max reward payout
+    Min = 3500, -- Min reward payout
+    Max = 6500 -- Max reward payout
 }
-Config.ActivationCost = 500 -- how much is the activation of the mission (clean from the bank)
+Config.ActivationCost = 4000 -- how much is the activation of the mission (clean from the bank)
 Config.Currency = "$"
 Config.ResetTimer = 600 -- cooldown for mission in seconds

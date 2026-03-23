@@ -31,13 +31,13 @@ Config = {
         --},
     },
     UseTarget = GetConvar('UseTarget', 'false') == 'true', -- Use qb-target interactions (don't change this, go to your server.cfg and add setr UseTarget true)
-    PoliceCallChance = 99,                                 --in percentage (if 99, theres the 99% to call the police)
+    PoliceCallChance = 65,                                 --in percentage (if 99, theres the 99% to call the police)
 
     -- Shop Config
     Products = {
         [1] = {
             name = 'weed_whitewidow',
-            price = 15,
+            price = 90,
             amount = 150,
             info = {},
             type = 'item',
@@ -46,7 +46,7 @@ Config = {
         },
         [2] = {
             name = 'weed_skunk',
-            price = 15,
+            price = 95,
             amount = 150,
             info = {},
             type = 'item',
@@ -55,7 +55,7 @@ Config = {
         },
         [3] = {
             name = 'weed_purplehaze',
-            price = 15,
+            price = 100,
             amount = 150,
             info = {},
             type = 'item',
@@ -64,7 +64,7 @@ Config = {
         },
         [4] = {
             name = 'weed_ogkush',
-            price = 15,
+            price = 105,
             amount = 150,
             info = {},
             type = 'item',
@@ -73,7 +73,7 @@ Config = {
         },
         [5] = {
             name = 'weed_amnesia',
-            price = 15,
+            price = 110,
             amount = 150,
             info = {},
             type = 'item',
@@ -82,7 +82,7 @@ Config = {
         },
         [6] = {
             name = 'weed_whitewidow_seed',
-            price = 15,
+            price = 120,
             amount = 150,
             info = {},
             type = 'item',
@@ -91,7 +91,7 @@ Config = {
         },
         [7] = {
             name = 'weed_skunk_seed',
-            price = 15,
+            price = 130,
             amount = 150,
             info = {},
             type = 'item',
@@ -100,7 +100,7 @@ Config = {
         },
         [8] = {
             name = 'weed_purplehaze_seed',
-            price = 15,
+            price = 140,
             amount = 150,
             info = {},
             type = 'item',
@@ -109,7 +109,7 @@ Config = {
         },
         [9] = {
             name = 'weed_ogkush_seed',
-            price = 15,
+            price = 150,
             amount = 150,
             info = {},
             type = 'item',
@@ -118,7 +118,7 @@ Config = {
         },
         [10] = {
             name = 'weed_amnesia_seed',
-            price = 15,
+            price = 160,
             amount = 150,
             info = {},
             type = 'item',
@@ -135,40 +135,40 @@ Config = {
 
     DrugsPrice = {
         ['weed_whitewidow'] = {
-            min = 15,
-            max = 24,
+            min = 120,
+            max = 180,
         },
         ['weed_ogkush'] = {
-            min = 15,
-            max = 28,
+            min = 130,
+            max = 200,
         },
         ['weed_skunk'] = {
-            min = 15,
-            max = 31,
+            min = 140,
+            max = 210,
         },
         ['weed_amnesia'] = {
-            min = 18,
-            max = 34,
+            min = 150,
+            max = 230,
         },
         ['weed_purplehaze'] = {
-            min = 18,
-            max = 37,
+            min = 160,
+            max = 240,
         },
         ['weed_ak47'] = {
-            min = 18,
-            max = 40,
+            min = 170,
+            max = 260,
         },
         ['crack_baggy'] = {
-            min = 18,
-            max = 34,
+            min = 190,
+            max = 280,
         },
         ['cokebaggy'] = {
-            min = 18,
-            max = 37,
+            min = 200,
+            max = 300,
         },
         ['meth'] = {
-            min = 18,
-            max = 40,
+            min = 210,
+            max = 320,
         },
     },
 
@@ -184,12 +184,12 @@ Config = {
         [1] = {
             ['item'] = 'weed_brick',
             ['minrep'] = 0,
-            ['payout'] = 1000
+            ['payout'] = 5500
         },
         [2] = {
             ['item'] = 'coke_brick',
             ['minrep'] = 0,
-            ['payout'] = 1000
+            ['payout'] = 7000
         },
     },
 
