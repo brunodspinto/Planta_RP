@@ -461,3 +461,8 @@ altitude {
 .speedometer-container, .car-stats, .vehicle-container {
     display: none !important;
 }
+
+/* Esconde o velocímetro atual do qb-hud (ao lado do mapa) */
+#veh-container {
+    display: none !important;
+}
