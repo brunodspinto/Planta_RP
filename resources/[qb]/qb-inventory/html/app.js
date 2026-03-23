@@ -44,10 +44,24 @@ const InventoryContainer = Vue.createApp({
         shouldCenterInventory() {
             return this.isOtherInventoryEmpty;
         },
+        playerUsedSlots() {
+            return Object.keys(this.playerInventory).length;
+        },
+        otherUsedSlots() {
+            return Object.keys(this.otherInventory).length;
+        },
     },
     watch: {
         transferAmount(newVal) {
-            if (newVal !== null && newVal < 1) this.transferAmount = 1;
+            if (newVal === null || Number.isNaN(newVal)) return;
+            const parsed = Math.floor(Number(newVal));
+            if (parsed < 1) {
+                this.transferAmount = 1;
+                return;
+            }
+            if (parsed !== newVal) {
+                this.transferAmount = parsed;
+            }
         },
     },
     methods: {
@@ -198,6 +212,13 @@ const InventoryContainer = Vue.createApp({
         },
         clearTransferAmount() {
             this.transferAmount = null;
+        },
+        setTransferAmountPreset(value) {
+            if (value === "all") {
+                this.transferAmount = null;
+                return;
+            }
+            this.transferAmount = Math.max(1, Number(value));
         },
         getItemInSlot(slot, inventoryType) {
             if (inventoryType === "player") {
