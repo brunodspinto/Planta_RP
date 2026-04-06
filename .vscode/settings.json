@@ -1,0 +1,18 @@
+{
+  "Lua.runtime.version": "Lua 5.4",
+  "Lua.workspace.checkThirdParty": false,
+  "Lua.diagnostics.enable": false,
+  "Lua.workspace.ignoreDir": [
+    "cache",
+    "cache/**"
+  ],
+  "Lua.diagnostics.disable": [
+    "undefined-global"
+  ],
+  "files.watcherExclude": {
+    "**/cache/**": true
+  },
+  "search.exclude": {
+    "**/cache/**": true
+  }
+}

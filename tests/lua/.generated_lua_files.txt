@@ -379,6 +379,7 @@ resources\[qb]\qb-diving\locales\fr.lua
 resources\[qb]\qb-diving\locales\is.lua
 resources\[qb]\qb-diving\locales\it.lua
 resources\[qb]\qb-diving\locales\nl.lua
+resources\[qb]\qb-diving\locales\pt.lua
 resources\[qb]\qb-diving\locales\pt-br.lua
 resources\[qb]\qb-diving\locales\tr.lua
 resources\[qb]\qb-diving\server\main.lua
@@ -642,6 +643,7 @@ resources\[qb]\qb-newsjob\locales\en.lua
 resources\[qb]\qb-newsjob\locales\es.lua
 resources\[qb]\qb-newsjob\locales\fr.lua
 resources\[qb]\qb-newsjob\locales\nl.lua
+resources\[qb]\qb-newsjob\locales\pt.lua
 resources\[qb]\qb-newsjob\locales\pt-br.lua
 resources\[qb]\qb-newsjob\server\main.lua
 resources\[qb]\qb-pawnshop\client\main.lua
@@ -748,6 +750,7 @@ resources\[qb]\qb-recyclejob\locales\de.lua
 resources\[qb]\qb-recyclejob\locales\en.lua
 resources\[qb]\qb-recyclejob\locales\es.lua
 resources\[qb]\qb-recyclejob\locales\nl.lua
+resources\[qb]\qb-recyclejob\locales\pt.lua
 resources\[qb]\qb-recyclejob\locales\pt-br.lua
 resources\[qb]\qb-recyclejob\server\main.lua
 resources\[qb]\qb-scoreboard\client.lua
@@ -762,6 +765,7 @@ resources\[qb]\qb-scrapyard\locales\en.lua
 resources\[qb]\qb-scrapyard\locales\es.lua
 resources\[qb]\qb-scrapyard\locales\fr.lua
 resources\[qb]\qb-scrapyard\locales\nl.lua
+resources\[qb]\qb-scrapyard\locales\pt.lua
 resources\[qb]\qb-scrapyard\locales\pt-br.lua
 resources\[qb]\qb-scrapyard\locales\tr.lua
 resources\[qb]\qb-scrapyard\server\main.lua
@@ -850,6 +854,7 @@ resources\[qb]\qb-storerobbery\locales\en.lua
 resources\[qb]\qb-storerobbery\locales\es.lua
 resources\[qb]\qb-storerobbery\locales\fr.lua
 resources\[qb]\qb-storerobbery\locales\nl.lua
+resources\[qb]\qb-storerobbery\locales\pt.lua
 resources\[qb]\qb-storerobbery\locales\pt-br.lua
 resources\[qb]\qb-storerobbery\server\main.lua
 resources\[qb]\qb-streetraces\client\main.lua
@@ -892,6 +897,7 @@ resources\[qb]\qb-towjob\locales\fi.lua
 resources\[qb]\qb-towjob\locales\fr.lua
 resources\[qb]\qb-towjob\locales\nl.lua
 resources\[qb]\qb-towjob\locales\pl.lua
+resources\[qb]\qb-towjob\locales\pt.lua
 resources\[qb]\qb-towjob\locales\pt-br.lua
 resources\[qb]\qb-towjob\locales\ro.lua
 resources\[qb]\qb-towjob\server\main.lua
@@ -1393,5 +1399,6 @@ resources\[voice]\qb-radio\locales\de.lua
 resources\[voice]\qb-radio\locales\en.lua
 resources\[voice]\qb-radio\locales\es.lua
 resources\[voice]\qb-radio\locales\nl.lua
+resources\[voice]\qb-radio\locales\pt.lua
 resources\[voice]\qb-radio\locales\pt-br.lua
 resources\[voice]\qb-radio\server.lua
