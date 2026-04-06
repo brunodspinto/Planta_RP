@@ -3,8 +3,8 @@ resources\[cfx-default]\[gamemodes]\[maps]\fivem-map-hipster\fxmanifest.lua
 resources\[cfx-default]\[gamemodes]\[maps]\fivem-map-hipster\map.lua
 resources\[cfx-default]\[gamemodes]\[maps]\fivem-map-skater\fxmanifest.lua
 resources\[cfx-default]\[gamemodes]\[maps]\fivem-map-skater\map.lua
-resources\[cfx-default]\[gamemodes]\[maps]\redm-map-one\fxmanifest.lua
-resources\[cfx-default]\[gamemodes]\[maps]\redm-map-one\map.lua
+resources\[cfx-default]\[gamemodes]\[maps]\redm-map-one.disabled\fxmanifest.lua
+resources\[cfx-default]\[gamemodes]\[maps]\redm-map-one.disabled\map.lua
 resources\[cfx-default]\[gamemodes]\basic-gamemode\basic_client.lua
 resources\[cfx-default]\[gamemodes]\basic-gamemode\fxmanifest.lua
 resources\[cfx-default]\[gameplay]\[examples]\money\client.lua

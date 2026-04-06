@@ -11,9 +11,17 @@ Config.AdminAce = 'group.admin'
 
 Config.Punishment = {
     Enabled = true,
+    UsePoints = false,
     KickAtPoints = 12,
     DecayEveryMinutes = 15,
-    DecayAmount = 2
+    DecayAmount = 2,
+    KickOnDetection = {
+        BlacklistedEvents = true,
+        ExplosionBlacklisted = false,
+        ExplosionSpam = false,
+        EntitySpam = false,
+        MonitoredEventSpam = false
+    }
 }
 
 Config.Detections = {
@@ -49,7 +57,7 @@ Config.Detections = {
     Explosion = {
         Enabled = true,
         WindowSeconds = 10,
-        MaxPerWindow = 8,
+        MaxPerWindow = 20,
         PointsForSpam = 2,
         BlacklistedTypes = {
             [0] = true,
@@ -61,15 +69,16 @@ Config.Detections = {
             [32] = true
         },
         PointsForBlacklistedType = 4,
-        CancelBlacklisted = true
+        CancelBlacklisted = false
     },
 
     EntitySpam = {
         Enabled = true,
         WindowSeconds = 10,
-        MaxPerWindow = 35,
+        MaxPerWindow = 180,
+        GraceAfterJoinSeconds = 120,
         PointsForSpam = 2,
-        CancelWhenExceeded = true
+        CancelWhenExceeded = false
     },
 
     -- Monitora eventos legitimos para detectar spam anormal.

@@ -22,7 +22,9 @@ Anticheat gratuito e leve para FiveM/QBCore com foco em validacao no servidor.
 Arquivo: `resources/[standalone]/prp-anticheat/config.lua`
 
 - `Config.Logging.Webhook`: URL do webhook do Discord para alertas.
+- `Config.Punishment.UsePoints`: `false` para modo sem pontos (padrao recomendado).
 - `Config.Punishment.KickAtPoints`: pontos para kick automatico.
+- `Config.Punishment.KickOnDetection`: define quais deteccoes devem dar kick direto.
 - `Config.Detections.MonitoredEvents`: eventos do teu servidor para limitar spam.
 
 Exemplo de monitoramento de evento legitimo:
