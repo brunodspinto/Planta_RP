@@ -12,6 +12,12 @@
   "files.watcherExclude": {
     "**/cache/**": true
   },
+  "files.associations": {
+    ".luacov": "lua",
+    ".luacheckrc": "lua",
+    ".busted": "lua",
+    "*.rockspec": "lua"
+  },
   "search.exclude": {
     "**/cache/**": true
   }

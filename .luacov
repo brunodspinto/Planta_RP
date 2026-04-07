@@ -1,0 +1,12 @@
+statsfile = "tests/lua/reports/luacov.stats.out"
+reportfile = "tests/lua/reports/luacov.report.out"
+
+include = {
+    "resources",
+}
+
+exclude = {
+    "tests",
+    "cache",
+    "%.git",
+}
