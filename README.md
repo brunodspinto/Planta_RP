@@ -2,7 +2,7 @@
 
 **Servidor FiveM de roleplay avançado, construído com QBCore.**
 
-Um projeto completo de roleplay em GTA V (FiveM) que integra economia dinâmica, sistema de empregos, gangues, habitação, voz 3D e ferramentas de administração. Desenvolvido como projeto académico de Engenharia Informática (2.º ano).
+Um projeto completo de roleplay em GTA V (FiveM) que integra economia dinâmica, sistema de empregos, gangues, habitação, voz 3D e ferramentas de administração.
 
 ## 🎮 Visão Geral
 
@@ -24,11 +24,11 @@ Principais componentes:
 | Plataforma | FiveM (FXServer) |
 | Framework | QBCore |
 | Linguagem | Lua 5.4+ |
-| Base de Dados | MySQL/MariaDB (oxmysql) |
+| Base de Dados | MySQL/MariaDB |
 | Voz | pma-voice |
 | Biblioteca Utilitária | ox_lib |
 | Testes | Lua Unit Test Framework |
-| Sistema Operativo | Windows + PowerShell 5.1+ |
+| Sistema Operativo | Windows |
 
 ## Estrutura do Projeto
 
@@ -65,7 +65,7 @@ server.cfg          # Configuração principal do servidor
 
 ### 1. Clonar o repositório
 ```powershell
-git clone https://github.com/seu-username/PlantaRP.git
+git clone https://github.com/paocomplanta1/PlantaRP.git
 cd PlantaRP
 ```
 
@@ -83,7 +83,7 @@ Agora edita `server.cfg` com os teus valores reais:
 | `endpoint_add_tcp` / `endpoint_add_udp` | Define o IP e porta do servidor |
 | `sv_maxclients` | Número máximo de jogadores (padrão: 48) |
 | `sv_licenseKey` | Obtém em https://keymaster.fivem.net |
-| `🎯 Executar o Servidor
+| `Executar o Servidor
 
 ### Com txAdmin (Recomendado)
 
@@ -126,18 +126,7 @@ ensure [maps]        # Mapas customizados
 ensure [meus-scripts] # Scripts próprios
 ```
 
-### 4. Revise permissões no `server.cfg`
-
-A última secção define a hierarquia:
-- `qbcore.god` → Acesso total
-- `group.admin` → Comandos administrativos
-- `qbcore.mod` → Moderadores
-
-Adiciona o teu license identifier:
-```cfg
-add_principal identifier.license:SEU_LICENSE_AQUI qbcore.god
 ```
-
 ## Executar o Servidor
 
 Com txAdmin, use o perfil deste projeto e garanta que o caminho aponta para a raiz onde está o `server.cfg`.
@@ -185,17 +174,6 @@ PlantaRP/
 4. Revisa ficheiros antes de fazer commit (`git diff`)
 5. Mantém backups regulares da BD
 
-## 🎓 Contexto Académico
-
-Este projeto foi desenvolvido como trabalho prático de **Engenharia Informática** (2.º ano) e demonstra:
-
-- Integração de múltiplas bibliotecas e frameworks
-- Desenvolvimento em Lua com padrões de production-like
-- Gestão de banco de dados MySQL
-- Arquitetura de sistemas distribuídos
-- Versionamento de código com Git
-- Testing e validação de scripts
-
 ## 📚 Recursos Úteis
 
 - [FiveM Documentation](https://aka.cfx.re/)
@@ -207,25 +185,4 @@ Este projeto foi desenvolvido como trabalho prático de **Engenharia Informátic
 
 - **FiveM** / **Cfx.re** - Plataforma base
 - **Comunidade QBCore** - Framework e recursos
-- Autores dos recursos third-party inclusos
 - Documentação da comunidade
-
----
-
-**Nota:** Este repositório contém o código-fonte e configuração de exemplo. A instalação de um servidor funcional requer chaves FiveM válidas, database MySQL e setup local adequado.
-- Evite editar recursos diretamente na pasta `cache/files` (conteúdo regenerável)
-- Faça alterações em `resources/` e mantenha versionamento limpo
-- Sempre validar sintaxe Lua antes de subir para ambiente de produção
-- Ao adicionar script novo, garantir ordem correta de `ensure` e dependências
-
-## Segurança e Boas Práticas
-
-- Não partilhar chaves de licença, API keys e connection strings reais
-- Use credenciais por ambiente (desenvolvimento, homologação, produção)
-- Restrinja permissões administrativas ao mínimo necessário
-- Mantenha backups regulares de banco e arquivos críticos
-
-## Créditos
-
-- Cfx.re/FiveM
-- Comunidade QBCore
