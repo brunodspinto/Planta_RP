@@ -1,0 +1,119 @@
+#   ____  ____   _____
+#  / __ \|  _ \ / ____|
+# | |  | | |_) | |     ___  _ __ ___
+# | |  | |  _ <| |    / _ \| '__/ _ \
+# | |__| | |_) | |___| (_) | | |  __/
+#  \___\_\____/ \_____\___/|_|  \___|
+
+## Documentacao FiveM
+## https://aka.cfx.re/server-commands
+
+## Documentacao QBCore
+## https://docs.qbcore.org
+
+## Podes editar o seguinte:
+endpoint_add_tcp "0.0.0.0:30120"
+endpoint_add_udp "0.0.0.0:30120"
+sv_maxclients 48
+set steam_webApiKey "YOUR_STEAM_WEB_API_KEY_HERE"
+sets tags "default, deployer, qbcore, qb-core"
+
+## Podes tambem editar o seguinte:
+sv_licenseKey "YOUR_FIVEM_LICENSE_KEY_HERE"
+sv_hostname "Planta RP"
+sets sv_projectName "Planta RP"
+sets sv_projectDesc "Um servidor de RP avancado com empregos, gangs, habitacao e muito mais!"
+sets locale "pt-PT" # substitui pelo codigo de idioma e localizacao pretendido, ex.: pt-PT
+load_server_icon server.png
+sv_enforceGameBuild 3095 #DLC The Chop Shop
+set resources_useSystemChat true
+set mysql_connection_string "mysql://username:password@localhost/database_name?charset=utf8mb4"
+
+# --- DISCORD WEBHOOK LOGS (separado por canais) ---
+# Cria webhooks no Discord e cola os URLs abaixo.
+# Exemplo: https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN
+set DISCORD_WEBHOOK_DEFAULT ""
+set DISCORD_WEBHOOK_SECURITY ""
+set DISCORD_WEBHOOK_ADMIN ""
+set DISCORD_WEBHOOK_ECONOMY ""
+set DISCORD_WEBHOOK_PLAYER_EVENTS ""
+set DISCORD_WEBHOOK_RP_EVENTS ""
+set DISCORD_WEBHOOK_PHONE_MEDIA ""
+
+# Branding dos logs do Discord
+set DISCORD_LOGS_BRAND_NAME "Planta RP Logs"
+# Coloca aqui o URL direto (https) da imagem/logo do Planta RP para avatar/author nos embeds
+set DISCORD_LOGS_ICON_URL ""
+
+# (Opcional) Overrides por log específico, exemplos:
+# set DISCORD_WEBHOOK_LOG_PS_ADMINMENU ""
+# set DISCORD_WEBHOOK_LOG_BANKING ""
+# set DISCORD_WEBHOOK_LOG_JOINLEAVE ""
+
+# Configuracao de voz
+setr voice_useNativeAudio true
+setr voice_useSendingRangeOnly true
+setr voice_defaultCycle "GRAVE"
+setr voice_defaultVolume 0.3
+setr voice_enableRadioAnim 1
+setr voice_syncData 1
+
+# Configuracao de idioma do QBCore
+setr qb_locale "pt"
+setr ox:locale "pt"
+setr illenium-appearance:locale "pt-PT"
+
+# UseTarget do QBCore
+setr UseTarget false
+
+# Estes recursos iniciam por defeito.
+ensure mapmanager
+ensure spawnmanager
+ensure sessionmanager
+ensure basic-gamemode
+ensure hardcap
+ensure baseevents
+ensure chat
+
+# --- DEPENDÊNCIAS IMPORTANTES ---
+ensure ox_lib
+ensure qb-core
+ensure bob74_ipl
+
+# --- RECURSOS ---
+ensure [qb]
+ensure [standalone]
+ensure [voice]
+ensure [defaultmaps]
+ensure [cars]
+ensure [maps]
+ensure [meus-scripts]
+
+# Anticheat ativo por defeito em ambiente normal
+
+# --- SCRIPTS EXTRA ---
+ensure ps-adminmenu
+ensure illenium-appearance
+
+## Permissoes ##
+# Permite comandos básicos ao grupo admin
+add_ace group.admin command allow 
+
+# --- PERMISSÕES ILLENIUM APPEARANCE (NOVO) ---
+add_ace group.admin command.skin allow
+add_ace group.admin illenium.skin allow
+
+# --- A TUA PERMISSÃO DE DEUS (USAR SEU LICENSE IDENTIFIER) ---
+# Substitui a linha seguinte com o teu license identifier pessoal
+# add_principal identifier.license:YOUR_LICENSE_IDENTIFIER_HERE qbcore.god
+
+# Recursos
+add_ace resource.qb-core command allow # Permite ao qb-core executar comandos
+
+# Deuses
+add_ace qbcore.god command allow # Permite todos os comandos
+
+# Heranca (Hierarquia de Poder)
+add_principal qbcore.god group.admin # Deus manda nos Admins
+add_principal qbcore.god qbcore.admin # Deus tem acesso de Admin QBCore
+add_principal qbcore.admin qbcore.mod # Admin manda nos Mods
