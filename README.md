@@ -43,7 +43,7 @@ Principais componentes:
 
 ### 1. Clonar o repositório
 ```powershell
-git clone https://github.com/paocomplanta1/PlantaRP.git
+git clone https://github.com/paocomplanta1/Planta_RP.git
 cd PlantaRP
 ```
 
