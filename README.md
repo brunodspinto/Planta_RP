@@ -4,20 +4,20 @@
 
 Um projeto completo de roleplay em GTA V (FiveM) que integra economia dinâmica, sistema de empregos, gangues, habitação, voz 3D e ferramentas de administração.
 
-## 🎮 Visão Geral
+## Visão Geral
 
 O servidor está organizado para funcionar com **txAdmin + FiveM Artifact**, com pilha técnica principal em **Lua** e base de dados **MySQL**.
 
 Principais componentes:
 
-- ✅ Núcleo QBCore e recursos do ecossistema oficial
-- ✅ Sistema de voz 3D (pma-voice)
-- ✅ Interface e UI responsiva
-- ✅ Mapas personalizados (bairros, lojas, locais de trabalho)
-- ✅ Scripts próprios em `[meus-scripts]`
-- ✅ Suite de testes em Lua para validação
+- Núcleo QBCore e recursos do ecossistema oficial
+- Sistema de voz 3D (pma-voice)
+- Interface e UI responsiva
+- Mapas personalizados (bairros, lojas, locais de trabalho)
+- Scripts próprios em `[meus-scripts]`
+- Suite de testes em Lua para validação
 
-## 🛠️ Pilha Técnica
+## Pilha Técnica
 
 | Componente | Tecnologia |
 |-----------|-----------|
@@ -30,7 +30,7 @@ Principais componentes:
 | Testes | Lua Unit Test Framework |
 | Sistema Operativo | Windows + PowerShell 5.1+ |
 
-## 📋 Requisitos
+## Requisitos
 
 - **Windows** com PowerShell 5.1+
 - **FiveM Artifact** atualizado (versão recomendada: atual)
@@ -39,7 +39,7 @@ Principais componentes:
 - **Lua 5.4+** no PATH (opcional, apenas para testes)
 - Chaves FiveM válidas e Steam Web API Key
 
-## 🚀 Como Começar
+## Como Começar
 
 ### 1. Clonar o repositório
 ```powershell
@@ -85,7 +85,7 @@ ensure [maps]        # Mapas personalizados
 ensure [meus-scripts] # Scripts próprios
 ```
 
-## 🎮 Executar o Servidor
+## Executar o Servidor
 
 ### Com txAdmin (Recomendado)
 
@@ -106,7 +106,7 @@ cd C:\FiveM\txData\PlantaRP
 
 **Nota:** Mantém cópias de segurança do `server.cfg` antes de editar configurações críticas.
 
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
 PlantaRP/
@@ -129,7 +129,7 @@ PlantaRP/
 └── .gitignore            # Ficheiros ignorados pelo Git
 ```
 
-## 🧪 Testes em Lua
+## Testes em Lua
 
 O projeto inclui uma suite de testes para validar sintaxe e lógica dos scripts.
 
@@ -148,30 +148,30 @@ powershell -ExecutionPolicy Bypass -File tests/run-lua-tests.ps1
 
 Útil para validar mudanças antes de enviar ao servidor em produção.
 
-## 🔐 Segurança e Boas Práticas
+## Segurança e Boas Práticas
 
-⚠️ **NÃO commites as seguintes informações:**
+**NÃO commites as seguintes informações:**
 - Chaves de licença FiveM
 - Credenciais de BD ou webhooks Discord
 - Steam Web API Keys
 - Identificadores de licença pessoais
 - Qualquer outro token ou palavra-passe
 
-✅ **O que fazer:**
+**O que fazer:**
 1. Utiliza `server.cfg.example` como modelo
 2. Cria o teu `server.cfg` local (ignorado pelo Git)
 3. Utiliza variáveis de ambiente ou sistemas de segredos para produção
 4. Revê ficheiros antes de fazer commit (`git diff`)
 5. Mantém cópias de segurança regulares da BD
 
-## 📚 Recursos Úteis
+## Recursos Úteis
 
 - [Documentação FiveM](https://aka.cfx.re/)
 - [Wiki QBCore](https://docs.qbcore.org)
 - [Guia txAdmin](https://docs.txadmin.com)
 - [Manual de Referência Lua](https://www.lua.org/manual/5.4/)
 
-## 📝 Créditos e Agradecimentos
+## Créditos e Agradecimentos
 
 - **FiveM** / **Cfx.re** - Plataforma base
 - **Comunidade QBCore** - Framework e recursos
