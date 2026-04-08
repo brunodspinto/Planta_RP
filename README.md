@@ -1,27 +1,34 @@
 # Planta RP
 
-Servidor FiveM focado em roleplay com base QBCore, incluindo recursos essenciais de economia, empregos, criminalidade, habitação, voz e administração.
+**Servidor FiveM de roleplay avançado, construído com QBCore.**
 
-## Visão Geral
+Um projeto completo de roleplay em GTA V (FiveM) que integra economia dinâmica, sistema de empregos, gangues, habitação, voz 3D e ferramentas de administração. Desenvolvido como projeto académico de Engenharia Informática (2.º ano).
 
-O projeto está organizado para rodar com txAdmin + FiveM Artifact, com stack principal em Lua e banco MySQL via oxmysql.
+## 🎮 Visão Geral
 
-Principais blocos:
+O servidor está organizado para funcionar com **txAdmin + FiveM Artifact**, com stack principal em **Lua** e base de dados **MySQL**.
 
-- Núcleo QBCore e recursos oficiais
-- Recursos de voz e interface
-- Mapas personalizados
-- Scripts próprios e standalone
-- Base de testes em Lua para validação rápida
+Principais componentes:
 
-## Stack Técnica
+- ✅ Núcleo QBCore e recursos do ecossistema oficial
+- ✅ Sistema de voz 3D (pma-voice)
+- ✅ Interface e UI responsiva
+- ✅ Mapas personalizados (bairros, lojas, locais de trabalho)
+- ✅ Scripts próprios em `[meus-scripts]`
+- ✅ Suite de testes em Lua para validação
 
-- Plataforma: FiveM (FXServer)
-- Framework: QBCore
-- Linguagem principal: Lua
-- Banco de dados: MySQL (oxmysql)
-- Voz: pma-voice
-- Biblioteca utilitária: ox_lib
+## 🛠️ Stack Técnica
+
+| Componente | Tecnologia |
+|-----------|-----------|
+| Plataforma | FiveM (FXServer) |
+| Framework | QBCore |
+| Linguagem | Lua 5.4+ |
+| Base de Dados | MySQL/MariaDB (oxmysql) |
+| Voz | pma-voice |
+| Biblioteca Utilitária | ox_lib |
+| Testes | Lua Unit Test Framework |
+| Sistema Operativo | Windows + PowerShell 5.1+ |
 
 ## Estrutura do Projeto
 
@@ -45,36 +52,91 @@ tests/
 server.cfg          # Configuração principal do servidor
 ~~~
 
-## Requisitos
+## 📋 Requisitos
 
-- Windows com PowerShell 5.1+
-- FiveM Artifact atualizado
-- txAdmin
-- MySQL/MariaDB acessível
-- Lua 5.4+ no PATH (para rodar testes)
+- **Windows** com PowerShell 5.1+
+- **FiveM Artifact** atualizado (recomendado: versão atual)
+- **txAdmin** instalado e configurado
+- **MySQL/MariaDB** acessível em rede local
+- **Lua 5.4+** no PATH (opcional, apenas para testes)
+- Chaves FiveM válidas e Steam Web API Key
 
-## Configuração Inicial
+## 🚀 Como Começar
 
-1. Ajuste as variáveis principais no arquivo `server.cfg`:
+### 1. Clonar o repositório
+```powershell
+git clone https://github.com/seu-username/PlantaRP.git
+cd PlantaRP
+```
 
-- `endpoint_add_tcp` e `endpoint_add_udp`
-- `sv_maxclients`
-- `sv_hostname`, `sv_projectName`, `sv_projectDesc`
-- `set mysql_connection_string`
-- `sv_licenseKey`
-- `steam_webApiKey`
+### 2. Configurar o servidor
 
-2. Confirme os recursos que devem iniciar com `ensure`:
+Copia o arquivo de exemplo para criar a configuração real:
+```powershell
+Copy-Item server.cfg.example server.cfg
+```
 
-- Dependências: `ox_lib`, `qb-core`, `bob74_ipl`
-- Grupos: `[qb]`, `[standalone]`, `[voice]`, `[defaultmaps]`, `[cars]`, `[maps]`
-- Extras: `ps-adminmenu`, `simple-repair`, `illenium-appearance`
+Agora edita `server.cfg` com os teus valores reais:
 
-3. Revise permissões e principals:
+| Variável | O que fazer |
+|----------|-----------|
+| `endpoint_add_tcp` / `endpoint_add_udp` | Define o IP e porta do servidor |
+| `sv_maxclients` | Número máximo de jogadores (padrão: 48) |
+| `sv_licenseKey` | Obtém em https://keymaster.fivem.net |
+| `🎯 Executar o Servidor
 
-- ACL para `group.admin`
-- Herança de permissões (`qbcore.god`, `qbcore.admin`, `qbcore.mod`)
-- Identificadores de donos/admins
+### Com txAdmin (Recomendado)
+
+1. Abre txAdmin
+2. Cria um novo "Server Profile" e aponta para a pasta raiz do projeto (onde está `server.cfg`)
+3. Inicia o servidor através da interface
+4. Verifica os logs para confirmar que `qb-core` e outros recursos iniciaram sem erros
+
+### Via Linha de Comando
+
+```powershell
+# Navega até à pasta do servidor
+cd C:\FiveM\txData\PlantaRP
+
+# Executa o artifact (exemplo, ajusta ao teu caminho)
+& "C:\FiveM\fx-server-data\run.cmd"
+```
+
+**Nota:** Mantém backups do `server.cfg` antes de editar configurações críticas.
+
+## 🧪 Testes em Lua
+
+O projeto inclui uma suite de testes para validar sintaxe e lógica dos scripts.
+
+### Como executar
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tests/run-lua-tests.ps1
+```
+
+### O que faz
+
+- ✓ Detecta interpretador Lua no PATH
+- ✓ Varre todos os ficheiros `.lua` em `resources/`
+- ✓ Executa suites de teste em `tests/lua/unit/`
+- ✓ Gera relatórios em `tests/lua/reports/`
+
+Útil para validar mudanças antes de subir ao servidor live.
+ensure [maps]        # Mapas customizados
+ensure [meus-scripts] # Scripts próprios
+```
+
+### 4. Revise permissões no `server.cfg`
+
+A última secção define a hierarquia:
+- `qbcore.god` → Acesso total
+- `group.admin` → Comandos administrativos
+- `qbcore.mod` → Moderadores
+
+Adiciona o teu license identifier:
+```cfg
+add_principal identifier.license:SEU_LICENSE_AQUI qbcore.god
+```
 
 ## Executar o Servidor
 
@@ -84,24 +146,73 @@ Também é recomendado manter backups de configuração (exemplo: `server.cfg.bk
 
 ## Testes Lua
 
-Existe uma base de testes para validar sintaxe e suites unitárias em Lua.
+Exi📁 Estrutura do Projeto
 
-### Como executar
+```
+PlantaRP/
+├── resources/
+│   ├── [qb]/              # Recursos do ecossistema QBCore
+│   ├── [standalone]/      # Recursos independentes
+│   ├── [voice]/           # Sistema de voz (pma-voice)
+│   ├── [defaultmaps]/     # Mapas padrão (hospital, prisão, etc.)
+│   ├── [cars]/            # Veículos customizados
+│   ├── [maps]/            # Mapas e locais de RP
+│   └── [meus-scripts]/    # Scripts desenvolvidos
+├── tests/
+│   ├── run-lua-tests.ps1  # Script para rodar testes
+│   └── lua/
+│       ├── test_runner.lua
+│       ├── unit/          # Suites de testes
+│       └── reports/       # Resultados dos testes
+├── server.cfg.example     # Exemplo de configuração
+├── README.md              # Este ficheiro
+└── .gitignore            # Ficheiros ignorados pelo Git
+```
 
-~~~powershell
-powershell -ExecutionPolicy Bypass -File tests/run-lua-tests.ps1
-~~~
+## 🔐 Segurança e Boas Práticas
 
-### O que o runner faz
+⚠️ **NÃO commites as seguintes informações:**
+- Chaves de licença FiveM
+- Credenciais de BD ou webhooks Discord
+- Steam Web API Keys
+- License identifiers pessoais
+- Qualquer outro token ou password
 
-- Verifica se existe interpretador Lua no PATH (ou fallback local)
-- Gera lista de arquivos Lua de `resources/`
-- Gera lista de suites em `tests/lua/unit`
-- Executa o `tests/lua/test_runner.lua`
-- Salva relatórios na pasta `tests/lua/reports`
+✅ **O que fazer:**
+1. Usa `server.cfg.example` como template
+2. Cria o teu `server.cfg` local (ignorado pelo Git)
+3. Usa variáveis de ambiente ou sistemas de secretos para produção
+4. Revisa ficheiros antes de fazer commit (`git diff`)
+5. Mantém backups regulares da BD
 
-## Convenções Operacionais
+## 🎓 Contexto Académico
 
+Este projeto foi desenvolvido como trabalho prático de **Engenharia Informática** (2.º ano) e demonstra:
+
+- Integração de múltiplas bibliotecas e frameworks
+- Desenvolvimento em Lua com padrões de production-like
+- Gestão de banco de dados MySQL
+- Arquitetura de sistemas distribuídos
+- Versionamento de código com Git
+- Testing e validação de scripts
+
+## 📚 Recursos Úteis
+
+- [FiveM Documentation](https://aka.cfx.re/)
+- [QBCore Wiki](https://docs.qbcore.org)
+- [txAdmin Guide](https://docs.txadmin.com)
+- [Lua Reference Manual](https://www.lua.org/manual/5.4/)
+
+## 📝 Créditos e Agradecimentos
+
+- **FiveM** / **Cfx.re** - Plataforma base
+- **Comunidade QBCore** - Framework e recursos
+- Autores dos recursos third-party inclusos
+- Documentação da comunidade
+
+---
+
+**Nota:** Este repositório contém o código-fonte e configuração de exemplo. A instalação de um servidor funcional requer chaves FiveM válidas, database MySQL e setup local adequado.
 - Evite editar recursos diretamente na pasta `cache/files` (conteúdo regenerável)
 - Faça alterações em `resources/` e mantenha versionamento limpo
 - Sempre validar sintaxe Lua antes de subir para ambiente de produção
