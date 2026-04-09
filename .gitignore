@@ -8,3 +8,15 @@ server
 
 # Backups e logs do txData
 *.log
+.replxx_history
+
+# Ficheiros locais e temporários comuns
+Thumbs.db
+desktop.ini
+*.tmp
+*.bak
+*.old
+*.orig
+*.swp
+*.swo
+.history/
