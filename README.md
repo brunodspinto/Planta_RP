@@ -24,7 +24,7 @@ Principais componentes:
 | Plataforma | FiveM (FXServer) |
 | Framework | QBCore |
 | Linguagem | Lua 5.4+ |
-| Base de Dados | MySQL/MariaDB |
+| Base de Dados | MySQL/MariaDB (oxmysql) |
 | Voz | pma-voice |
 | Biblioteca Utilitária | ox_lib |
 | Testes | Lua Unit Test Framework |
