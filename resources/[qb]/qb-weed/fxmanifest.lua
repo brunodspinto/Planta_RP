@@ -5,6 +5,12 @@ author 'Kakarot'
 description 'Allows players to grow weed plants in their house to harvest for items to sell'
 version '1.2.0'
 
+
+dependencies {
+    'qb-core',
+    'qb-inventory',
+}
+
 shared_scripts {
     'config.lua',
     '@qb-core/shared/locale.lua',

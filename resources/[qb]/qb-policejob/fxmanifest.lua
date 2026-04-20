@@ -5,6 +5,16 @@ author 'Kakarot'
 description 'Provides police tools, evidence, job and more functionality for players to use as a cop'
 version '1.3.5'
 
+
+dependencies {
+	'qb-banking',
+	'qb-core',
+	'qb-input',
+	'qb-inventory',
+	'qb-menu',
+	'qb-target',
+}
+
 shared_scripts {
 	'config.lua',
 	'@qb-core/shared/locale.lua',

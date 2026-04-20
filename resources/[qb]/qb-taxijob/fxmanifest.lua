@@ -5,6 +5,15 @@ author 'Kakarot'
 description 'Allows players to work as a taxi driver and pickup npcs around the map'
 version '1.2.0'
 
+
+dependencies {
+    'qb-banking',
+    'qb-core',
+    'qb-inventory',
+    'qb-menu',
+    'qb-target',
+}
+
 ui_page 'html/meter.html'
 
 shared_scripts {

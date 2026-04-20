@@ -5,6 +5,12 @@ author 'Kakarot'
 description 'Allows players to rob various stores on the map for money and items'
 version '1.2.0'
 
+
+dependencies {
+    'qb-core',
+    'qb-inventory',
+}
+
 ui_page 'html/index.html'
 
 shared_scripts {

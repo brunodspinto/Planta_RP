@@ -5,6 +5,14 @@ author 'Kakarot'
 description 'Employee management system allowing players to hire/fire other players'
 version '2.1.2'
 
+
+dependencies {
+    'qb-core',
+    'qb-inventory',
+    'qb-menu',
+    'qb-target',
+}
+
 shared_scripts {
     '@qb-core/shared/locale.lua',
     'locales/en.lua',

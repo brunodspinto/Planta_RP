@@ -5,6 +5,12 @@ author 'Kakarot'
 description 'Allows players to work as a bus driver and pickup npcs around the map'
 version '1.2.0'
 
+
+dependencies {
+    'qb-core',
+    'qb-menu',
+}
+
 shared_scripts {
     '@qb-core/shared/locale.lua',
     'locales/en.lua',

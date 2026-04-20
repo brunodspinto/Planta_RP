@@ -5,6 +5,13 @@ author 'Kakarot'
 description 'Allows players to scrap cars for money'
 version '1.2.0'
 
+
+dependencies {
+    'qb-core',
+    'qb-inventory',
+    'qb-target',
+}
+
 shared_script {
     '@PolyZone/client.lua',
     '@PolyZone/BoxZone.lua',

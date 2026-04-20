@@ -48,3 +48,11 @@ files {
 }
 
 dependency 'oxmysql'
+
+
+dependencies {
+    'progressbar',
+    'qb-banking',
+    'qb-inventory',
+    'qb-vehiclekeys',
+}

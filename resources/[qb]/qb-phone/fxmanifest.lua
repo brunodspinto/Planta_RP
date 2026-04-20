@@ -5,6 +5,15 @@ author 'Kakarot'
 description 'Allows players to access a phone to interact with various apps and features'
 version '1.3.0'
 
+
+dependencies {
+    'pma-voice',
+    'qb-banking',
+    'qb-core',
+    'qb-lapraces',
+    'screenshot-basic',
+}
+
 ui_page 'html/index.html'
 
 shared_scripts {

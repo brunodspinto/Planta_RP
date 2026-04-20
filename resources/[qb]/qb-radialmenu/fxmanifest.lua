@@ -5,6 +5,12 @@ author 'Kakarot'
 description 'Allows players quick access to a menu for various actions'
 version '1.2.0'
 
+
+dependencies {
+    'qb-core',
+    'qb-smallresources',
+}
+
 ui_page 'html/index.html'
 
 shared_scripts {

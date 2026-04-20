@@ -1,0 +1,59 @@
+# Normalizar line endings para evitar diffs ruidosos entre Windows/Linux/macOS
+# Regra geral: deteta automaticamente texto e normaliza para LF no repositório
+* text=auto eol=lf
+
+# Ficheiros textuais: forçar LF no repositório (Windows converte para CRLF no checkout)
+*.lua       text eol=lf
+*.js        text eol=lf
+*.ts        text eol=lf
+*.json      text eol=lf
+*.html      text eol=lf
+*.css       text eol=lf
+*.scss      text eol=lf
+*.md        text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.xml       text eol=lf
+*.sql       text eol=lf
+*.sh        text eol=lf
+
+# Ficheiros de configuração do FiveM
+fxmanifest.lua      text eol=lf
+__resource.lua      text eol=lf
+server.cfg          text eol=lf
+server.cfg.example  text eol=lf
+*.cfg               text eol=lf
+*.meta              text eol=lf
+
+# Scripts Windows usam CRLF obrigatoriamente
+*.ps1       text eol=crlf
+*.bat       text eol=crlf
+*.cmd       text eol=crlf
+
+# Ficheiros binários — nunca normalizar
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.ico       binary
+*.webp      binary
+*.ogg       binary
+*.mp3       binary
+*.wav       binary
+*.ytd       binary
+*.ydr       binary
+*.ydd       binary
+*.yft       binary
+*.ytyp      binary
+*.ymap      binary
+*.ymt       binary
+*.ybn       binary
+*.awc       binary
+*.gxt2      binary
+*.rpf       binary
+*.pdf       binary
+*.zip       binary
+*.rar       binary
+*.7z        binary
+*.exe       binary
+*.dll       binary

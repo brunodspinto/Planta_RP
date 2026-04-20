@@ -6,6 +6,12 @@ description "A flexible player customization script for FiveM servers."
 repository "https://github.com/iLLeniumStudios/illenium-appearance"
 version "v5.7.0"
 
+
+dependencies {
+  'qb-core',
+  'qb-target',
+}
+
 lua54 "yes"
 
 client_scripts {

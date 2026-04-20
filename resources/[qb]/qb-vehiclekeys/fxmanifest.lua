@@ -5,6 +5,13 @@ author 'Kakarot'
 description 'Manages vehicle doors and keys for players to lock/unlock them'
 version '1.3.0'
 
+
+dependencies {
+    'qb-core',
+    'qb-inventory',
+    'qb-minigames',
+}
+
 shared_scripts {
     '@qb-core/shared/locale.lua',
     'locales/en.lua',

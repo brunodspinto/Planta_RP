@@ -5,6 +5,14 @@ author 'Kakarot'
 description 'Allows players to collect garbage for money'
 version '1.2.0'
 
+
+dependencies {
+	'qb-core',
+	'qb-inventory',
+	'qb-menu',
+	'qb-target',
+}
+
 shared_scripts {
 	'@qb-core/shared/locale.lua',
 	'locales/en.lua',

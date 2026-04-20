@@ -5,6 +5,13 @@ author 'Kakarot'
 description 'Allows players to sell hotdogs to npcs for money'
 version '1.2.2'
 
+
+dependencies {
+    'qb-core',
+    'qb-minigames',
+    'qb-target',
+}
+
 ui_page 'html/ui.html'
 
 shared_scripts {

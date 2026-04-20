@@ -5,6 +5,12 @@ author 'Kakarot'
 description 'Allows players to store their vehicles in garages and withdraw job vehicles'
 version '2.0.0'
 
+
+dependencies {
+    'qb-core',
+    'qb-houses',
+}
+
 shared_scripts {
     'config.lua',
     '@qb-core/shared/locale.lua',

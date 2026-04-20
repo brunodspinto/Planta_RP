@@ -35,3 +35,9 @@ files {
 }
 
 dependency 'qb-weapons'
+
+
+dependencies {
+    'qb-core',
+    'qb-target',
+}

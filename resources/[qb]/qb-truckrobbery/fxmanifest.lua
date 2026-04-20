@@ -5,6 +5,12 @@ author 'Kakarot'
 description 'Allows players to rob specific trucks for money and items'
 version '1.2.0'
 
+
+dependencies {
+    'qb-core',
+    'qb-inventory',
+}
+
 shared_script 'config.lua'
 server_script 'server/main.lua'
 client_script 'client/main.lua'

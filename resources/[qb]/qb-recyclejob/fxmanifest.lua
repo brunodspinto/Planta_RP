@@ -5,6 +5,14 @@ author 'Kakarot'
 description 'Allows players to work in the recycling plant for money'
 version '2.2.0'
 
+
+dependencies {
+  'qb-core',
+  'qb-input',
+  'qb-menu',
+  'qb-target',
+}
+
 shared_scripts {
   '@qb-core/shared/locale.lua',
   'locales/en.lua',

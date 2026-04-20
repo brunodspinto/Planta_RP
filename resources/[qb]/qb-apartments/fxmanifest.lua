@@ -28,4 +28,8 @@ dependencies {
     'qb-core',
     'qb-interior',
     'qb-weathersync',
+
+    'qb-inventory',
+    'qb-menu',
+    'qb-target',
 }

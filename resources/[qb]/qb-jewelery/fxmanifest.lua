@@ -5,6 +5,13 @@ author 'Kakarot'
 description 'Allows players to rob jewelry stores for items to sell'
 version '1.2.0'
 
+
+dependencies {
+    'qb-core',
+    'qb-inventory',
+    'qb-target',
+}
+
 shared_scripts {
     '@qb-core/shared/locale.lua',
     'locale/en.lua',

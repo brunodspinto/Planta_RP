@@ -5,6 +5,14 @@ author 'Kakarot'
 description 'Allows players to set their vehicles on display for sale to other players'
 version '1.2.0'
 
+
+dependencies {
+    'qb-core',
+    'qb-menu',
+    'qb-phone',
+    'qb-target',
+}
+
 shared_scripts {
     'config.lua',
     '@qb-core/shared/locale.lua',

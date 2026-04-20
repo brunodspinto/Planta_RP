@@ -6,6 +6,14 @@ author 'Kakarot'
 description 'Allows players to be jailed, escape from jail and work in jail'
 version '2.1.0'
 
+
+dependencies {
+    'qb-core',
+    'qb-inventory',
+    'qb-minigames',
+    'qb-target',
+}
+
 shared_scripts {
     '@qb-core/shared/locale.lua',
     'locales/en.lua',

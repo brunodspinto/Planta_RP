@@ -3,7 +3,7 @@ game 'gta5'
 
 author 'Bob_74'
 description 'Load and customize your map'
-version '2.4.2'
+version '2.6.0'
 
 lua54 "yes"
 
@@ -105,6 +105,8 @@ client_scripts {
     -- DLC Diamond Casino (Requires forced build 2060 or higher)
     , "dlc_casino/casino.lua"
     , "dlc_casino/penthouse.lua"
+    , "dlc_casino/arcade.lua"
+    , "dlc_casino/arcade_basement.lua"
 
     -- DLC Cayo Perico Heist (Requires forced build 2189 or higher)
     , "dlc_cayoperico/base.lua"
@@ -161,4 +163,19 @@ client_scripts {
     , "dlc_agents/office.lua"
     , "dlc_agents/airstrip.lua"
     , "dlc_agents/hangar_door.lua"
+
+    -- DLC Money Fronts (Requires forced build 3570 or higher)
+    , "dlc_money/base.lua"
+    , "dlc_money/carwash.lua"
+    , "dlc_money/office.lua"
+    , "dlc_money/construction.lua"
+
+    -- DLC A Safehouse in the Hills (Requires forced build 3717 or higher)
+    , "dlc_mansions/base.lua"
+    , "dlc_mansions/mansion1.lua"
+    , "dlc_mansions/mansion2.lua"
+    , "dlc_mansions/mansion3.lua"
+    , "dlc_mansions/mansion_basement1.lua"
+    , "dlc_mansions/mansion_basement2.lua"
+    , "dlc_mansions/mansion_basement3.lua"
 }

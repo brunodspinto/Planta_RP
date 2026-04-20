@@ -26,3 +26,8 @@ files {
 }
 
 dependency 'PolyZone'
+
+
+dependencies {
+	'qb-core',
+}

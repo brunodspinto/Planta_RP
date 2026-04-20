@@ -5,6 +5,11 @@ author 'Kakarot'
 description 'Heads-up display letting players track their hunger, thirst, stress, and more'
 version '2.2.0'
 
+
+dependencies {
+    'qb-core',
+}
+
 shared_scripts {
     '@qb-core/shared/locale.lua',
     'locales/en.lua',

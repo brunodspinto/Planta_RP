@@ -18,3 +18,9 @@ server_scripts {
 client_script 'client/main.lua'
 
 dependency 'qb-minigames'
+
+
+dependencies {
+    'qb-core',
+    'qb-inventory',
+}

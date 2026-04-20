@@ -36,3 +36,12 @@ files {
 }
 
 dependency 'PolyZone'
+
+
+dependencies {
+    'qb-core',
+    'qb-inventory',
+    'qb-minigames',
+    'qb-target',
+    'qb-weathersync',
+}

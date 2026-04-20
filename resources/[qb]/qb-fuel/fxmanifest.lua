@@ -31,4 +31,9 @@ files {
 
 dependency 'qb-target'
 
+
+dependencies {
+	'qb-core',
+}
+
 provide 'LegacyFuel'

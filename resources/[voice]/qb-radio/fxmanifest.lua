@@ -28,4 +28,9 @@ files {
 
 dependency 'pma-voice'
 
+
+dependencies {
+  'qb-core',
+}
+
 lua54 'yes'

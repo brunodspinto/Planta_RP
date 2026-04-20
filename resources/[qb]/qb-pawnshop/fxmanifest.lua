@@ -5,6 +5,15 @@ author 'Kakarot'
 description 'Allows players to sell items for money'
 version '1.2.0'
 
+
+dependencies {
+    'qb-core',
+    'qb-input',
+    'qb-inventory',
+    'qb-menu',
+    'qb-target',
+}
+
 shared_scripts {
     '@qb-core/shared/locale.lua',
     'config.lua',

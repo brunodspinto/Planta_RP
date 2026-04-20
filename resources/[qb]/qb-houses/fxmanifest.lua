@@ -39,4 +39,10 @@ dependencies {
     'qb-core',
     'qb-interior',
     'qb-weathersync'
+,
+    'qb-banking',
+    'qb-inventory',
+    'qb-menu',
+    'qb-minigames',
+    'qb-target',
 }

@@ -5,6 +5,13 @@ author 'Kakarot'
 description 'Allows players to deposit/withdraw money from their bank/job account and create shared accounts'
 version '2.0.0'
 
+
+dependencies {
+    'qb-core',
+    'qb-inventory',
+    'qb-target',
+}
+
 shared_scripts {
     '@qb-core/shared/locale.lua',
     'locales/en.lua',

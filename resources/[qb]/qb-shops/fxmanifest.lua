@@ -5,6 +5,14 @@ author 'Kakarot'
 description 'Allows players to purchase items from various shops around the map'
 version '1.2.1'
 
+
+dependencies {
+    'qb-core',
+    'qb-inventory',
+    'qb-menu',
+    'qb-target',
+}
+
 shared_scripts {
     '@PolyZone/client.lua',
     '@PolyZone/BoxZone.lua',

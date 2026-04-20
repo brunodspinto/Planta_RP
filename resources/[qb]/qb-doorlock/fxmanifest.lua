@@ -5,6 +5,13 @@ author 'Kakarot'
 description 'Door management system allowing players to lock and unlock doors'
 version '2.0.0'
 
+
+dependencies {
+    'qb-core',
+    'qb-input',
+    'qb-minigames',
+}
+
 ui_page 'html/index.html'
 
 shared_scripts {

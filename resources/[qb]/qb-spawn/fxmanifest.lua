@@ -5,6 +5,11 @@ author 'Kakarot'
 description 'Allows players to select a spawn point from a list of available locations'
 version '1.2.0'
 
+
+dependencies {
+    'qb-core',
+}
+
 shared_scripts {
     '@qb-core/shared/locale.lua',
     'locales/en.lua',

@@ -5,6 +5,15 @@ author 'Kakarot'
 description 'Allows players to purchase vehicles and manage shops through a job'
 version '2.1.0'
 
+
+dependencies {
+    'qb-banking',
+    'qb-core',
+    'qb-input',
+    'qb-menu',
+    'qb-target',
+}
+
 shared_script {
     'config.lua',
     '@qb-core/shared/locale.lua',

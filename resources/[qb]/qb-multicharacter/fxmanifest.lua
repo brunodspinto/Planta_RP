@@ -39,4 +39,6 @@ files {
 dependencies {
     'qb-core',
     'qb-spawn'
+,
+    'qb-inventory',
 }

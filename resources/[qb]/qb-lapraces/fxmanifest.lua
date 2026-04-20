@@ -5,6 +5,11 @@ author 'Kakarot'
 description 'Allows players to create vehicle races to compete in for money'
 version '1.2.0'
 
+
+dependencies {
+    'qb-core',
+}
+
 ui_page 'html/index.html'
 
 shared_script 'config.lua'
@@ -19,6 +24,5 @@ server_scripts {
 files {
     'html/*.html',
     'html/*.css',
-    'html/*.js',
-    'html/img/*'
+    'html/*.js'
 }

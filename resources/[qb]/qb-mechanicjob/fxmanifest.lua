@@ -5,6 +5,15 @@ author 'Kakarot'
 description 'Allows players to repair/customize vehicles through a specified job'
 version '3.0.0'
 
+
+dependencies {
+    'qb-core',
+    'qb-input',
+    'qb-inventory',
+    'qb-menu',
+    'qb-target',
+}
+
 shared_scripts {
     '@qb-core/shared/locale.lua',
     'locales/en.lua',

@@ -6,6 +6,16 @@ author 'Kakarot'
 description 'Various small code snippets compiled into one resource for ease of use'
 version '1.4.0'
 
+
+dependencies {
+    'qb-core',
+    'qb-fuel',
+    'qb-inventory',
+    'qb-menu',
+    'qb-policejob',
+    'qb-target',
+}
+
 shared_scripts {
     '@qb-core/shared/locale.lua',
     'locales/en.lua',

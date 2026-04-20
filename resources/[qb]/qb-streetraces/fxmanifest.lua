@@ -5,6 +5,11 @@ author 'Kakarot'
 description 'Allows players to compete in quick vehicle races with wagers'
 version '1.3.0'
 
+
+dependencies {
+    'qb-core',
+}
+
 ui_page 'html/index.html'
 
 shared_script 'config.lua'
