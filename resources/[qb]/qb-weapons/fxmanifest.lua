@@ -9,7 +9,6 @@ version '1.2.1'
 dependencies {
     'qb-core',
     'qb-inventory',
-    'qb-phone',
 }
 
 shared_scripts {
