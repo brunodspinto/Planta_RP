@@ -468,7 +468,7 @@ local Vehicles = {
     { model = 'powersurge',      name = 'Powersurge',                    brand = 'Western',         price = 7000,    category = 'motorcycles',    type = 'bike',       shop = 'pdm' },
     { model = 'pizzaboy',        name = 'Pizza Boy',                     brand = 'Pegassi',         price = 50000,   category = 'motorcycles',    type = 'bike',       shop = 'pdm' },
     { model = '25cb1000',        name = 'CB1000',                     brand = 'Honda',         price = 80000,   category = 'motorcycles',    type = 'bike',       shop = 'pdm' },
-    { model = 'ninef',        name = 'Harley Davidson Fat Boy',                     brand = 'Harley',         price = 80000,   category = 'motorcycles',    type = 'bike',       shop = 'pdm' },
+    { model = 'hexer',        name = 'Harley Davidson Fat Boy',                     brand = 'Harley',         price = 80000,   category = 'motorcycles',    type = 'bike',       shop = 'pdm' },
     
     --- Off-Road (9)
     { model = 'bfinjection',     name = 'Bf Injection',                  brand = 'Annis',           price = 9000,    category = 'offroad',        type = 'automobile', shop = 'pdm' },
