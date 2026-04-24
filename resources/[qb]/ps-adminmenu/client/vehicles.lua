@@ -33,7 +33,10 @@ RegisterNetEvent('ps-adminmenu:client:SpawnVehicle', function(data, selectedData
     local selectedVehicle = selectedData["Vehicle"].value
     local hash = GetHashKey(selectedVehicle)
 
-    if not IsModelValid(hash) then return end
+    if not IsModelValid(hash) then
+        QBCore.Functions.Notify('Modelo não disponível: ' .. selectedVehicle, 'error', 5000)
+        return
+    end
 
     lib.requestModel(hash)
 
