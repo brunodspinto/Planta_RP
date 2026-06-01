@@ -438,7 +438,6 @@ local Vehicles = {
     { model = 'gargoyle',        name = 'Gargoyle',                      brand = 'Western',         price = 32000,   category = 'motorcycles',    type = 'bike',       shop = 'pdm' },
     { model = 'hakuchou',        name = 'Hakuchou',                      brand = 'Shitzu',          price = 17000,   category = 'motorcycles',    type = 'bike',       shop = 'pdm' },
     { model = 'hakuchou2',       name = 'Hakuchou Drag',                 brand = 'Shitzu',          price = 45000,   category = 'motorcycles',    type = 'bike',       shop = 'pdm' },
-    { model = 'hexer',           name = 'Hexer',                         brand = 'LCC',             price = 16000,   category = 'motorcycles',    type = 'bike',       shop = 'pdm' },
     { model = 'innovation',      name = 'Innovation',                    brand = 'LLC',             price = 33500,   category = 'motorcycles',    type = 'bike',       shop = 'pdm' },
     { model = 'lectro',          name = 'Lectro',                        brand = 'Principe',        price = 28000,   category = 'motorcycles',    type = 'bike',       shop = 'pdm' },
     { model = 'manchez',         name = 'Manchez',                       brand = 'Maibatsu',        price = 8300,    category = 'motorcycles',    type = 'bike',       shop = 'pdm' },

@@ -4,7 +4,10 @@ cache/
 # Ignorar configurações sensíveis
 server.cfg
 server.cfg.bkp
-server
+# Pasta do FXServer artifact, se for instalada localmente na raiz do projeto.
+# Tem de ser ancorada com '/' — sem isso, ignora 'server/' DENTRO de cada
+# recurso e parte todo o código server-side (qb-core, qb-policejob, etc.).
+/server/
 
 # Backups e logs do txData
 *.log
