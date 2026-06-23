@@ -25,7 +25,7 @@ sets sv_projectName "Planta RP"
 sets sv_projectDesc "Um servidor de RP avancado com empregos, gangs, habitacao e muito mais!"
 sets locale "pt-PT" # substitui pelo codigo de idioma e localizacao pretendido, ex.: pt-PT
 load_server_icon server.png
-sv_enforceGameBuild 3095 #DLC The Chop Shop
+sv_enforceGameBuild 3258 #DLC Bottom Dollar Bounties
 set resources_useSystemChat true
 set mysql_connection_string "mysql://username:password@localhost/database_name?charset=utf8mb4"
 

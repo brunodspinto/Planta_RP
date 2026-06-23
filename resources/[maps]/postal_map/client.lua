@@ -6,13 +6,6 @@ Citizen.CreateThread(function()
     SetMapZoomDataLevel(4, 22.3, 0.9, 0.08, 0.0, 0.0) -- Level 4
 end)
 
-Citizen.CreateThread(function()
-    while true do
-		Citizen.Wait(1)
-		if IsPedOnFoot(GetPlayerPed(-1)) then 
-			SetRadarZoom(1100)
-		elseif IsPedInAnyVehicle(GetPlayerPed(-1), true) then
-			SetRadarZoom(1100)
-		end
-    end
-end)
+-- NOTA: o radar zoom (SetRadarZoom 1100) é gerido pelo qb-hud (client.lua,
+-- thread "Minimap update"), que é o dono único. Tinha aqui um loop per-frame
+-- que competia com o qb-hud e fazia o radar piscar — removido de propósito.

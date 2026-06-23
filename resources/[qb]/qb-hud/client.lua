@@ -1023,10 +1023,13 @@ CreateThread(function()
 end)
 
 -- Minimap update
+-- Dono único do radar zoom no servidor. O postal_map (mapa de codigos
+-- postais) depende deste valor estar em 1100 — não voltar a pôr um loop de
+-- SetRadarZoom no postal_map, senão os dois competem e o radar pisca.
 CreateThread(function()
     while true do
         SetBigmapActive(false, false)
-        SetRadarZoom(1000)
+        SetRadarZoom(1100)
         Wait(500)
     end
 end)
