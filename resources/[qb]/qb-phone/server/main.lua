@@ -395,26 +395,32 @@ QBCore.Functions.CreateCallback('qb-phone:server:GetPicture', function(_, cb, nu
 end)
 
 QBCore.Functions.CreateCallback('qb-phone:server:FetchResult', function(_, cb, search)
-    search = escape_sqli(search)
+    -- Queries parameterizadas (?): o input do cliente nunca toca no SQL como
+    -- texto, por isso não precisa de escape manual (que era bypassável via '\').
+    search = tostring(search or '')
     local searchData = {}
     local ApaData = {}
-    local query = 'SELECT * FROM `players` WHERE `citizenid` = "' .. search .. '"'
+    local query = 'SELECT * FROM `players` WHERE `citizenid` = ?'
+    local params = { search }
     -- Split on " " and check each var individual
     local searchParameters = SplitStringToArray(search)
-    -- Construct query dynamicly for individual parm check
+    -- Construct query dynamicly for individual parm check (cada termo = 1 bind)
     if #searchParameters > 1 then
-        query = query .. ' OR `charinfo` LIKE "%' .. searchParameters[1] .. '%"'
+        query = query .. ' OR `charinfo` LIKE ?'
+        params[#params + 1] = '%' .. searchParameters[1] .. '%'
         for i = 2, #searchParameters do
-            query = query .. ' AND `charinfo` LIKE  "%' .. searchParameters[i] .. '%"'
+            query = query .. ' AND `charinfo` LIKE ?'
+            params[#params + 1] = '%' .. searchParameters[i] .. '%'
         end
     else
-        query = query .. ' OR `charinfo` LIKE "%' .. search .. '%"'
+        query = query .. ' OR `charinfo` LIKE ?'
+        params[#params + 1] = '%' .. search .. '%'
     end
     local ApartmentData = MySQL.query.await('SELECT * FROM apartments', {})
     for k, v in pairs(ApartmentData) do
         ApaData[v.citizenid] = ApartmentData[k]
     end
-    local result = MySQL.query.await(query)
+    local result = MySQL.query.await(query, params)
     if result[1] ~= nil then
         for _, v in pairs(result) do
             local charinfo = json.decode(v.charinfo)

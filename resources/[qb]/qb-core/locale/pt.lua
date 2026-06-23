@@ -76,6 +76,9 @@ local Translations = {
             },
         },
         dv = { help = 'Apagar Veículo (Apenas Admin)' },
+        dvall = { help = 'Apagar Todos os Veículos (Apenas Admin)' },
+        dvp = { help = 'Apagar Todos os Peds (Apenas Admin)' },
+        dvo = { help = 'Apagar Todos os Objetos (Apenas Admin)' },
         givemoney = {
             help = 'Dar dinheiro a jogador (Apenas Admin)',
             params = {
