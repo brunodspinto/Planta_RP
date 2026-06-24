@@ -30,16 +30,24 @@ RegisterCommand('acstatus', function(source, args)
         return
     end
 
+    local online = GetPlayerName(target)
     local p = PRP.State.getPlayer(target)
     if not p then
-        reply(source, ('player=%s sem registos'):format(target))
+        if online then
+            -- Sem state acumulado mas online: ainda assim mostramos o bypass
+            -- real (live), útil para diagnóstico logo após restart do recurso.
+            reply(source, ('player=%s name=%s sem registos | bypassed=%s')
+                :format(target, online, tostring(PRP.Punishment.isBypassed(target))))
+        else
+            reply(source, ('player=%s sem registos (offline)'):format(target))
+        end
         return
     end
 
     local lines = {
-        ('player=%s name=%s'):format(target, GetPlayerName(target) or 'offline'),
+        ('player=%s name=%s'):format(target, online or 'offline'),
         ('points=%s bypassed=%s kicked=%s banned=%s'):format(
-            p.points, tostring(p.bypassed), tostring(p.kicked), tostring(p.banned or false)),
+            p.points, tostring(PRP.Punishment.isBypassed(target)), tostring(p.kicked), tostring(p.banned or false)),
     }
 
     local n = #p.reasons

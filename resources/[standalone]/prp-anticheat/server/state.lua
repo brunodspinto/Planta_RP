@@ -37,6 +37,7 @@ function State.ensurePlayer(source)
             bypassed        = false,
             identifiers     = {},
             lastHealthCheck = 0,
+            lastFlag        = {}, -- detectionKey -> timestamp (cooldown anti-flood)
         }
         State.players[source] = p
     end
