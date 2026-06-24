@@ -47,6 +47,12 @@ Config.Punishment = {
     --       True  = sistema de pontos (KickAtPoints / DecayEveryMinutes).
     UsePoints = false,
 
+    -- Cooldown por (jogador, tipo de deteção) em segundos. Um único incidente
+    -- (ex.: 200 entities num segundo) dispara entityCreating dezenas de vezes;
+    -- sem cooldown isso gera dezenas de webhooks/pontos para o mesmo evento.
+    -- Com cooldown, conta 1 deteção por tipo por janela. 0 = desligado.
+    DetectionCooldownSeconds = 10,
+
     -- Apenas usado se UsePoints = true.
     KickAtPoints       = 12,
     DecayEveryMinutes  = 15,
@@ -131,7 +137,11 @@ Config.Detections = {
     EntitySpam = {
         Enabled                = true,
         WindowSeconds          = 10,
-        MaxPerWindow           = 180,
+        -- NOTA: jogo normal (1 jogador) chegou a 200 entities/10s em testes
+        -- reais (2026-06-23), por isso 180 dava falsos positivos. Subido para
+        -- 500 (ataques reais de entity-spam criam milhares). Calibrar com modo
+        -- observação (Punishment.Enabled=false) antes de ligar punição a sério.
+        MaxPerWindow           = 500,
         GraceAfterJoinSeconds  = 120,
         PointsForSpam          = 2,
         CancelWhenExceeded     = false,

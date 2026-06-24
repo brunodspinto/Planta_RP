@@ -9,14 +9,16 @@ local Punishment = PRP.Punishment
 local KICK_MESSAGE = '[prp-anticheat] Comportamento suspeito detectado. Reconnect e abre ticket no Discord se for erro.'
 local BAN_MESSAGE  = '[prp-anticheat] Foste banido. Vê o motivo no Discord ou abre ticket para apelar.'
 
--- Verifica se source tem ACE de bypass. Resultado é cacheado no playerState.
+-- Verifica se source tem ACE de bypass (live).
+-- A cache (p.bypassed) é só uma optimização — não dependemos dela, porque a
+-- ACE pode não estar resolvida no playerJoining (timing do FiveM) e queremos
+-- que o bypass funcione mesmo para deteções muito cedo, antes de haver state.
 local function isBypassed(source)
     local p = PRP.State.getPlayer(source)
-    if not p then return false end
-    if p.bypassed then return true end
+    if p and p.bypassed then return true end
 
     if Config.BypassAce and Config.BypassAce ~= '' and IsPlayerAceAllowed(source, Config.BypassAce) then
-        p.bypassed = true
+        if p then p.bypassed = true end
         return true
     end
     return false
@@ -146,6 +148,20 @@ end
 function Punishment.flag(source, detectionKey, reason, amount)
     local src = tonumber(source)
     if not src or src <= 0 then return end
+
+    -- Cooldown por (jogador, tipo): um único incidente (ex.: 200 entities
+    -- criadas num segundo) dispara este flag dezenas de vezes. Sem isto, gera
+    -- dezenas de webhooks/pontos para o mesmo evento. Conta 1 por janela.
+    local cd = Config.Punishment.DetectionCooldownSeconds or 0
+    if cd > 0 then
+        local p = PRP.State.ensurePlayer(src)
+        p.lastFlag = p.lastFlag or {}
+        local last = p.lastFlag[detectionKey]
+        if last and (PRP.Now() - last) < cd then
+            return
+        end
+        p.lastFlag[detectionKey] = PRP.Now()
+    end
 
     PRP.State.countDetection(detectionKey)
 
