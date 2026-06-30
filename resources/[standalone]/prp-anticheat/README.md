@@ -19,6 +19,8 @@ Dois modos, exclusivos:
 
 `Punishment.Enabled = false` **continua a logar** mas não kicka nem bana (modo observação para tuning).
 
+**Cooldown anti-flood** (`Config.Punishment.DetectionCooldownSeconds`, default 10s): um único incidente (ex.: 200 entities criadas num segundo) dispara `entityCreating` dezenas de vezes. Sem cooldown isso geraria dezenas de webhooks/pontos para o mesmo evento. Com cooldown, conta 1 deteção por tipo por jogador por janela.
+
 ### Bans persistentes
 - Tabela MySQL `prp_anticheat_bans` criada automaticamente no arranque.
 - Match por `license`, `steam`, `discord`, `fivem`, `ip` (qualquer um chega).
@@ -30,8 +32,11 @@ Dois modos, exclusivos:
 Devs/testers precisam fazer testes que dispararíam alertas (spawn massivo, etc.). Atribui:
 
 ```
-add_ace identifier.license:XXXXXX prp_anticheat.bypass
+add_ace identifier.license:XXXXXX prp_anticheat.bypass allow
 ```
+
+> ⚠️ O `allow` final é obrigatório. Sem ele o FiveM rejeita a linha com
+> "Argument count mismatch (passed 2, wanted 3)" e a ACE nunca é criada.
 
 Players com a ACE `prp_anticheat.bypass` (configurável via `Config.BypassAce`) continuam a aparecer no log com tag `[BYPASS]` para auditoria, mas nunca acumulam pontos nem são kicked.
 
