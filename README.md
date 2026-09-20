@@ -49,9 +49,12 @@ Principais componentes:
 
 ### 1. Clonar o repositório
 ```powershell
-git clone https://github.com/paocomplanta1/Planta_RP.git
-cd PlantaRP
+git clone https://github.com/brunodspinto/Planta_RP.git
+cd Planta_RP
 ```
+
+> **Este clone não traz um servidor visualmente completo.** Os assets binários de
+> jogo não estão versionados — ver [Assets binários](#assets-binários).
 
 ### 2. Configurar o servidor
 
@@ -106,18 +109,23 @@ ensure [meus-scripts] # Scripts próprios
 
 ```powershell
 # Navega até à pasta do servidor
-cd C:\FiveM\txData\PlantaRP
+cd C:\FiveM\txData\Planta_RP
 
 # Executa o artefacto (exemplo, ajusta ao teu caminho)
 & "C:\FiveM\fx-server-data\run.cmd"
 ```
+
+> **Nota sobre o nome da pasta:** o `git clone` cria `Planta_RP`, e é esse o nome
+> usado ao longo deste README. Numa instalação com txAdmin a pasta pode chamar-se
+> outra coisa — o txAdmin cria os seus próprios *deploys* dentro de `txData/` com
+> o nome que lhe deres. Ajusta os caminhos ao teu caso.
 
 **Nota:** Mantém cópias de segurança do `server.cfg` antes de editar configurações críticas.
 
 ## Estrutura do Projeto
 
 ```
-PlantaRP/
+Planta_RP/
 ├── resources/
 │   ├── [qb]/              # Recursos do ecossistema QBCore
 │   ├── [standalone]/      # Recursos independentes
@@ -125,7 +133,9 @@ PlantaRP/
 │   ├── [defaultmaps]/     # Mapas padrão (hospital, prisão, etc.)
 │   ├── [cars]/            # Veículos personalizados
 │   ├── [maps]/            # Mapas e locais de RP
-│   └── [meus-scripts]/    # Scripts desenvolvidos
+│   ├── [meus-scripts]/    # Scripts desenvolvidos
+│   └── assets/
+│       └── PROVENIENCIA.md # Origem e licença dos assets binários
 ├── tests/
 │   ├── run-lua-tests.ps1  # Script para executar testes
 │   └── lua/
@@ -155,6 +165,33 @@ powershell -ExecutionPolicy Bypass -File tests/run-lua-tests.ps1
 - ✓ Gera relatórios em `tests/lua/reports/`
 
 Útil para validar mudanças antes de enviar ao servidor em produção.
+
+## Assets binários
+
+Os ficheiros binários de jogo — modelos (`.ydr`, `.ydd`, `.yft`), texturas
+(`.ytd`), colisões (`.ybn`) e mapas (`.ymap`, `.ytyp`) — **não estão versionados
+neste repositório** e são excluídos pelo `.gitignore`. São 357 ficheiros, cerca
+de 308 MB.
+
+**Porquê:** são assets de terceiros. Uma parte vem com licença clara e
+documentada, mas outra chegou ao projeto sem qualquer indicação de origem, e
+alguns modelos de veículos representam marcas reais. Um repositório público não
+é sítio para os redistribuir enquanto isso não estiver esclarecido — e mantê-los
+fora do git também evita arrastar centenas de MB em cada clone.
+
+A origem, a licença e o estado de cada pack estão documentados em
+[`resources/assets/PROVENIENCIA.md`](resources/assets/PROVENIENCIA.md).
+
+**O que isto significa na prática:**
+
+- Um clone novo **arranca**, mas sem os carros, os MLOs nem o minimapa
+  personalizado. Os manifestos (`fxmanifest.lua`, `__resource.lua`), os `.meta`
+  e todo o código continuam versionados — só faltam os binários.
+- Para pôr um servidor a funcionar a sério, os assets têm de ser colocados no
+  disco à parte, por cima da árvore de `resources/`.
+- ⚠️ **Nunca corras `git clean -xfd`** numa instalação a sério: o `-x` inclui os
+  ficheiros ignorados e apagaria todos os assets, que fora do git não têm
+  segunda cópia no repositório.
 
 ## Segurança e Boas Práticas
 
