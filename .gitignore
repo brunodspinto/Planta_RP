@@ -23,3 +23,37 @@ desktop.ini
 *.swp
 *.swo
 .history/
+
+# --- Assets binários de jogo -------------------------------------------
+# Ficam no disco do servidor, fora do git, e são distribuídos à parte.
+# Os manifestos (fxmanifest.lua/__resource.lua), os .meta e o código
+# continuam versionados. Ver resources/assets/PROVENIENCIA.md.
+#
+# NUNCA correr 'git clean -xfd' nesta pasta: apagaria estes ficheiros.
+
+# Modelos e geometria (drawables, dicionários, fragments)
+*.ydr
+*.ydd
+*.yft
+
+# Texturas
+*.ytd
+
+# Colisões
+*.ybn
+
+# Mapas, definições de tipos e manifestos de stream
+*.ymap
+*.ytyp
+*.ymf
+*.ymt
+
+# Áudio empacotado e dicionários de animação
+*.awc
+*.ycd
+
+# Scaleform (minimapa)
+*.gfx
+
+# Ficheiros-fonte de design
+*.psd
