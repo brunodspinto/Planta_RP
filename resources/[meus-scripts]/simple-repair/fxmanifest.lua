@@ -1,6 +1,7 @@
 fx_version 'cerulean'
 game 'gta5'
 
+author 'PlantaRP'
 description 'Sistema de Reparar Carro Pago'
 version '1.0.0'
 

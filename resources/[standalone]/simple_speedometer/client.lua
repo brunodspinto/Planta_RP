@@ -1,5 +1,3 @@
-local QBCore = exports['qb-core']:GetCoreObject()
-
 -- CONFIGURAÇÃO VISUAL
 local posX = 0.88  -- Canto Inferior Direito (Eixo X)
 local posY = 0.88  -- Canto Inferior Direito (Eixo Y)

@@ -216,6 +216,51 @@ A origem, a licença e o estado de cada pack estão documentados em
 - [Guia txAdmin](https://docs.txadmin.com)
 - [Manual de Referência Lua](https://www.lua.org/manual/5.4/)
 
+## Licença
+
+**Código próprio:** [GPL-3.0](LICENSE), copyright © 2026 Bruno Pinto, exceto
+onde indicado abaixo.
+
+Três recursos são independentes do QBCore e estão sob **MIT**, com o respetivo
+`LICENSE` dentro da pasta:
+
+| Recurso | Âmbito |
+|---|---|
+| [`[standalone]/prp-anticheat`](resources/[standalone]/prp-anticheat/LICENSE) | Todo o recurso |
+| [`[standalone]/simple_speedometer`](resources/[standalone]/simple_speedometer/LICENSE) | Todo o recurso |
+| [`[maps]/postal_map`](resources/[maps]/postal_map/LICENSE) | **Apenas o código.** Os tiles de minimapa em `stream/` são de terceiros |
+
+**Código de terceiros:** este repositório é uma instalação de servidor e contém
+dezenas de recursos de outros autores. **Cada recurso mantém a sua própria
+licença, que prevalece sobre esta.** Procura o `LICENSE` dentro da pasta de cada
+um antes de reutilizar seja o que for.
+
+A maioria dos recursos do ecossistema QBCore está sob GPL-3.0. As exceções que
+importam:
+
+| Recurso | Licença | O que implica |
+|---|---|---|
+| `[qb]/ps-adminmenu` | CC BY-NC-SA 4.0 | Uso não-comercial; derivados sob a mesma licença |
+| `[defaultmaps]/hospital_map` | NoFreeRide (NFRL) | Uso não-comercial |
+| `[standalone]/ox_lib`, `oxmysql` | LGPL-3.0 | Podem ser usadas sem impor copyleft a quem as chama |
+| `[voice]/pma-voice`, `PolyZone`, `bob74_ipl`, `interact-sound`, `screenshot-basic` | MIT | |
+
+As duas primeiras pedem uso não-comercial, e este servidor não tem qualquer
+receita — sem donativos, VIP ou venda de itens —, pelo que a condição está
+cumprida. Fica a nota para o caso de isso mudar um dia: aí esses dois recursos
+teriam de ser revistos.
+
+**Recursos modificados.** Vários recursos de terceiros foram alterados aqui —
+correções de segurança e traduções pt-PT em `qb-core`, `qb-phone`, `qb-houses`,
+`qb-policejob`, `qb-vehicleshop`, `ps-adminmenu`, `qb-hud`, `qb-radialmenu` e
+`qb-smallresources`. Essas alterações ficam sob a licença do recurso original, e
+o histórico do git identifica-as uma a uma.
+
+**Recursos sem licença.** 35 dos 100 recursos chegaram ao projeto sem qualquer
+ficheiro de licença — sobretudo mapas. Sem licença expressa, o padrão é *todos os
+direitos reservados*: não são redistribuíveis sem autorização do autor. Ver
+[`resources/assets/PROVENIENCIA.md`](resources/assets/PROVENIENCIA.md).
+
 ## Créditos e Agradecimentos
 
 - **FiveM** / **Cfx.re** - Plataforma base
