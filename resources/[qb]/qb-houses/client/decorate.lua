@@ -277,7 +277,7 @@ RegisterNUICallback('buySelectedObject', function(data, cb)
 			peanut = false
 		end
 		cb('ok')
-	end, data.price)
+	end, ClosestHouse, SelObjHash) -- o servidor calcula o preço pelo modelo
 end)
 
 RegisterNUICallback('setupMyObjects', function(_, cb)

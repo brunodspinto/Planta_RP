@@ -98,16 +98,6 @@ Config.PhoneApplications = {
         slot = 8,
         Alerts = 0,
     },
-    ['crypto'] = {
-        app = 'crypto',
-        color = '#004682',
-        icon = 'fas fa-coins',
-        tooltipText = 'Criptomoedas',
-        job = false,
-        blockedjobs = {},
-        slot = 9,
-        Alerts = 0,
-    },
     ['racing'] = {
         app = 'racing',
         color = '#353b48',

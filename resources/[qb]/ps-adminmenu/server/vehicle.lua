@@ -1,5 +1,6 @@
 -- Admin Car
 RegisterNetEvent('ps-adminmenu:server:SaveCar', function(mods, vehicle, _, plate)
+    if not CheckEventPerms(source, 'ps-adminmenu:server:SaveCar') then return end
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     local result = MySQL.query.await('SELECT plate FROM player_vehicles WHERE plate = ?', { plate })
@@ -26,8 +27,7 @@ end)
 RegisterNetEvent("ps-adminmenu:server:givecar", function(data, selectedData)
     local src = source
 
-    local data = CheckDataFromKey(data)
-    if not data or not CheckPerms(source, data.perms) then
+    if not CheckEventPerms(source, 'ps-adminmenu:server:givecar') then
         QBCore.Functions.Notify(src, locale("no_perms"), "error", 5000)
         return
     end
@@ -91,8 +91,7 @@ end)
 RegisterNetEvent("ps-adminmenu:server:SetVehicleState", function(data, selectedData)
     local src = source
 
-    local data = CheckDataFromKey(data)
-    if not data or not CheckPerms(source, data.perms) then
+    if not CheckEventPerms(source, 'ps-adminmenu:server:SetVehicleState') then
         QBCore.Functions.Notify(src, locale("no_perms"), "error", 5000)
         return
     end
@@ -117,6 +116,7 @@ end)
 
 -- Change Plate
 RegisterNetEvent('ps-adminmenu:server:ChangePlate', function(newPlate, currentPlate)
+    if not CheckEventPerms(source, 'ps-adminmenu:server:ChangePlate') then return end
     local newPlate = newPlate:upper()
 
     if Config.Inventory == 'ox_inventory' then
@@ -129,6 +129,8 @@ RegisterNetEvent('ps-adminmenu:server:ChangePlate', function(newPlate, currentPl
 end)
 
 lib.callback.register('ps-adminmenu:server:GetVehicleByPlate', function(source, plate)
+    -- Sem permissão devolve o mesmo que "matrícula não encontrada".
+    if not CheckEventPerms(source, 'ps-adminmenu:server:GetVehicleByPlate') then return {} end
     local result = MySQL.query.await('SELECT vehicle FROM player_vehicles WHERE plate = ?', { plate })
     local veh = result[1] and result[1].vehicle or {}
     return veh
@@ -136,8 +138,7 @@ end)
 
 -- Fix Vehicle for player
 RegisterNetEvent('ps-adminmenu:server:FixVehFor', function(data, selectedData)
-    local data = CheckDataFromKey(data)
-    if not data or not CheckPerms(source, data.perms) then return end
+    if not CheckEventPerms(source, 'ps-adminmenu:server:FixVehFor') then return end
     local src = source
     local playerId = selectedData['Player'].value
     local Player = QBCore.Functions.GetPlayer(tonumber(playerId))

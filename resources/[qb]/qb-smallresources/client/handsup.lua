@@ -17,6 +17,10 @@ RegisterCommand(Config.HandsUp.command, function()
         ClearPedTasks(ped)
         exports['qb-smallresources']:removeDisableControls(Config.HandsUp.controls)
     end
+    -- Replicado para o servidor: é o próprio cliente do jogador a dizer que tem
+    -- as mãos no ar, e é assim que o qb-policejob confirma, do lado do servidor,
+    -- que um assalto é legítimo.
+    LocalPlayer.state:set('handsup', handsUp, true)
 end, false)
 
 RegisterKeyMapping(Config.HandsUp.command, 'Hands Up', 'keyboard', Config.HandsUp.keybind)

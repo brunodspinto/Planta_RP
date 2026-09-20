@@ -26,13 +26,6 @@ Config.MenuItems = {
                 event = 'qb-trunk:client:GetIn',
                 shouldClose = true
             }, {
-                id = 'cornerselling',
-                title = 'Venda de Esquina',
-                icon = 'cannabis',
-                type = 'client',
-                event = 'qb-drugs:client:cornerselling',
-                shouldClose = true
-            }, {
                 id = 'togglehotdogsell',
                 title = 'Venda de Cachorros',
                 icon = 'hotdog',

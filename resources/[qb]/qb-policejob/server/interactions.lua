@@ -170,6 +170,9 @@ end)
 
 RegisterNetEvent('police:server:SeizeDriverLicense', function(playerId)
     local src = source
+    if not IsOnDutyLeo(src) then
+        return TriggerClientEvent('QBCore:Notify', src, Lang:t('error.on_duty_police_only'), 'error')
+    end
     local playerPed = GetPlayerPed(src)
     local targetPed = GetPlayerPed(playerId)
     local playerCoords = GetEntityCoords(playerPed)
@@ -179,15 +182,31 @@ RegisterNetEvent('police:server:SeizeDriverLicense', function(playerId)
     local SearchedPlayer = QBCore.Functions.GetPlayer(playerId)
     if not QBCore.Functions.GetPlayer(src) or not SearchedPlayer then return end
 
-    local driverLicense = SearchedPlayer.PlayerData.metadata['licences']['driver']
+    local current = SearchedPlayer.PlayerData.metadata['licences'] or {}
+    local driverLicense = current['driver']
     if driverLicense then
-        local licenses = { ['driver'] = false, ['business'] = SearchedPlayer.PlayerData.metadata['licences']['business'] }
+        -- Copiar as licenças todas e tirar só a de condução: a versão anterior
+        -- escrevia apenas driver/business e apagava a de armas pelo caminho.
+        local licenses = {}
+        for name, value in pairs(current) do licenses[name] = value end
+        licenses['driver'] = false
         SearchedPlayer.Functions.SetMetaData('licences', licenses)
         TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, Lang:t('info.driving_license_confiscated'))
     else
         TriggerClientEvent('QBCore:Notify', src, Lang:t('error.no_driver_license'), 'error')
     end
 end)
+
+--- Alvo em condições de ser assaltado: algemado, morto, em last stand ou de
+--- mãos no ar. Os três primeiros vêm da metadata (o mesmo critério que o
+--- escoltar/sequestrar deste ficheiro usa); o último vem do statebag 'handsup',
+--- publicado pelo cliente do próprio alvo (o assaltante não lhe pode mexer).
+local function IsRobbable(target)
+    local meta = target.PlayerData.metadata or {}
+    if meta['ishandcuffed'] or meta['isdead'] or meta['inlaststand'] then return true end
+    local ok, state = pcall(function() return Player(target.PlayerData.source).state end)
+    return ok and state ~= nil and state.handsup == true
+end
 
 RegisterNetEvent('police:server:RobPlayer', function(playerId)
     local src = source
@@ -200,10 +219,19 @@ RegisterNetEvent('police:server:RobPlayer', function(playerId)
     local Player = QBCore.Functions.GetPlayer(src)
     local SearchedPlayer = QBCore.Functions.GetPlayer(playerId)
     if not Player or not SearchedPlayer then return end
+    -- Não é ação policial (está no menu de cidadão, "Assaltar"), por isso não
+    -- leva verificação de job; o que faltava era confirmar no servidor aquilo
+    -- que só o cliente verificava: que o alvo está indefeso e não é o próprio.
+    if Player.PlayerData.source == SearchedPlayer.PlayerData.source then return end
+    if not IsRobbable(SearchedPlayer) then return end
 
+    -- Tirar primeiro, dar depois: se o débito falhar não se cria dinheiro.
     local money = SearchedPlayer.PlayerData.money['cash']
-    Player.Functions.AddMoney('cash', money, 'police-player-robbed')
-    SearchedPlayer.Functions.RemoveMoney('cash', money, 'police-player-robbed')
+    if money > 0 and SearchedPlayer.Functions.RemoveMoney('cash', money, 'police-player-robbed') then
+        Player.Functions.AddMoney('cash', money, 'police-player-robbed')
+    else
+        money = 0
+    end
     exports['qb-inventory']:OpenInventoryById(src, playerId)
     TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, Lang:t('info.cash_robbed', { money = money }))
     TriggerClientEvent('QBCore:Notify', Player.PlayerData.source, Lang:t('info.stolen_money', { stolen = money }))

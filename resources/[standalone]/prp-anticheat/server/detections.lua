@@ -131,16 +131,22 @@ local function initWeaponDamageGuard()
 
         local maxAllowed = maxByHash[weapon] or cfg.DefaultMaxDamage
         if data.hitGlobalId and data.hitGlobalId ~= 0 then
-            -- Tem alvo; aplicar headshot multiplier.
-            -- isHeadShot vem em alguns FXServers; fallback liberal.
+            -- ATENÇÃO: o weaponDamageEvent NÃO tem campo isHeadShot (confirmado
+            -- na doc oficial), por isso este ramo nunca corre. A parte do corpo
+            -- atingida vem em data.hitComponent. Corrigir na recalibração.
             if data.isHeadShot then
                 maxAllowed = maxAllowed * (cfg.HeadShotMultiplier or 2.5)
             end
         end
 
         if damage > maxAllowed then
+            -- Campos extra no log para recalibrar: hitComponent (parte do corpo),
+            -- vehicle (alvo é veículo), willKill (golpe fatal / takedown).
             flag(sender, 'WeaponDamageModifier',
-                ('Weapon=%s damage=%s > max=%s'):format(weapon, damage, math.floor(maxAllowed)),
+                ('Weapon=%s damage=%s > max=%s | hitComponent=%s vehicle=%s willKill=%s')
+                    :format(weapon, damage, math.floor(maxAllowed),
+                        tostring(data.hitComponent), tostring(data.hasVehicleData),
+                        tostring(data.willKill)),
                 cfg.Points)
         end
     end)

@@ -89,12 +89,38 @@ local function calculateFinance(vehiclePrice, downPayment, paymentamount)
     return round(balance), round(vehPaymentAmount)
 end
 
-local function calculateNewFinance(paymentAmount, vehData)
-    local newBalance = tonumber(vehData.balance - paymentAmount)
-    local minusPayment = vehData.paymentsLeft - 1
-    local newPaymentsLeft = newBalance / minusPayment
-    local newPayment = newBalance / newPaymentsLeft
-    return round(newBalance), round(newPayment), newPaymentsLeft
+-- Novo estado do financiamento depois de uma prestação, a partir dos valores da
+-- BD (nunca dos do cliente). Nunca menos de 1 prestação em falta: evita dividir
+-- por zero na última prestação.
+local function calculateNewFinance(paymentAmount, balance, paymentsLeft)
+    local newBalance = balance - paymentAmount
+    local newPaymentsLeft = math.max(1, paymentsLeft - 1)
+    return round(newBalance), round(newBalance / newPaymentsLeft), newPaymentsLeft
+end
+
+-- Financiamento de um carro DO PRÓPRIO jogador (citizenid vem do source).
+-- Do cliente só se aproveita a matrícula, para identificar o carro.
+local function GetOwnedFinance(citizenid, plate)
+    if type(plate) ~= 'string' or #plate == 0 or #plate > 16 then return nil end
+    local result = MySQL.query.await(
+        'SELECT balance, paymentamount, paymentsleft FROM player_vehicles WHERE plate = ? AND citizenid = ?',
+        { plate, citizenid })
+    return result and result[1] or nil
+end
+
+-- Pagamento vindo do cliente: inteiro, finito e > 0 (colunas são INT).
+local function ValidatePayment(value)
+    local n = tonumber(value)
+    if not n or n ~= n or n <= 0 or n == math.huge or n % 1 ~= 0 then return nil end
+    return n
+end
+
+-- Cobra em dinheiro vivo, senão no banco (como antes), verificando o saldo e o
+-- resultado do débito. Devolve o tipo de dinheiro cobrado, ou nil.
+local function ChargeFinance(player, amount, reason)
+    if player.PlayerData.money.cash >= amount and player.Functions.RemoveMoney('cash', amount, reason) then return 'cash' end
+    if player.PlayerData.money.bank >= amount and player.Functions.RemoveMoney('bank', amount, reason) then return 'bank' end
+    return nil
 end
 
 local function GeneratePlate()
@@ -164,55 +190,73 @@ end)
 
 -- Make a finance payment
 RegisterNetEvent('qb-vehicleshop:server:financePayment', function(paymentAmount, vehData)
+    -- Saldo, prestação mínima e prestações em falta vêm da BD, e só de carros
+    -- do próprio jogador. Do cliente: a matrícula e o valor que quer pagar.
     local src = source
     local player = QBCore.Functions.GetPlayer(src)
-    local cash = player.PlayerData.money['cash']
-    local bank = player.PlayerData.money['bank']
+    if not player or type(vehData) ~= 'table' then return end
+    local cid = player.PlayerData.citizenid
     local plate = vehData.vehiclePlate
-    paymentAmount = tonumber(paymentAmount)
-    local minPayment = tonumber(vehData.paymentAmount)
+    local finance = GetOwnedFinance(cid, plate)
+    if not finance then return end -- carro inexistente ou de outro jogador
+    local balance = tonumber(finance.balance) or 0
+    if balance <= 0 then
+        return TriggerClientEvent('QBCore:Notify', src, Lang:t('error.alreadypaid'), 'error')
+    end
+
+    paymentAmount = ValidatePayment(paymentAmount)
+    local minPayment = tonumber(finance.paymentamount) or 0
+    if not paymentAmount or paymentAmount < minPayment then
+        return TriggerClientEvent('QBCore:Notify', src, Lang:t('error.minimumallowed') .. comma_value(minPayment), 'error')
+    end
+    local newBalance, newPayment, newPaymentsLeft = calculateNewFinance(paymentAmount, balance, tonumber(finance.paymentsleft) or 1)
+    if newBalance <= 0 then
+        -- Liquidar o resto faz-se pelo "pagar tudo" (financePaymentFull).
+        return TriggerClientEvent('QBCore:Notify', src, Lang:t('error.overpaid'), 'error')
+    end
+
+    local paidWith = ChargeFinance(player, paymentAmount, 'financed vehicle')
+    if not paidWith then
+        return TriggerClientEvent('QBCore:Notify', src, Lang:t('error.notenoughmoney'), 'error')
+    end
+    -- UPDATE condicionado ao saldo lido: dois pagamentos em simultâneo não se
+    -- aplicam ambos sobre o mesmo saldo; o que falhar é reembolsado.
     local timer = (Config.PaymentInterval * 60)
-    local newBalance, newPaymentsLeft, newPayment = calculateNewFinance(paymentAmount, vehData)
-    if newBalance > 0 then
-        if player and paymentAmount >= minPayment then
-            if cash >= paymentAmount then
-                player.Functions.RemoveMoney('cash', paymentAmount, 'financed vehicle')
-                MySQL.update('UPDATE player_vehicles SET balance = ?, paymentamount = ?, paymentsleft = ?, financetime = ? WHERE plate = ?', { newBalance, newPayment, newPaymentsLeft, timer, plate })
-            elseif bank >= paymentAmount then
-                player.Functions.RemoveMoney('bank', paymentAmount, 'financed vehicle')
-                MySQL.update('UPDATE player_vehicles SET balance = ?, paymentamount = ?, paymentsleft = ?, financetime = ? WHERE plate = ?', { newBalance, newPayment, newPaymentsLeft, timer, plate })
-            else
-                TriggerClientEvent('QBCore:Notify', src, Lang:t('error.notenoughmoney'), 'error')
-            end
-        else
-            TriggerClientEvent('QBCore:Notify', src, Lang:t('error.minimumallowed') .. comma_value(minPayment), 'error')
-        end
-    else
-        TriggerClientEvent('QBCore:Notify', src, Lang:t('error.overpaid'), 'error')
+    local affected = MySQL.update.await(
+        'UPDATE player_vehicles SET balance = ?, paymentamount = ?, paymentsleft = ?, financetime = ? WHERE plate = ? AND citizenid = ? AND balance = ?',
+        { newBalance, newPayment, newPaymentsLeft, timer, plate, cid, balance })
+    if (tonumber(affected) or 0) < 1 then
+        player.Functions.AddMoney(paidWith, paymentAmount, 'financed vehicle refund')
     end
 end)
 
 
 -- Pay off vehice in full
 RegisterNetEvent('qb-vehicleshop:server:financePaymentFull', function(data)
+    -- O valor a pagar é o saldo na BD, e só de carros do próprio jogador.
+    -- O data.vehBalance enviado pelo cliente é ignorado.
     local src = source
     local player = QBCore.Functions.GetPlayer(src)
-    local cash = player.PlayerData.money['cash']
-    local bank = player.PlayerData.money['bank']
-    local vehBalance = data.vehBalance
+    if not player or type(data) ~= 'table' then return end
+    local cid = player.PlayerData.citizenid
     local vehPlate = data.vehPlate
-    if player and vehBalance ~= 0 then
-        if cash >= vehBalance then
-            player.Functions.RemoveMoney('cash', vehBalance, 'paid off vehicle')
-            MySQL.update('UPDATE player_vehicles SET balance = ?, paymentamount = ?, paymentsleft = ?, financetime = ? WHERE plate = ?', { 0, 0, 0, 0, vehPlate })
-        elseif bank >= vehBalance then
-            player.Functions.RemoveMoney('bank', vehBalance, 'paid off vehicle')
-            MySQL.update('UPDATE player_vehicles SET balance = ?, paymentamount = ?, paymentsleft = ?, financetime = ? WHERE plate = ?', { 0, 0, 0, 0, vehPlate })
-        else
-            TriggerClientEvent('QBCore:Notify', src, Lang:t('error.notenoughmoney'), 'error')
-        end
-    else
-        TriggerClientEvent('QBCore:Notify', src, Lang:t('error.alreadypaid'), 'error')
+    local finance = GetOwnedFinance(cid, vehPlate)
+    if not finance then return end -- carro inexistente ou de outro jogador
+    local vehBalance = tonumber(finance.balance) or 0
+    if vehBalance <= 0 then
+        return TriggerClientEvent('QBCore:Notify', src, Lang:t('error.alreadypaid'), 'error')
+    end
+
+    local paidWith = ChargeFinance(player, vehBalance, 'paid off vehicle')
+    if not paidWith then
+        return TriggerClientEvent('QBCore:Notify', src, Lang:t('error.notenoughmoney'), 'error')
+    end
+    -- Condicionado ao saldo lido: impede liquidar duas vezes em simultâneo.
+    local affected = MySQL.update.await(
+        'UPDATE player_vehicles SET balance = ?, paymentamount = ?, paymentsleft = ?, financetime = ? WHERE plate = ? AND citizenid = ? AND balance = ?',
+        { 0, 0, 0, 0, vehPlate, cid, vehBalance })
+    if (tonumber(affected) or 0) < 1 then
+        player.Functions.AddMoney(paidWith, vehBalance, 'paid off vehicle refund')
     end
 end)
 

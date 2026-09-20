@@ -1,8 +1,7 @@
 local spectating = {}
 
 RegisterNetEvent('ps-adminmenu:server:SpectateTarget', function(data, selectedData)
-    local data = CheckDataFromKey(data)
-    if not data or not CheckPerms(source, data.perms) then return end
+    if not CheckEventPerms(source, 'ps-adminmenu:server:SpectateTarget') then return end
     local player = selectedData["Player"].value
 
     local type = "1"
@@ -32,6 +31,7 @@ AddEventHandler('ps-adminmenu:spectate', function(target, on, source, perms)
 end)
 
 RegisterNetEvent('ps-adminmenu:spectate:teleport', function(target)
+    if not CheckEventPerms(source, 'ps-adminmenu:spectate:teleport') then return end
     local source = source
     local ped = GetPlayerPed(target)
     if DoesEntityExist(ped) then

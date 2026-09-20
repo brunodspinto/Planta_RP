@@ -65,7 +65,8 @@ Config.Punishment = {
         ExplosionSpam         = false,
         EntitySpam            = false,
         MonitoredEventSpam    = false,
-        WeaponDamageModifier  = true,
+        -- DESLIGADO (só log) até recalibrar. Ver nota em BanOnDetection.
+        WeaponDamageModifier  = false,
         GodMode               = true,
     },
 
@@ -78,7 +79,14 @@ Config.Punishment = {
     -- Aplica-se apenas a detecções de altíssima confiança.
     BanOnDetection = {
         BlacklistedEvents     = false,
-        WeaponDamageModifier  = true,
+        -- DESLIGADO: dava falsos positivos com ban PERMANENTE.
+        -- O weaponDamageEvent não tem campo isHeadShot (tem hitComponent), por
+        -- isso o multiplicador de headshot nunca era aplicado. O evento também
+        -- dispara para dano a veículos e para takedowns corpo-a-corpo, que
+        -- ultrapassam a tabela MaxDamageByWeapon sem haver batota.
+        -- A deteção continua a registar no log/webhook (sem punir) para se
+        -- recalibrar com dados reais.
+        WeaponDamageModifier  = false,
         GodMode               = false,
     },
 }
@@ -152,11 +160,15 @@ Config.Detections = {
     MonitoredEvents = {
     },
 
-    -- Validação de weapon damage. Captura "weapon damage modifier" cheats.
-    -- Funciona para PvP. Headshots usam multiplicador (capturado por HeadShotMultiplier).
+    -- Validação de weapon damage. Tenta apanhar "weapon damage modifier" cheats.
+    -- ESTADO: só log (sem punição) até recalibrar. O HeadShotMultiplier ainda
+    -- não tem efeito (o evento não tem isHeadShot; usar hitComponent).
     WeaponDamage = {
         Enabled            = true,
-        Points             = 8,
+        -- 0 = só log, também em modo pontos (UsePoints = true). Com pontos > 0
+        -- esta deteção voltaria a poder causar kick/ban por acumulação.
+        -- Repor (ex.: 8) só depois de recalibrar — ver BanOnDetection.
+        Points             = 0,
         HeadShotMultiplier = 3.0, -- tolerância para headshot real
         -- Dano máximo confiável por weapon hash. Calculado em runtime para evitar
         -- carregar `GetHashKey` no parse. Mapeamento string→max.

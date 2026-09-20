@@ -140,7 +140,11 @@ local function addPoints(source, reason, amount, detectionKey)
     print(text)
     PRP.Webhook.send('Suspicious Activity', text, 16753920)
 
-    escalateIfNeeded(src, reason)
+    -- Deteções com 0 pontos são só log: não podem disparar kick/ban, mesmo
+    -- que o jogador já esteja acima de um limite por outras razões.
+    if (amount or 1) > 0 then
+        escalateIfNeeded(src, reason)
+    end
 end
 
 -- Ponto de entrada principal das detecções.

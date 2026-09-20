@@ -54,14 +54,20 @@ local function getPlayers()
     return players
 end
 
+-- Nível mínimo para usar o menu: o comando /admin está restrito a qbcore.mod
+-- (server/main.lua). Admin e god herdam-no pela hierarquia do server.cfg.
+local MENU_PERMS = 'mod'
+
 lib.callback.register('ps-adminmenu:callback:GetPlayers', function(source)
+    -- Devolve license, Discord e Steam reais de todos os jogadores online:
+    -- só para quem pode abrir o menu. Sem permissão, lista vazia.
+    if not CheckPerms(source, MENU_PERMS) then return {} end
     return getPlayers()
 end)
 
 -- Set Job
 RegisterNetEvent('ps-adminmenu:server:SetJob', function(data, selectedData)
-    local data = CheckDataFromKey(data)
-    if not data or not CheckPerms(source, data.perms) then return end
+    if not CheckEventPerms(source, 'ps-adminmenu:server:SetJob') then return end
     local src = source
     local playerId, Job, Grade = selectedData["Player"].value, selectedData["Job"].value, selectedData["Grade"].value
     local Player = QBCore.Functions.GetPlayer(playerId)
@@ -89,8 +95,7 @@ end)
 
 -- Set Gang
 RegisterNetEvent('ps-adminmenu:server:SetGang', function(data, selectedData)
-    local data = CheckDataFromKey(data)
-    if not data or not CheckPerms(source, data.perms) then return end
+    if not CheckEventPerms(source, 'ps-adminmenu:server:SetGang') then return end
     local src = source
     local playerId, Gang, Grade = selectedData["Player"].value, selectedData["Gang"].value, selectedData["Grade"].value
     local Player = QBCore.Functions.GetPlayer(playerId)
@@ -114,8 +119,7 @@ end)
 
 -- Set Perms
 RegisterNetEvent("ps-adminmenu:server:SetPerms", function(data, selectedData)
-    local data = CheckDataFromKey(data)
-    if not data or not CheckPerms(source, data.perms) then return end
+    if not CheckEventPerms(source, 'ps-adminmenu:server:SetPerms') then return end
     local src = source
     local rank = selectedData["Permissions"].value
     local targetId = selectedData["Player"].value
@@ -134,8 +138,7 @@ end)
 
 -- Remove Stress
 RegisterNetEvent("ps-adminmenu:server:RemoveStress", function(data, selectedData)
-    local data = CheckDataFromKey(data)
-    if not data or not CheckPerms(source, data.perms) then return end
+    if not CheckEventPerms(source, 'ps-adminmenu:server:RemoveStress') then return end
     local src = source
     local targetId = selectedData['Player (Optional)'] and tonumber(selectedData['Player (Optional)'].value) or src
     local tPlayer = QBCore.Functions.GetPlayer(tonumber(targetId))

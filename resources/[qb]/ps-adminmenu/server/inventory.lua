@@ -1,7 +1,6 @@
 -- Clear Inventory
 RegisterNetEvent('ps-adminmenu:server:ClearInventory', function(data, selectedData)
-    local data = CheckDataFromKey(data)
-    if not data or not CheckPerms(data.perms) then return end
+    if not CheckEventPerms(source, 'ps-adminmenu:server:ClearInventory') then return end
 
     local src = source
     local player = selectedData["Player"].value
@@ -24,8 +23,7 @@ end)
 
 -- Clear Inventory Offline
 RegisterNetEvent('ps-adminmenu:server:ClearInventoryOffline', function(data, selectedData)
-    local data = CheckDataFromKey(data)
-    if not data or not CheckPerms(source, data.perms) then return end
+    if not CheckEventPerms(source, 'ps-adminmenu:server:ClearInventoryOffline') then return end
 
     local src = source
     local citizenId = selectedData["Citizen ID"].value
@@ -56,23 +54,25 @@ end)
 
 -- Open Inv [ox side]
 RegisterNetEvent('ps-adminmenu:server:OpenInv', function(data)
+    if not CheckEventPerms(source, 'ps-adminmenu:server:OpenInv') then return end
     exports.ox_inventory:forceOpenInventory(source, 'player', data)
 end)
 
 -- Open Stash [ox side]
 RegisterNetEvent('ps-adminmenu:server:OpenStash', function(data)
+    if not CheckEventPerms(source, 'ps-adminmenu:server:OpenStash') then return end
     exports.ox_inventory:forceOpenInventory(source, 'stash', data)
 end)
 
 -- Open Trunk [ox side]
 RegisterNetEvent('ps-adminmenu:server:OpenTrunk', function(data)
+    if not CheckEventPerms(source, 'ps-adminmenu:server:OpenTrunk') then return end
     exports.ox_inventory:forceOpenInventory(source, 'trunk', data)
 end)
 
 -- Give Item
 RegisterNetEvent('ps-adminmenu:server:GiveItem', function(data, selectedData)
-    local data = CheckDataFromKey(data)
-    if not data or not CheckPerms(source, data.perms) then return end
+    if not CheckEventPerms(source, 'ps-adminmenu:server:GiveItem') then return end
 
     local target = selectedData["Player"].value
     local item = selectedData["Item"].value
@@ -92,8 +92,7 @@ end)
 
 -- Give Item to All
 RegisterNetEvent('ps-adminmenu:server:GiveItemAll', function(data, selectedData)
-    local data = CheckDataFromKey(data)
-    if not data or not CheckPerms(source, data.perms) then return end
+    if not CheckEventPerms(source, 'ps-adminmenu:server:GiveItemAll') then return end
 
     local item = selectedData["Item"].value
     local amount = selectedData["Amount"].value

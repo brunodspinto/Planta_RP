@@ -1,6 +1,7 @@
 local resources = {}
 
 lib.callback.register('ps-adminmenu:callback:GetResources', function(source)
+    if not CheckEventPerms(source, 'ps-adminmenu:callback:GetResources') then return {} end
     local totalResources = GetNumResources()
         
     resources = {}
@@ -26,7 +27,6 @@ end)
 
 
 lib.callback.register('ps-adminmenu:callback:ChangeResourceState', function(source, data, perms)
-    print(json.encode(data))
     if not CheckPerms(source, Config.ResourcePerms) then return end
 
     if data.state == "start" then

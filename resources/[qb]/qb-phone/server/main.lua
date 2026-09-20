@@ -8,8 +8,47 @@ local Adverts = {}
 local GeneratedPlates = {}
 local WebHook = GetConvar('DISCORD_WEBHOOK_PHONE_MEDIA', GetConvar('DISCORD_WEBHOOK_DEFAULT', ''))
 local FivemerrApiToken = ''
-local bannedCharacters = { '%', '$', ';' }
 local TWData = {}
+
+-- Transferências: teto por operação (valores acima são tratados como inválidos).
+local MAX_TRANSFER_AMOUNT = 100000000
+
+-- Valor de dinheiro vindo do cliente: número inteiro, finito e > 0. Devolve nil se inválido.
+local function ValidateMoneyAmount(value)
+    local n = tonumber(value)
+    if not n or n ~= n or n <= 0 or n > MAX_TRANSFER_AMOUNT or n % 1 ~= 0 then return nil end
+    return n
+end
+
+-- Número de conta vindo do cliente: só alfanumérico (formato do qb-core,
+-- ex.: US01QBCore1234567812). Devolve nil se inválido.
+local function ValidateIban(value)
+    if type(value) ~= 'string' then return nil end
+    value = value:gsub('^%s+', ''):gsub('%s+$', '')
+    if #value < 4 or #value > 34 or not value:match('^%w+$') then return nil end
+    return value
+end
+
+-- Procura o titular pela conta com correspondência exata (a mesma query do
+-- qb-core em CreateAccountNumber). Devolve a linha ou nil.
+local function FindPlayerByAccount(iban)
+    local result = MySQL.query.await(
+        'SELECT citizenid, money FROM players WHERE JSON_UNQUOTE(JSON_EXTRACT(charinfo, "$.account")) = ? LIMIT 1',
+        { iban })
+    return result and result[1] or nil
+end
+
+-- Credita um titular que pode estar online ou offline. Devolve true se creditou.
+local function CreditBank(citizenid, moneyJson, amount, reason)
+    local receiver = QBCore.Functions.GetPlayerByCitizenId(citizenid)
+    if receiver then
+        return receiver.Functions.AddMoney('bank', amount, reason) ~= false, receiver
+    end
+    local moneyInfo = json.decode(moneyJson or '{}') or {}
+    moneyInfo.bank = QBCore.Shared.Round((tonumber(moneyInfo.bank) or 0) + amount)
+    local affected = MySQL.update.await('UPDATE players SET money = ? WHERE citizenid = ?', { json.encode(moneyInfo), citizenid })
+    return (tonumber(affected) or 0) > 0
+end
 
 CreateThread(function()
     -- Allow gallery to store data URLs when camera fallback is used without webhook uploads.
@@ -37,12 +76,31 @@ local function GenerateMailId()
     return math.random(111111, 999999)
 end
 
-local function escape_sqli(source)
-    local replacements = {
-        ['"'] = '\\"',
-        ["'"] = "\\'"
-    }
-    return source:gsub("['\"]", replacements)
+-- Pesquisas do MDT (app 'meos'): limites do input. Evitam pesquisas vazias
+-- (que devolviam todos os registos) e queries enormes (um LIKE por termo).
+local SEARCH_MIN_LEN = 2
+local SEARCH_MAX_LEN = 50
+local SEARCH_MAX_TERMS = 5
+
+-- O job vem do servidor (source do callback), nunca do cliente. A app só
+-- aparece à polícia, mas qualquer cliente pode chamar o callback diretamente.
+local function IsPolice(source)
+    local Player = QBCore.Functions.GetPlayer(source)
+    return Player ~= nil and Player.PlayerData.job.name == 'police'
+end
+
+-- Devolve a pesquisa limpa, ou nil se for inválida.
+local function SanitizeSearch(search)
+    if type(search) ~= 'string' then return nil end
+    search = search:gsub('^%s+', ''):gsub('%s+$', '')
+    if #search < SEARCH_MIN_LEN or #search > SEARCH_MAX_LEN then return nil end
+    return search
+end
+
+-- Escapa os wildcards do LIKE (\ % _) para o input ser texto literal.
+-- Sem isto, pesquisar '%' devolvia todos os registos.
+local function EscapeLike(value)
+    return (value:gsub('[\\%%_]', '\\%0'))
 end
 
 function QBPhone.AddMentionedTweet(citizenid, TweetData)
@@ -162,6 +220,25 @@ local function sendNewMailToOffline(citizenid, mailData)
     end
 end
 exports('sendNewMailToOffline', sendNewMailToOffline)
+
+-- Mail de faturação para os funcionários de uma sociedade, enviado PELO
+-- SERVIDOR. Antes era o cliente que disparava qb-phone:server:BillingEmail com
+-- os dados dele (sociedade, valor e "pago/recusado"), por isso qualquer jogador
+-- podia forjar faturas pagas a qualquer profissão. Agora só é chamado aqui,
+-- depois de a transação ser confirmada, e com os valores que estão na BD.
+local function SendBillingMailToSociety(society, subject, message)
+    if type(society) ~= 'string' or society == '' then return end
+    for _, playerId in pairs(QBCore.Functions.GetPlayers()) do
+        local employee = QBCore.Functions.GetPlayer(playerId)
+        if employee and employee.PlayerData.job.name == society then
+            sendNewMailToOffline(employee.PlayerData.citizenid, {
+                sender = 'Departamento de faturação',
+                subject = subject,
+                message = message,
+            })
+        end
+    end
+end
 -- Callbacks
 
 QBCore.Functions.CreateCallback("qb-phone:server:GetInvoices", function(source, cb)
@@ -292,58 +369,90 @@ QBCore.Functions.CreateCallback('qb-phone:server:GetPhoneData', function(source,
     end
 end)
 
-QBCore.Functions.CreateCallback('qb-phone:server:PayInvoice', function(source, cb, society, amount, invoiceId, sendercitizenid)
+QBCore.Functions.CreateCallback('qb-phone:server:PayInvoice', function(source, cb, _, _, invoiceId, _)
+    -- Valor, sociedade e destinatário da comissão vêm SEMPRE da fatura na BD;
+    -- os valores equivalentes enviados pelo cliente são ignorados. Qualquer
+    -- falha devolve false, tal como "fatura não encontrada".
     local Ply = QBCore.Functions.GetPlayer(source)
-    local SenderPly = QBCore.Functions.GetPlayerByCitizenId(sendercitizenid)
-    local invoiceMailData = nil
-    if Ply then
-        local exists = MySQL.query.await('select count(1) as count FROM phone_invoices WHERE id = ? and citizenid = ?', { invoiceId, Ply.PlayerData.citizenid })
+    invoiceId = tonumber(invoiceId)
+    if not Ply or not invoiceId or invoiceId % 1 ~= 0 or invoiceId <= 0 then return cb(false) end
+    local cid = Ply.PlayerData.citizenid
 
-        if exists[1] and exists[1]["count"] == 1 then
-            if SenderPly and Config.BillingCommissions[society] then
-                local commission = QBCore.Shared.Round(amount * Config.BillingCommissions[society])
-                SenderPly.Functions.AddMoney('bank', commission)
-                invoiceMailData = {
-                    sender = 'Departamento de faturação',
-                    subject = 'Comissão recebida',
-                    message = string.format('Recebeste uma comissão de $%s quando %s %s pagou uma fatura de $%s.', commission, Ply.PlayerData.charinfo.firstname, Ply.PlayerData.charinfo.lastname, amount)
-                }
-            elseif not SenderPly and Config.BillingCommissions[society] then
-                invoiceMailData = {
-                    sender = 'Departamento de faturação',
-                    subject = 'Fatura paga',
-                    message = string.format('%s %s pagou uma fatura de $%s', Ply.PlayerData.charinfo.firstname, Ply.PlayerData.charinfo.lastname, amount)
-                }
-            end
-            if Ply.Functions.RemoveMoney('bank', amount, 'paid-invoice') then
-                MySQL.query('DELETE FROM phone_invoices WHERE id = ? and citizenid = ?', { invoiceId, Ply.PlayerData.citizenid })
-                if invoiceMailData then
-                    exports['qb-phone']:sendNewMailToOffline(sendercitizenid, invoiceMailData)
-                end
-                TriggerEvent("qb-phone:server:paidInvoice", source, invoiceId)
-                exports['qb-banking']:AddMoney(society, amount, 'Fatura por telemóvel')
-                cb(true)
-                return
-            end
+    -- Só faturas do próprio pagador (citizenid vem do source).
+    local rows = MySQL.query.await('SELECT amount, society, sendercitizenid FROM phone_invoices WHERE id = ? AND citizenid = ?', { invoiceId, cid })
+    local invoice = rows and rows[1]
+    if not invoice then return cb(false) end
+    local amount = tonumber(invoice.amount)
+    if not amount or amount <= 0 then return cb(false) end
+
+    -- 1) Débito primeiro. Se falhar, nada mais acontece (sem comissão) e a fatura fica.
+    if Ply.PlayerData.money.bank < amount or not Ply.Functions.RemoveMoney('bank', amount, 'paid-invoice') then
+        return cb(false)
+    end
+    -- 2) Apagar a fatura só se ainda existir: com dois pedidos em simultâneo, só
+    --    um a apaga; o outro é reembolsado. Impede pagar/comissionar duas vezes.
+    local deleted = MySQL.update.await('DELETE FROM phone_invoices WHERE id = ? AND citizenid = ?', { invoiceId, cid })
+    if (tonumber(deleted) or 0) < 1 then
+        Ply.Functions.AddMoney('bank', amount, 'paid-invoice-refund')
+        return cb(false)
+    end
+
+    -- 3) Só agora: comissão, depósito na sociedade e mail.
+    local society = invoice.society
+    local sendercitizenid = invoice.sendercitizenid
+    local rate = society and Config.BillingCommissions[society]
+    local invoiceMailData = nil
+    if rate then
+        local SenderPly = sendercitizenid and QBCore.Functions.GetPlayerByCitizenId(sendercitizenid)
+        if SenderPly then
+            local commission = QBCore.Shared.Round(amount * rate)
+            SenderPly.Functions.AddMoney('bank', commission)
+            invoiceMailData = {
+                sender = 'Departamento de faturação',
+                subject = 'Comissão recebida',
+                message = string.format('Recebeste uma comissão de $%s quando %s %s pagou uma fatura de $%s.', commission, Ply.PlayerData.charinfo.firstname, Ply.PlayerData.charinfo.lastname, amount)
+            }
+        else
+            invoiceMailData = {
+                sender = 'Departamento de faturação',
+                subject = 'Fatura paga',
+                message = string.format('%s %s pagou uma fatura de $%s', Ply.PlayerData.charinfo.firstname, Ply.PlayerData.charinfo.lastname, amount)
+            }
         end
     end
-    cb(false)
+    if invoiceMailData and sendercitizenid then
+        exports['qb-phone']:sendNewMailToOffline(sendercitizenid, invoiceMailData)
+    end
+    TriggerEvent("qb-phone:server:paidInvoice", source, invoiceId)
+    if society then
+        exports['qb-banking']:AddMoney(society, amount, 'Fatura por telemóvel')
+    end
+    SendBillingMailToSociety(society, 'Fatura paga', string.format('A fatura foi paga por %s %s no valor de $%s',
+        Ply.PlayerData.charinfo.firstname, Ply.PlayerData.charinfo.lastname, amount))
+    cb(true)
 end)
 
 QBCore.Functions.CreateCallback('qb-phone:server:DeclineInvoice', function(source, cb, _, _, invoiceId)
+    -- Sociedade e valor vêm da fatura na BD; os enviados pelo cliente são
+    -- ignorados. Qualquer falha devolve false, tal como "fatura não encontrada".
     local Ply = QBCore.Functions.GetPlayer(source)
-    if Ply then
-        local exists = MySQL.query.await('select count(1) as count FROM phone_invoices WHERE id = ? and citizenid = ? and candecline = ?', { invoiceId, Ply.PlayerData.citizenid, 1 })
+    invoiceId = tonumber(invoiceId)
+    if not Ply or not invoiceId or invoiceId % 1 ~= 0 or invoiceId <= 0 then return cb(false) end
+    local cid = Ply.PlayerData.citizenid
 
-        if exists[1] and exists[1]["count"] == 1 then
-            TriggerEvent("qb-phone:server:declinedInvoice", source, invoiceId)
-            MySQL.query('DELETE FROM phone_invoices WHERE id = ? and citizenid = ? and candecline = ?', { invoiceId, Ply.PlayerData.citizenid, 1 })
-            cb(true)
-            return
-        end
-    end
+    -- Só faturas do próprio e que possam ser recusadas.
+    local rows = MySQL.query.await('SELECT amount, society FROM phone_invoices WHERE id = ? AND citizenid = ? AND candecline = ?', { invoiceId, cid, 1 })
+    local invoice = rows and rows[1]
+    if not invoice then return cb(false) end
 
-    cb(false)
+    -- Apagar só se ainda existir: dois pedidos em simultâneo só recusam uma vez.
+    local deleted = MySQL.update.await('DELETE FROM phone_invoices WHERE id = ? AND citizenid = ? AND candecline = ?', { invoiceId, cid, 1 })
+    if (tonumber(deleted) or 0) < 1 then return cb(false) end
+
+    TriggerEvent("qb-phone:server:declinedInvoice", source, invoiceId)
+    SendBillingMailToSociety(invoice.society, 'Fatura recusada', string.format('A fatura foi recusada por %s %s no valor de $%s',
+        Ply.PlayerData.charinfo.firstname, Ply.PlayerData.charinfo.lastname, invoice.amount))
+    cb(true)
 end)
 
 QBCore.Functions.CreateCallback('qb-phone:server:GetContactPictures', function(_, cb, Chats)
@@ -394,27 +503,32 @@ QBCore.Functions.CreateCallback('qb-phone:server:GetPicture', function(_, cb, nu
     end
 end)
 
-QBCore.Functions.CreateCallback('qb-phone:server:FetchResult', function(_, cb, search)
-    -- Queries parameterizadas (?): o input do cliente nunca toca no SQL como
-    -- texto, por isso não precisa de escape manual (que era bypassável via '\').
-    search = tostring(search or '')
-    local searchData = {}
-    local ApaData = {}
-    local query = 'SELECT * FROM `players` WHERE `citizenid` = ?'
-    local params = { search }
+QBCore.Functions.CreateCallback('qb-phone:server:FetchResult', function(source, cb, search)
+    -- Sem autorização ou com input inválido devolve vazio, tal como "sem
+    -- resultados", para não revelar se o registo existe.
+    if not IsPolice(source) then return cb(nil) end
+    search = SanitizeSearch(search)
+    if not search then return cb(nil) end
     -- Split on " " and check each var individual
     local searchParameters = SplitStringToArray(search)
+    if #searchParameters > SEARCH_MAX_TERMS then return cb(nil) end
+
+    local searchData = {}
+    local ApaData = {}
+    -- Queries parameterizadas (?): o input do cliente nunca toca no SQL como texto.
+    local query = 'SELECT * FROM `players` WHERE `citizenid` = ?'
+    local params = { search }
     -- Construct query dynamicly for individual parm check (cada termo = 1 bind)
     if #searchParameters > 1 then
         query = query .. ' OR `charinfo` LIKE ?'
-        params[#params + 1] = '%' .. searchParameters[1] .. '%'
+        params[#params + 1] = '%' .. EscapeLike(searchParameters[1]) .. '%'
         for i = 2, #searchParameters do
             query = query .. ' AND `charinfo` LIKE ?'
-            params[#params + 1] = '%' .. searchParameters[i] .. '%'
+            params[#params + 1] = '%' .. EscapeLike(searchParameters[i]) .. '%'
         end
     else
         query = query .. ' OR `charinfo` LIKE ?'
-        params[#params + 1] = '%' .. search .. '%'
+        params[#params + 1] = '%' .. EscapeLike(search) .. '%'
     end
     local ApartmentData = MySQL.query.await('SELECT * FROM apartments', {})
     for k, v in pairs(ApartmentData) do
@@ -448,10 +562,14 @@ QBCore.Functions.CreateCallback('qb-phone:server:FetchResult', function(_, cb, s
     end
 end)
 
-QBCore.Functions.CreateCallback('qb-phone:server:GetVehicleSearchResults', function(_, cb, search)
-    search = escape_sqli(search)
+QBCore.Functions.CreateCallback('qb-phone:server:GetVehicleSearchResults', function(source, cb, search)
+    -- Mesmas regras do FetchResult: só polícia, input validado, vazio caso contrário.
+    if not IsPolice(source) then return cb(nil) end
+    search = SanitizeSearch(search)
+    if not search then return cb(nil) end
+
     local searchData = {}
-    local query = '%' .. search .. '%'
+    local query = '%' .. EscapeLike(search) .. '%'
     local result = MySQL.query.await('SELECT * FROM player_vehicles WHERE plate LIKE ? OR citizenid = ?',
         { query, search })
     if result[1] ~= nil then
@@ -559,35 +677,23 @@ QBCore.Functions.CreateCallback('qb-phone:server:HasPhone', function(source, cb)
 end)
 
 QBCore.Functions.CreateCallback('qb-phone:server:CanTransferMoney', function(source, cb, amount, iban)
-    -- strip bad characters from bank transfers
-    local newAmount = tostring(amount)
-    local newiban = tostring(iban)
-    for _, v in pairs(bannedCharacters) do
-        newAmount = string.gsub(newAmount, '%' .. v, '')
-        newiban = string.gsub(newiban, '%' .. v, '')
-    end
-    iban = newiban
-    amount = tonumber(newAmount)
-
+    -- Qualquer falha devolve false, tal como "a conta não existe".
     local Player = QBCore.Functions.GetPlayer(source)
-    if (Player.PlayerData.money.bank - amount) >= 0 then
-        local query = '%"account":"' .. iban .. '"%'
-        local result = MySQL.query.await('SELECT * FROM players WHERE charinfo LIKE ?', { query })
-        if result[1] ~= nil then
-            local Reciever = QBCore.Functions.GetPlayerByCitizenId(result[1].citizenid)
-            Player.Functions.RemoveMoney('bank', amount)
-            if Reciever ~= nil then
-                Reciever.Functions.AddMoney('bank', amount)
-            else
-                local RecieverMoney = json.decode(result[1].money)
-                RecieverMoney.bank = (RecieverMoney.bank + amount)
-                MySQL.update('UPDATE players SET money = ? WHERE citizenid = ?', { json.encode(RecieverMoney), result[1].citizenid })
-            end
-            cb(true)
-        else
-            cb(false)
-        end
+    amount = ValidateMoneyAmount(amount) -- rejeita negativos, zero, NaN e não-inteiros
+    iban = ValidateIban(iban)
+    if not Player or not amount or not iban then return cb(false) end
+    if Player.PlayerData.money.bank < amount then return cb(false) end
+
+    local target = FindPlayerByAccount(iban)
+    if not target or target.citizenid == Player.PlayerData.citizenid then return cb(false) end
+
+    -- Débito antes do crédito; se não der para creditar, reembolsa.
+    if not Player.Functions.RemoveMoney('bank', amount, 'phone-transfered-to-' .. target.citizenid) then return cb(false) end
+    if not CreditBank(target.citizenid, target.money, amount, 'phone-transfered-from-' .. Player.PlayerData.citizenid) then
+        Player.Functions.AddMoney('bank', amount, 'phone-transfer-refund')
+        return cb(false)
     end
+    cb(true)
 end)
 
 QBCore.Functions.CreateCallback('qb-phone:server:GetCurrentLawyers', function(_, cb)
@@ -794,20 +900,8 @@ RegisterNetEvent('qb-phone:server:CallContact', function(TargetData, CallId, Ano
     end
 end)
 
-RegisterNetEvent('qb-phone:server:BillingEmail', function(data, paid)
-    for _, v in pairs(QBCore.Functions.GetPlayers()) do
-        local target = QBCore.Functions.GetPlayer(v)
-        if target.PlayerData.job.name == data.society then
-            if paid then
-                local name = '' .. QBCore.Functions.GetPlayer(source).PlayerData.charinfo.firstname .. ' ' .. QBCore.Functions.GetPlayer(source).PlayerData.charinfo.lastname .. ''
-                TriggerClientEvent('qb-phone:client:BillingEmail', target.PlayerData.source, data, true, name)
-            else
-                local name = '' .. QBCore.Functions.GetPlayer(source).PlayerData.charinfo.firstname .. ' ' .. QBCore.Functions.GetPlayer(source).PlayerData.charinfo.lastname .. ''
-                TriggerClientEvent('qb-phone:client:BillingEmail', target.PlayerData.source, data, false, name)
-            end
-        end
-    end
-end)
+-- qb-phone:server:BillingEmail foi removido: o mail de faturação passou a ser
+-- enviado pelo servidor em PayInvoice/DeclineInvoice (SendBillingMailToSociety).
 
 RegisterNetEvent('qb-phone:server:UpdateHashtags', function(Handle, messageData)
     if Hashtags[Handle] ~= nil and next(Hashtags[Handle]) ~= nil then
@@ -865,32 +959,40 @@ RegisterNetEvent('qb-phone:server:UpdateTweets', function(NewTweets, TweetData)
 end)
 
 RegisterNetEvent('qb-phone:server:TransferMoney', function(iban, amount)
+    -- O emissor é sempre o source (o cliente não indica emissor). Ordem:
+    -- validar -> saldo -> destinatário -> DEBITAR -> creditar (com reembolso).
     local src = source
     local sender = QBCore.Functions.GetPlayer(src)
+    if not sender then return end
 
-    local query = '%' .. iban .. '%'
-    local result = MySQL.query.await('SELECT * FROM players WHERE charinfo LIKE ?', { query })
-    if result[1] ~= nil then
-        local reciever = QBCore.Functions.GetPlayerByCitizenId(result[1].citizenid)
+    amount = ValidateMoneyAmount(amount)
+    if not amount then
+        return TriggerClientEvent('QBCore:Notify', src, 'Valor de transferência inválido.', 'error')
+    end
+    -- Saldo antes de procurar a conta, para não revelar se a conta existe.
+    if sender.PlayerData.money.bank < amount then
+        return TriggerClientEvent('QBCore:Notify', src, 'Saldo insuficiente.', 'error')
+    end
 
-        if reciever ~= nil then
-            local PhoneItem = reciever.Functions.GetItemByName('phone')
-            reciever.Functions.AddMoney('bank', amount, 'phone-transfered-from-' .. sender.PlayerData.citizenid)
-            sender.Functions.RemoveMoney('bank', amount, 'phone-transfered-to-' .. reciever.PlayerData.citizenid)
+    iban = ValidateIban(iban)
+    local target = iban and FindPlayerByAccount(iban)
+    if not target or target.citizenid == sender.PlayerData.citizenid then
+        return TriggerClientEvent('QBCore:Notify', src, 'Este número de conta não existe!', 'error')
+    end
 
-            if PhoneItem ~= nil then
-                TriggerClientEvent('qb-phone:client:TransferMoney', reciever.PlayerData.source, amount,
-                    reciever.PlayerData.money.bank)
-            end
-        else
-            local moneyInfo = json.decode(result[1].money)
-            moneyInfo.bank = QBCore.Shared.Round(moneyInfo.bank + amount)
-            MySQL.update('UPDATE players SET money = ? WHERE citizenid = ?',
-                { json.encode(moneyInfo), result[1].citizenid })
-            sender.Functions.RemoveMoney('bank', amount, 'phone-transfered')
-        end
-    else
-        TriggerClientEvent('QBCore:Notify', src, "Este número de conta não existe!", 'error')
+    if not sender.Functions.RemoveMoney('bank', amount, 'phone-transfered-to-' .. target.citizenid) then
+        return TriggerClientEvent('QBCore:Notify', src, 'Saldo insuficiente.', 'error')
+    end
+
+    local credited, reciever = CreditBank(target.citizenid, target.money, amount, 'phone-transfered-from-' .. sender.PlayerData.citizenid)
+    if not credited then
+        -- Não foi possível creditar: devolve ao emissor.
+        sender.Functions.AddMoney('bank', amount, 'phone-transfer-refund')
+        return TriggerClientEvent('QBCore:Notify', src, 'Transferência falhou. O valor foi devolvido.', 'error')
+    end
+
+    if reciever and reciever.Functions.GetItemByName('phone') then
+        TriggerClientEvent('qb-phone:client:TransferMoney', reciever.PlayerData.source, amount, reciever.PlayerData.money.bank)
     end
 end)
 

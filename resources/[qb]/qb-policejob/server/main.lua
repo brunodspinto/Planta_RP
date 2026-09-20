@@ -2,6 +2,15 @@
 QBCore = exports['qb-core']:GetCoreObject()
 local updatingCops = false
 
+--- Polícia em serviço, confirmado no servidor a partir do source.
+--- Os menus já verificam isto no cliente, mas o cliente pode disparar o evento
+--- à mesma, por isso quem age tem de ser validado aqui.
+function IsOnDutyLeo(src)
+    local Player = QBCore.Functions.GetPlayer(src)
+    if not Player then return false end
+    return Player.PlayerData.job.type == 'leo' and Player.PlayerData.job.onduty
+end
+
 -- Functions
 
 local function UpdateBlips()
@@ -197,6 +206,9 @@ end)
 
 RegisterNetEvent('police:server:SetTracker', function(targetId)
     local src = source
+    if not IsOnDutyLeo(src) then
+        return TriggerClientEvent('QBCore:Notify', src, Lang:t('error.on_duty_police_only'), 'error')
+    end
     local playerPed = GetPlayerPed(src)
     local targetPed = GetPlayerPed(targetId)
     local playerCoords = GetEntityCoords(playerPed)

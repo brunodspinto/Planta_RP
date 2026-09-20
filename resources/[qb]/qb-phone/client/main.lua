@@ -663,7 +663,7 @@ RegisterNUICallback('PayInvoice', function(data, cb)
     QBCore.Functions.TriggerCallback('qb-phone:server:PayInvoice', function(resp)
         cb(resp)
     end, society, amount, invoiceId, senderCitizenId)
-    TriggerServerEvent('qb-phone:server:BillingEmail', data, true)
+    -- O mail para a sociedade é enviado pelo servidor, com os dados da fatura.
 end)
 
 RegisterNUICallback('DeclineInvoice', function(data, cb)
@@ -673,7 +673,7 @@ RegisterNUICallback('DeclineInvoice', function(data, cb)
     QBCore.Functions.TriggerCallback('qb-phone:server:DeclineInvoice', function(resp)
         cb(resp)
     end, society, amount, invoiceId)
-    TriggerServerEvent('qb-phone:server:BillingEmail', data, false)
+    -- O mail para a sociedade é enviado pelo servidor, com os dados da fatura.
 end)
 
 RegisterNUICallback('EditContact', function(data, cb)
@@ -1737,22 +1737,6 @@ RegisterNetEvent('qb-phone:client:UpdateAdverts', function(Adverts, LastAd)
         action = 'RefreshAdverts',
         Adverts = PhoneData.Adverts
     })
-end)
-
-RegisterNetEvent('qb-phone:client:BillingEmail', function(data, paid, name)
-    if paid then
-        TriggerServerEvent('qb-phone:server:sendNewMail', {
-            sender = 'Departamento de faturação',
-            subject = 'Fatura paga',
-            message = 'A fatura foi paga por ' .. name .. ' no valor de $' .. data.amount,
-        })
-    else
-        TriggerServerEvent('qb-phone:server:sendNewMail', {
-            sender = 'Departamento de faturação',
-            subject = 'Fatura recusada',
-            message = 'A fatura foi recusada por ' .. name .. ' no valor de $' .. data.amount,
-        })
-    end
 end)
 
 RegisterNetEvent('qb-phone:client:CancelCall', function()

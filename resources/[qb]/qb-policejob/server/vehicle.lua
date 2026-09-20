@@ -1,5 +1,19 @@
 local Plates = {}
 
+-- Valores que chegam do cliente (preço do depósito, danos, combustível):
+-- limitados ao intervalo válido antes de irem para a base de dados.
+local function clampNumber(value, min, max, default)
+    local n = tonumber(value)
+    if not n or n ~= n then return default end
+    if n < min then return min end
+    if n > max then return max end
+    return n
+end
+
+local function IsValidPlate(plate)
+    return type(plate) == 'string' and #plate > 0 and #plate <= 8
+end
+
 local function IsVehicleOwned(plate)
     local result = MySQL.scalar.await('SELECT plate FROM player_vehicles WHERE plate = ?', { plate })
     return result
@@ -36,7 +50,16 @@ end)
 
 RegisterNetEvent('police:server:Impound', function(plate, fullImpound, price, body, engine, fuel)
     local src = source
-    price = price and price or 0
+    -- Sem isto, qualquer jogador podia mandar para o depósito (ou apreender)
+    -- o carro de outro, com o preço de reboque que quisesse.
+    if not IsOnDutyLeo(src) then
+        return TriggerClientEvent('QBCore:Notify', src, Lang:t('error.on_duty_police_only'), 'error')
+    end
+    if not IsValidPlate(plate) then return end
+    price = clampNumber(price, 0, 1000000, 0)
+    body = clampNumber(body, 0, 1000, 1000)
+    engine = clampNumber(engine, 0, 1000, 1000)
+    fuel = clampNumber(fuel, 0, 100, 100)
     if IsVehicleOwned(plate) then
         if not fullImpound then
             MySQL.query('UPDATE player_vehicles SET state = ?, depotprice = ?, body = ?, engine = ?, fuel = ? WHERE plate = ?', { 0, price, body, engine, fuel, plate })
@@ -50,11 +73,18 @@ end)
 
 RegisterNetEvent('police:server:TakeOutImpound', function(plate, garage)
     local src = source
+    if not IsOnDutyLeo(src) then
+        return TriggerClientEvent('QBCore:Notify', src, Lang:t('error.on_duty_police_only'), 'error')
+    end
+    if not IsValidPlate(plate) then return end
+    local targetCoords = Config.Locations['impound'][garage]
+    if not targetCoords then return end
     local playerPed = GetPlayerPed(src)
     local playerCoords = GetEntityCoords(playerPed)
-    local targetCoords = Config.Locations['impound'][garage]
     if #(playerCoords - targetCoords) > 10.0 then return DropPlayer(src, 'Attempted exploit abuse') end
-    MySQL.update('UPDATE player_vehicles SET state = ? WHERE plate = ?', { 0, plate })
+    -- Só liberta o que está mesmo apreendido (state 2, o que a lista mostra).
+    local affected = MySQL.update.await('UPDATE player_vehicles SET state = ? WHERE plate = ? AND state = ?', { 0, plate, 2 })
+    if (tonumber(affected) or 0) < 1 then return end
     TriggerClientEvent('QBCore:Notify', src, Lang:t('success.impound_vehicle_removed'), 'success')
 end)
 

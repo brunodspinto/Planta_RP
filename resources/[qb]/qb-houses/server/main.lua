@@ -128,6 +128,135 @@ end
 
 exports('hasKey', hasKey)
 
+-- Preço de cada modelo do catálogo (Config.Furniture). É a única fonte de
+-- preços da mobília: o cliente só indica qual o modelo que quer.
+local FurniturePrices = {}
+for _, category in pairs(Config.Furniture) do
+    for _, item in ipairs(category.items or {}) do
+        FurniturePrices[item.object] = item.price
+    end
+end
+
+-- Mobília paga em qb-houses:server:buyFurniture e ainda não gravada, por casa:
+-- PendingFurniture[casa][modelo] = { instante_de_expiração, ... } (um por unidade).
+-- Ao gravar, cada móvel A MAIS do que já está na BD tem de ser coberto por uma
+-- destas compras, que é então consumida. Sem isto, o cliente podia mandar uma
+-- lista com mobília do catálogo que nunca comprou.
+local PendingFurniture = {}
+local PENDING_FURNITURE_TTL = 15 * 60
+
+local function PurgePendingFurniture(house)
+    local byModel = PendingFurniture[house]
+    if not byModel then return nil end
+    local now, remaining = os.time(), nil
+    for model, stamps in pairs(byModel) do
+        local kept = {}
+        for _, expires in ipairs(stamps) do
+            if expires > now then kept[#kept + 1] = expires end
+        end
+        if #kept > 0 then
+            byModel[model] = kept
+            remaining = byModel
+        else
+            byModel[model] = nil
+        end
+    end
+    if not remaining then PendingFurniture[house] = nil end
+    return remaining
+end
+
+local function AddPendingFurniture(house, model)
+    local byModel = PendingFurniture[house]
+    if not byModel then
+        byModel = {}
+        PendingFurniture[house] = byModel
+    end
+    local stamps = byModel[model]
+    if not stamps then
+        stamps = {}
+        byModel[model] = stamps
+    end
+    stamps[#stamps + 1] = os.time() + PENDING_FURNITURE_TTL
+end
+
+local function CountByModel(list)
+    local counts = {}
+    for _, d in pairs(list or {}) do
+        local model = type(d) == 'table' and d.hashname
+        if type(model) == 'string' then counts[model] = (counts[model] or 0) + 1 end
+    end
+    return counts
+end
+
+-- Decorações que estão mesmo gravadas (a referência do que já foi pago).
+local function GetSavedDecorations(house)
+    local result = MySQL.query.await('SELECT decorations FROM player_houses WHERE house = ?', { house })
+    if not result or not result[1] then return nil end
+    local raw = result[1].decorations
+    if not raw or raw == '' then return {} end
+    local ok, decoded = pcall(json.decode, raw)
+    return (ok and type(decoded) == 'table') and decoded or {}
+end
+
+-- O interior (shell) é criado nas coordenadas da porta, Config.MinZOffset
+-- metros abaixo. "Dentro da casa" = perto da porta na horizontal e à altura
+-- do shell. Ajustar se algum shell maior ficar de fora.
+local HOUSE_AREA_RADIUS = 40.0
+local HOUSE_AREA_ZBAND = 15.0
+local MAX_DECORATIONS = 250
+local MAX_DECORATION_ID = 1000
+
+local function isFiniteNumber(v)
+    return type(v) == 'number' and v == v and v ~= math.huge and v ~= -math.huge
+end
+
+local function IsInHouseArea(house, x, y, z)
+    local enter = Config.Houses[house] and Config.Houses[house].coords and Config.Houses[house].coords.enter
+    if not enter then return false end
+    local dx, dy = x - enter.x, y - enter.y
+    if dx * dx + dy * dy > HOUSE_AREA_RADIUS * HOUSE_AREA_RADIUS then return false end
+    return math.abs(z - (enter.z - Config.MinZOffset)) <= HOUSE_AREA_ZBAND
+end
+
+-- Posição vem do servidor (ped do source), nunca do cliente.
+local function IsPlayerInHouse(source, house)
+    local ped = GetPlayerPed(source)
+    if not ped or ped == 0 then return false end
+    local coords = GetEntityCoords(ped)
+    return IsInHouseArea(house, coords.x, coords.y, coords.z)
+end
+
+-- Valida a lista de decorações vinda do cliente e reconstrói-a só com os
+-- campos conhecidos. Devolve nil se alguma entrada for inválida: a gravação
+-- inteira é recusada. Só modelos do catálogo (um modelo inexistente deixa o
+-- cliente preso a carregá-lo) e só posições dentro do shell da casa.
+local function SanitizeDecorations(house, decorations)
+    if type(decorations) ~= 'table' then return nil end
+    local clean, seenIds = {}, {}
+    for _, d in pairs(decorations) do
+        if #clean >= MAX_DECORATIONS then return nil end
+        if type(d) ~= 'table' or type(d.hashname) ~= 'string' or not FurniturePrices[d.hashname] then return nil end
+        for _, field in ipairs({ 'x', 'y', 'z', 'rotx', 'roty', 'rotz' }) do
+            if not isFiniteNumber(d[field]) then return nil end
+        end
+        if not IsInHouseArea(house, d.x, d.y, d.z) then return nil end
+        local id = d.objectId
+        if not isFiniteNumber(id) or id % 1 ~= 0 or id < 1 or id > MAX_DECORATION_ID or seenIds[id] then return nil end
+        seenIds[id] = true
+        -- 'object' é o handle da entidade no cliente de quem gravou; o cliente
+        -- usa-o para apagar os objetos antigos. Aceite só como número.
+        if d.object ~= nil and not isFiniteNumber(d.object) then return nil end
+        clean[#clean + 1] = {
+            hashname = d.hashname,
+            x = d.x, y = d.y, z = d.z,
+            rotx = d.rotx, roty = d.roty, rotz = d.rotz,
+            objectId = id,
+            object = d.object,
+        }
+    end
+    return clean
+end
+
 local function GetHouseStreetCount(street)
     local count = 0
     local query = '%' .. street .. '%'
@@ -149,12 +278,27 @@ local function isHouseOwned(house)
     return false
 end
 
-local function escape_sqli(source)
-    local replacements = {
-        ['"'] = '\\"',
-        ["'"] = "\\'"
-    }
-    return source:gsub("['\"]", replacements)
+-- Pesquisa de casas do MDT (app 'meos'): mesmas regras do FetchResult do qb-phone.
+local SEARCH_MIN_LEN = 2
+local SEARCH_MAX_LEN = 50
+
+-- O job vem do servidor (source do callback), nunca do cliente.
+local function IsPolice(source)
+    local Player = QBCore.Functions.GetPlayer(source)
+    return Player ~= nil and Player.PlayerData.job.name == 'police'
+end
+
+-- Devolve a pesquisa limpa, ou nil se for inválida.
+local function SanitizeSearch(search)
+    if type(search) ~= 'string' then return nil end
+    search = search:gsub('^%s+', ''):gsub('%s+$', '')
+    if #search < SEARCH_MIN_LEN or #search > SEARCH_MAX_LEN then return nil end
+    return search
+end
+
+-- Escapa os wildcards do LIKE (\ % _) para o input ser texto literal.
+local function EscapeLike(value)
+    return (value:gsub('[\\%%_]', '\\%0'))
 end
 
 -- Events
@@ -325,8 +469,41 @@ RegisterNetEvent('qb-houses:server:RingDoor', function(house)
 end)
 
 RegisterNetEvent('qb-houses:server:savedecorations', function(house, decorations)
-    MySQL.update('UPDATE player_houses SET decorations = ? WHERE house = ?', { json.encode(decorations), house })
-    TriggerClientEvent('qb-houses:server:sethousedecorations', -1, house, decorations)
+    -- Só dono ou quem tem chave (verificado pelo source) pode gravar, e só
+    -- listas válidas. Em qualquer falha não grava nem envia nada aos clientes.
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    if not Player then return end
+    if type(house) ~= 'string' or not Config.Houses[house] then return end
+    if not hasKey(Player.PlayerData.license, Player.PlayerData.citizenid, house) then return end
+
+    local clean = SanitizeDecorations(house, decorations)
+    if not clean then return end
+
+    -- Cada móvel a mais face ao que está gravado tem de ter sido comprado.
+    local saved = GetSavedDecorations(house)
+    if not saved then return end
+    local savedCounts, wantedCounts = CountByModel(saved), CountByModel(clean)
+    local pending = PurgePendingFurniture(house) or {}
+    local toConsume = {}
+    for model, wanted in pairs(wantedCounts) do
+        local extra = wanted - (savedCounts[model] or 0)
+        if extra > 0 then
+            local stamps = pending[model]
+            if not stamps or #stamps < extra then return end
+            toConsume[model] = extra
+        end
+    end
+
+    MySQL.update.await('UPDATE player_houses SET decorations = ? WHERE house = ?', { json.encode(clean), house })
+
+    for model, extra in pairs(toConsume) do
+        local stamps = pending[model]
+        for _ = 1, extra do table.remove(stamps, 1) end
+        if #stamps == 0 then pending[model] = nil end
+    end
+
+    TriggerClientEvent('qb-houses:server:sethousedecorations', -1, house, clean)
 end)
 
 RegisterNetEvent('qb-houses:server:LogoutLocation', function()
@@ -407,18 +584,25 @@ end)
 
 -- Callbacks
 
-QBCore.Functions.CreateCallback('qb-houses:server:buyFurniture', function(source, cb, price)
+QBCore.Functions.CreateCallback('qb-houses:server:buyFurniture', function(source, cb, house, object)
+    -- O cliente só diz a casa e o modelo; o preço vem do catálogo do servidor.
+    -- Exige chave da casa e que o jogador esteja lá dentro (posição do servidor).
     local src = source
     local pData = QBCore.Functions.GetPlayer(src)
-    local bankBalance = pData.PlayerData.money['bank']
+    if not pData then return cb(false) end
+    if type(house) ~= 'string' or not Config.Houses[house] then return cb(false) end
+    local price = type(object) == 'string' and FurniturePrices[object]
+    if not price or price <= 0 then return cb(false) end
+    if not hasKey(pData.PlayerData.license, pData.PlayerData.citizenid, house) then return cb(false) end
+    if not IsPlayerInHouse(src, house) then return cb(false) end
 
-    if bankBalance >= price then
-        pData.Functions.RemoveMoney('bank', price, 'bought-furniture')
-        cb(true)
-    else
+    if pData.PlayerData.money['bank'] < price or not pData.Functions.RemoveMoney('bank', price, 'bought-furniture') then
         TriggerClientEvent('QBCore:Notify', src, Lang:t('error.not_enough_money'), 'error')
-        cb(false)
+        return cb(false)
     end
+    -- Pago: fica um crédito para a gravação seguinte desta casa.
+    AddPendingFurniture(house, object)
+    cb(true)
 end)
 
 QBCore.Functions.CreateCallback('qb-houses:server:ProximityKO', function(source, cb, house)
@@ -507,21 +691,33 @@ QBCore.Functions.CreateCallback('qb-houses:server:getHouseKeyHolders', function(
     end
 end)
 
-QBCore.Functions.CreateCallback('qb-phone:server:TransferCid', function(_, cb, NewCid, house)
-    local result = MySQL.query.await('SELECT * FROM players WHERE citizenid = ?', { NewCid })
-    if result[1] then
-        local HouseName = house.name
-        housekeyholders[HouseName] = {}
-        housekeyholders[HouseName][1] = NewCid
-        houseownercid[HouseName] = NewCid
-        houseowneridentifier[HouseName] = result[1].license
-        MySQL.update(
-            'UPDATE player_houses SET citizenid = ?, keyholders = ?, identifier = ? WHERE house = ?',
-            { NewCid, json.encode(housekeyholders[HouseName]), result[1].license, HouseName })
-        cb(true)
-    else
-        cb(false)
-    end
+QBCore.Functions.CreateCallback('qb-phone:server:TransferCid', function(source, cb, NewCid, house)
+    -- Só o dono atual pode transferir, verificado pelo source. Em qualquer
+    -- falha devolve false, tal como quando o citizenid de destino não existe.
+    local Player = QBCore.Functions.GetPlayer(source)
+    if not Player then return cb(false) end
+    if type(house) ~= 'table' or type(house.name) ~= 'string' or not Config.Houses[house.name] then return cb(false) end
+    if type(NewCid) ~= 'string' or #NewCid > 50 or not NewCid:match('^%w+$') then return cb(false) end
+
+    local HouseName = house.name
+    local license, cid = Player.PlayerData.license, Player.PlayerData.citizenid
+    if NewCid == cid or not isHouseOwner(license, cid, HouseName) then return cb(false) end
+
+    local result = MySQL.query.await('SELECT license FROM players WHERE citizenid = ?', { NewCid })
+    if not result[1] then return cb(false) end
+
+    -- UPDATE condicionado ao dono atual: a BD é a fonte de verdade e isto
+    -- também impede duas transferências em simultâneo da mesma casa.
+    local affected = MySQL.update.await(
+        'UPDATE player_houses SET citizenid = ?, keyholders = ?, identifier = ? WHERE house = ? AND citizenid = ? AND identifier = ?',
+        { NewCid, json.encode({ NewCid }), result[1].license, HouseName, cid, license })
+    if (tonumber(affected) or 0) < 1 then return cb(false) end
+
+    -- Memória só é atualizada depois de a BD confirmar a transferência.
+    housekeyholders[HouseName] = { NewCid }
+    houseownercid[HouseName] = NewCid
+    houseowneridentifier[HouseName] = result[1].license
+    cb(true)
 end)
 
 QBCore.Functions.CreateCallback('qb-houses:server:getHouseDecorations', function(_, cb, house)
@@ -673,11 +869,14 @@ QBCore.Functions.CreateCallback('qb-phone:server:GetHouseKeys', function(source,
     cb(MyKeys)
 end)
 
-QBCore.Functions.CreateCallback('qb-phone:server:MeosGetPlayerHouses', function(_, cb, input)
-    if input then
-        local search = escape_sqli(input)
+QBCore.Functions.CreateCallback('qb-phone:server:MeosGetPlayerHouses', function(source, cb, input)
+    -- Só polícia (pelo source). Sem autorização ou com input inválido devolve
+    -- nil, igual a "sem resultados", para não revelar se o registo existe.
+    if not IsPolice(source) then return cb(nil) end
+    local search = SanitizeSearch(input)
+    if search then
         local searchData = {}
-        local query = '%' .. search .. '%'
+        local query = '%' .. EscapeLike(search) .. '%'
         local result = MySQL.query.await('SELECT * FROM players WHERE citizenid = ? OR charinfo LIKE ?',
             { search, query })
         if result[1] then
@@ -702,6 +901,8 @@ QBCore.Functions.CreateCallback('qb-phone:server:MeosGetPlayerHouses', function(
                     }
                 end
                 cb(searchData)
+            else
+                cb(nil) -- antes não respondia e o cliente ficava à espera
             end
         else
             cb(nil)
