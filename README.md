@@ -133,9 +133,7 @@ Planta_RP/
 │   ├── [defaultmaps]/     # Mapas padrão (hospital, prisão, etc.)
 │   ├── [cars]/            # Veículos personalizados
 │   ├── [maps]/            # Mapas e locais de RP
-│   ├── [meus-scripts]/    # Scripts desenvolvidos
-│   └── assets/
-│       └── PROVENIENCIA.md # Origem e licença dos assets binários
+│   └── [meus-scripts]/    # Scripts desenvolvidos
 ├── tests/
 │   ├── run-lua-tests.ps1  # Script para executar testes
 │   └── lua/
@@ -173,14 +171,10 @@ Os ficheiros binários de jogo — modelos (`.ydr`, `.ydd`, `.yft`), texturas
 neste repositório** e são excluídos pelo `.gitignore`. São 357 ficheiros, cerca
 de 308 MB.
 
-**Porquê:** são assets de terceiros. Uma parte vem com licença clara e
-documentada, mas outra chegou ao projeto sem qualquer indicação de origem, e
-alguns modelos de veículos representam marcas reais. Um repositório público não
-é sítio para os redistribuir enquanto isso não estiver esclarecido — e mantê-los
-fora do git também evita arrastar centenas de MB em cada clone.
-
-A origem, a licença e o estado de cada pack estão documentados em
-[`resources/assets/PROVENIENCIA.md`](resources/assets/PROVENIENCIA.md).
+**Porquê:** são assets de terceiros, com as suas próprias condições de
+distribuição, e cada um tem de ser obtido junto da respetiva fonte. Mantê-los
+fora do git evita também arrastar centenas de MB em cada clone e em cada
+operação sobre o histórico.
 
 **O que isto significa na prática:**
 
@@ -258,8 +252,7 @@ o histórico do git identifica-as uma a uma.
 
 **Recursos sem licença.** 35 dos 100 recursos chegaram ao projeto sem qualquer
 ficheiro de licença — sobretudo mapas. Sem licença expressa, o padrão é *todos os
-direitos reservados*: não são redistribuíveis sem autorização do autor. Ver
-[`resources/assets/PROVENIENCIA.md`](resources/assets/PROVENIENCIA.md).
+direitos reservados*: não são redistribuíveis sem autorização do autor.
 
 ## Créditos e Agradecimentos
 
