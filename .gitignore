@@ -57,3 +57,5 @@ desktop.ini
 
 # Ficheiros-fonte de design
 *.psd
+# Added by code-review-graph
+.code-review-graph/
