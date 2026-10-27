@@ -3,6 +3,8 @@ local Translations = {
         negative = 'A tentar vender uma quantidade negativa?',
         no_melt = 'Não me deste nada para fundir..',
         no_items = 'Items insuficientes',
+        inventory_full = 'Inventário cheio, não coube %{value}. Fica guardado, volta para o recolher.',
+        still_melting = 'Ainda estou a fundir os teus items',
     },
     success = {
         sold = 'Tu vendeste %{value} x %{value2} por %{value3}€',

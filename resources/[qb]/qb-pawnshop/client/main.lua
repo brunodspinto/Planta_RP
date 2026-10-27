@@ -164,7 +164,7 @@ RegisterNetEvent('qb-pawnshop:client:openMenu', function()
 end)
 
 RegisterNetEvent('qb-pawnshop:client:openPawn', function(data)
-    QBCore.Functions.TriggerCallback('qb-pawnshop:server:getInv', function(inventory)
+    QBCore.Functions.TriggerCallback('qb-pawnshop:server:getInv', function(inventory, prices)
         local PlyInv = inventory
         local pawnMenu = {
             {
@@ -175,14 +175,16 @@ RegisterNetEvent('qb-pawnshop:client:openPawn', function(data)
         for _, v in pairs(PlyInv) do
             for i = 1, #data.items do
                 if v.name == data.items[i].item then
+                    -- Preço do servidor: o math.random da config dá valores diferentes em cada lado
+                    local price = prices[v.name] or data.items[i].price
                     pawnMenu[#pawnMenu + 1] = {
                         header = QBCore.Shared.Items[v.name].label,
-                        txt = Lang:t('info.sell_items', { value = data.items[i].price }),
+                        txt = Lang:t('info.sell_items', { value = price }),
                         params = {
                             event = 'qb-pawnshop:client:pawnitems',
                             args = {
                                 label = QBCore.Shared.Items[v.name].label,
-                                price = data.items[i].price,
+                                price = price,
                                 name = v.name,
                                 amount = v.amount
                             }
@@ -260,7 +262,7 @@ RegisterNetEvent('qb-pawnshop:client:pawnitems', function(item)
 
         if tonumber(sellingItem.amount) > 0 then
             if tonumber(sellingItem.amount) <= item.amount then
-                TriggerServerEvent('qb-pawnshop:server:sellPawnItems', item.name, sellingItem.amount, item.price)
+                TriggerServerEvent('qb-pawnshop:server:sellPawnItems', item.name, sellingItem.amount)
             else
                 QBCore.Functions.Notify(Lang:t('error.no_items'), 'error')
             end
@@ -290,7 +292,7 @@ RegisterNetEvent('qb-pawnshop:client:meltItems', function(item)
         end
         if meltingItem.amount ~= nil then
             if tonumber(meltingItem.amount) > 0 then
-                TriggerServerEvent('qb-pawnshop:server:meltItemRemove', item.name, meltingItem.amount, item)
+                TriggerServerEvent('qb-pawnshop:server:meltItemRemove', item.name, meltingItem.amount)
 
             else
                 QBCore.Functions.Notify(Lang:t('error.no_melt'), 'error')

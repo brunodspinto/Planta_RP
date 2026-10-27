@@ -3,7 +3,8 @@ local Translations = {
         negative = 'Trying to sell a negative amount?',
         no_melt = 'You didn\'t give me anything to melt...',
         no_items = 'Not enough items',
-        inventory_full = 'Inventory too full to receive all possible items. Try making sure inventory isn\'t full next time. Items Lost: %{value}'
+        inventory_full = 'Inventory too full to receive %{value}. It stays here, come back to pick it up.',
+        still_melting = 'Your items are still melting',
     },
     success = {
         sold = 'You have sold %{value} x %{value2} for $%{value3}',

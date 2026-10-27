@@ -157,6 +157,8 @@ local function GetDeliveryLocation()
     SetBlipRoute(NpcData.DeliveryBlip, true)
     SetBlipRouteColour(NpcData.DeliveryBlip, 3)
     NpcData.LastDeliver = NpcData.CurrentDeliver
+    -- O servidor regista onde a viagem começou e para onde vai, para limitar o pagamento
+    TriggerServerEvent('qb-taxi:server:NpcPickup', NpcData.CurrentDeliver)
     if not Config.UseTarget then -- added checks to disable distance checking if polyzone option is used
         CreateThread(function()
             while true and NpcData.Active do

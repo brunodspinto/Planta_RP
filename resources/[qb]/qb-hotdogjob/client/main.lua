@@ -279,26 +279,9 @@ local function FinishMinigame(faults)
     elseif faults == 1 then
         Quality = 'rare'
     end
-    if Config.Stock[Quality].Current + 1 <= Config.Stock[Quality].Max[Config.MyLevel] then
-        TriggerServerEvent('qb-hotdogjob:server:UpdateReputation', Quality)
-        if Config.MyLevel == 1 then
-            QBCore.Functions.Notify(Lang:t('success.made_hotdog', { value = Config.Stock[Quality].Label }), 'success')
-            Config.Stock[Quality].Current = Config.Stock[Quality].Current + 1
-        else
-            local Luck = math.random(1, 2)
-            local LuckyNumber = math.random(1, 2)
-            local LuckyAmount = math.random(1, Config.MyLevel)
-            if Luck == LuckyNumber then
-                QBCore.Functions.Notify(Lang:t('success.made_luck_hotdog', { value = LuckyAmount, value2 = Config.Stock[Quality].Label }), 'success')
-                Config.Stock[Quality].Current = Config.Stock[Quality].Current + LuckyAmount
-            else
-                QBCore.Functions.Notify(Lang:t('success.made_hotdog', { value = Config.Stock[Quality].Label }), 'success')
-                Config.Stock[Quality].Current = Config.Stock[Quality].Current + 1
-            end
-        end
-    else
-        QBCore.Functions.Notify(Lang:t('error.no_more', { value = Config.Stock[Quality].Label }), 'error')
-    end
+    -- O servidor decide quantos ficam feitos (sorte, limite do nível e reputação)
+    -- e devolve o stock com qb-hotdogjob:client:UpdateStock
+    TriggerServerEvent('qb-hotdogjob:server:MakeHotdog', Quality)
     PreparingFood = false
 end
 
@@ -627,7 +610,7 @@ local function SellToPed(ped)
                                     label = Lang:t('info.sell_dogs_target', { value = HotdogsForSale, value2 = (HotdogsForSale * SellingPrice) }),
                                     action = function(entity)
                                         QBCore.Functions.Notify(Lang:t('success.sold_hotdogs', { value = HotdogsForSale, value2 = (HotdogsForSale * SellingPrice) }), 'success')
-                                        TriggerServerEvent('qb-hotdogjob:server:Sell', pedCoords, HotdogsForSale, SellingPrice)
+                                        TriggerServerEvent('qb-hotdogjob:server:Sell', SellingData.Hotdog, HotdogsForSale, SellingPrice)
                                         SellingData.HasTarget = false
                                         LoadAnim('mp_common')
                                         TaskPlayAnim(PlayerPedId(), 'mp_common', 'givetake1_b', 8.0, 8.0, 1100, 48, 0.0, 0, 0, 0)
@@ -666,7 +649,7 @@ local function SellToPed(ped)
                     DrawText3Ds(pedCoords.x, pedCoords.y, pedCoords.z, Lang:t('info.sell_dogs', { value = HotdogsForSale, value2 = (HotdogsForSale * SellingPrice) }))
                     if IsControlJustPressed(0, 161) or IsDisabledControlJustPressed(0, 161) then
                         QBCore.Functions.Notify(Lang:t('success.sold_hotdogs', { value = HotdogsForSale, value2 = (HotdogsForSale * SellingPrice) }), 'success')
-                        TriggerServerEvent('qb-hotdogjob:server:Sell', pedCoords, HotdogsForSale, SellingPrice)
+                        TriggerServerEvent('qb-hotdogjob:server:Sell', SellingData.Hotdog, HotdogsForSale, SellingPrice)
                         SellingData.HasTarget = false
                         local Myped = PlayerPedId()
 
@@ -810,6 +793,12 @@ end)
 RegisterNetEvent('qb-hotdogjob:client:UpdateReputation', function(JobRep)
     PlayerData.metadata['rep'] = JobRep
     UpdateLevel()
+end)
+
+RegisterNetEvent('qb-hotdogjob:client:UpdateStock', function(Stock)
+    for k, v in pairs(Config.Stock) do
+        v.Current = Stock[k] or 0
+    end
 end)
 
 RegisterNetEvent('qb-hotdogjob:client:ToggleSell', function()

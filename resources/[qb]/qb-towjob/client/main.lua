@@ -178,6 +178,8 @@ local function CreateZone(type, number)
 end
 
 local function deliverVehicle(vehicle)
+    -- O servidor só paga as entregas que ele próprio validou
+    TriggerServerEvent('qb-tow:server:DeliverVehicle', NetworkGetNetworkIdFromEntity(vehicle))
     DeleteVehicle(vehicle)
     RemoveBlip(CurrentBlip2)
     JobsDone = JobsDone + 1
@@ -414,7 +416,7 @@ end)
 RegisterNetEvent('qb-tow:client:PaySlip', function()
     if JobsDone > 0 then
         RemoveBlip(CurrentBlip)
-        TriggerServerEvent("qb-tow:server:11101110", JobsDone)
+        TriggerServerEvent("qb-tow:server:11101110")
         JobsDone = 0
         NpcOn = false
     else
