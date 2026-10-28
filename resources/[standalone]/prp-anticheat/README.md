@@ -23,10 +23,10 @@ Dois modos, exclusivos:
 
 ### Bans persistentes
 - Tabela MySQL `prp_anticheat_bans` criada automaticamente no arranque.
-- Match por `license`, `steam`, `discord`, `fivem`, `ip` (qualquer um chega).
+- Match por `license`, `steam`, `discord`, `fivem` (qualquer um chega). O `ip` fica gravado mas só bloqueia com `Config.Punishment.BanMatchIP = true`, porque um IP partilhado (CGNAT, rede móvel, casa) apanhava inocentes.
 - Cache em memória (lookup O(1)).
 - `playerConnecting` rejeita ligações banidas antes de carregar recursos.
-- Bans podem ter expiração (`expires_at`) ou ser permanentes.
+- Bans podem ter expiração (`expires_at`) ou ser permanentes. Um ban temporário deixa de bloquear quando acaba, sem precisar de restart.
 
 ### Allowlist por ACE
 Devs/testers precisam fazer testes que dispararíam alertas (spawn massivo, etc.). Atribui:

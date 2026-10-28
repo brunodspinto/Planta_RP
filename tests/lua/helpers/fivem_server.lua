@@ -1,6 +1,6 @@
 -- Minimal FiveM + QBCore server runtime for testing resource handlers outside the game.
--- Every case runs between install() and uninstall(), so the mocked globals never leak
--- into other specs that share the same Lua state.
+-- Every case runs between install() and uninstall(), so the mocked globals (and any global a
+-- loaded resource creates) never leak into other specs that share the same Lua state.
 local M = {}
 
 local MOCKED_GLOBALS = {
@@ -35,23 +35,29 @@ local function makePlayer(src, job, cash, bank)
             source = src,
             citizenid = 'CID' .. src,
             job = { name = job, isboss = false, grade = { level = 0 } },
+            gang = { name = 'none', isboss = false },
+            charinfo = { firstname = 'Test', lastname = 'Player' },
             money = { cash = cash or 0, bank = bank or 0 },
             metadata = { rep = {} },
             items = {},
         },
         Functions = {},
     }
+    -- Same guards as qb-core: negative amounts are refused, NaN is not
     function P.Functions.AddMoney(kind, amount)
-        assert(type(amount) == 'number' and amount >= 0, 'invalid AddMoney amount: ' .. tostring(amount))
+        amount = tonumber(amount)
+        if amount < 0 then return false end
         P.PlayerData.money[kind] = P.PlayerData.money[kind] + amount
         M.money[#M.money + 1] = { src = src, kind = kind, amount = amount }
         return true
     end
     function P.Functions.RemoveMoney(kind, amount)
-        if P.PlayerData.money[kind] < amount then return false end
+        amount = tonumber(amount)
+        if amount < 0 or P.PlayerData.money[kind] < amount then return false end
         P.PlayerData.money[kind] = P.PlayerData.money[kind] - amount
         return true
     end
+    function P.Functions.SetPlayerData(key, value) P.PlayerData[key] = value end
     function P.Functions.GetRep(name) return P.PlayerData.metadata.rep[name] or 0 end
     function P.Functions.AddRep(name, n) P.PlayerData.metadata.rep[name] = (P.PlayerData.metadata.rep[name] or 0) + n end
     return P
@@ -62,7 +68,8 @@ local function resetState()
     M.money, M.items, M.spawned = {}, {}, {}
     M.now, M.timer = 1000000, 1000000
     M.coords, M.entities, M.netEntities, M.lastVehicle = {}, {}, {}, {}
-    M.players, M.aces = {}, {}
+    M.players, M.aces, M.states = {}, {}, {}
+    M.commands, M.clientCallbacks, M.objects, M.exported = {}, {}, 0, {}
     M.inventoryFull = false
     M.randomQueue = {}
     M.randomOverride = nil
@@ -108,7 +115,39 @@ local function installGlobals()
         for id, e in pairs(M.netEntities) do if e == ent then M.netEntities[id] = nil end end
     end
     IsPlayerAceAllowed = function(src, ace) return M.aces[src] == ace end
-    MySQL = { insert = function() end, query = { await = function() return {} end }, scalar = { await = function() end } }
+    MySQL = {
+        insert = setmetatable({ await = function() return 1 end }, { __call = function() end }),
+        update = setmetatable({ await = function() return 1 end }, { __call = function() end }),
+        rawExecute = { await = function() return {} end },
+        prepare = function() end,
+        query = setmetatable({ await = function() return {} end }, { __call = function() end }),
+        scalar = { await = function() end },
+    }
+    Player = function(src)
+        M.states[src] = M.states[src] or { state = {} }
+        return M.states[src]
+    end
+    GetSelectedPedWeapon = function() return 0 end
+    RemoveWeaponFromPed = function() end
+    GetInvokingResource = function() return nil end
+    TaskPlayAnim = function() end
+    CreateObjectNoOffset = function(_, x, y, z)
+        M.objects = M.objects + 1
+        local entity = 'object' .. M.objects
+        M.entities[entity] = { model = 0 }
+        M.netEntities[M.objects] = entity
+        M.coords[entity] = vector3(x, y, z)
+        return entity
+    end
+    GetAllVehicles = function()
+        local list = {}
+        for entity, data in pairs(M.entities) do
+            if data.plate then list[#list + 1] = entity end
+        end
+        return list
+    end
+    GetVehicleNumberPlateText = function(entity) return M.entities[entity] and M.entities[entity].plate end
+    RegisterCommand = function(name, fn) M.commands[name] = fn end
 
     Lang = { t = function(_, key) return key end }
     Locale = { new = function() return Lang end }
@@ -118,6 +157,22 @@ local function installGlobals()
             GetPlayer = function(src) return M.players[src] end,
             CreateCallback = function(name, fn) M.callbacks[name] = fn end,
             GetIdentifier = function() return 'id' end,
+            GetPlayers = function()
+                local list = {}
+                for src in pairs(M.players) do list[#list + 1] = src end
+                return list
+            end,
+            AddPlayerMethod = function() end,
+            CreateUseableItem = function() end,
+            GetPlayerByCitizenId = function(cid)
+                for _, P in pairs(M.players) do
+                    if P.PlayerData.citizenid == cid then return P end
+                end
+            end,
+            CanUseItem = function() end,
+            TriggerClientCallback = function(name, src, cb)
+                M.clientCallbacks[#M.clientCallbacks + 1] = { name = name, src = src, cb = cb }
+            end,
             HasPermission = function(src, perm) return IsPlayerAceAllowed(src, perm) end,
             SpawnVehicle = function(src, model)
                 M.spawned[#M.spawned + 1] = { src = src, model = model }
@@ -131,7 +186,7 @@ local function installGlobals()
         Commands = { Add = function() end, List = {} },
         Config = { Server = { Closed = false } },
         Players = {},
-        Shared = { Items = setmetatable({}, { __index = function(_, k) return { name = k, label = k } end }) },
+        Shared = { Items = setmetatable({}, { __index = function(_, k) return { name = k, label = k } end }), Jobs = {}, Gangs = {} },
     }
 
     local inventory = {
@@ -148,7 +203,7 @@ local function installGlobals()
             return true
         end,
     }
-    exports = setmetatable({}, { __index = function(_, res)
+    exports = setmetatable({}, { __call = function(_, name, fn) M.exported[name] = fn end, __index = function(_, res)
         if res == 'qb-core' then
             return { GetCoreObject = function() return QBCore end }
         elseif res == 'qb-inventory' then
@@ -176,13 +231,17 @@ local function installGlobals()
 end
 
 function M.install()
-    saved = { osTime = os.time, random = math.random, globals = {} }
+    saved = { osTime = os.time, random = math.random, globals = {}, keys = {} }
     for _, name in ipairs(MOCKED_GLOBALS) do saved.globals[name] = _G[name] end
+    for key in pairs(_G) do saved.keys[key] = true end
     resetState()
     installGlobals()
 end
 
 function M.uninstall()
+    for key in pairs(_G) do
+        if not saved.keys[key] then _G[key] = nil end
+    end
     for _, name in ipairs(MOCKED_GLOBALS) do _G[name] = saved.globals[name] end
     os.time = saved.osTime
     math.random = saved.random

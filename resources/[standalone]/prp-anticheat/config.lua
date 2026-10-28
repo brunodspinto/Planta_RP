@@ -75,6 +75,11 @@ Config.Punishment = {
     BanAtPoints        = 30, -- em modo pontos, threshold para promover a ban.
     BanDurationHours   = 0,  -- 0 = permanente. Pode ser overridden por /acban.
 
+    -- Bloquear também quem liga do IP de um ban. Desligado porque o mesmo IP é
+    -- partilhado em CGNAT, redes móveis, casas e cafés, e o ban apanhava quem não
+    -- tinha nada a ver. O IP continua gravado no ban e no webhook para consulta.
+    BanMatchIP         = false,
+
     -- Em modo direct-kick: que tipos disparam ban automático (em vez de só kick)?
     -- Aplica-se apenas a detecções de altíssima confiança.
     BanOnDetection = {

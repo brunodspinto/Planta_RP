@@ -12,11 +12,25 @@ local cache = {}
 
 -- Schema lookup expr: SELECT que filtra bans ainda válidos.
 -- expires_at IS NULL = permanente, ou expires_at > NOW().
+-- expires_in (segundos que faltam, contados pelo relógio da BD) evita misturar o
+-- fuso horário do MySQL com o do servidor ao calcular quando o ban acaba.
 local SELECT_ACTIVE = [[
-    SELECT id, license, steam, discord, fivem, ip, reason, banned_at, expires_at, banned_by
+    SELECT id, license, steam, discord, fivem, ip, reason, banned_at, expires_at, banned_by,
+        TIMESTAMPDIFF(SECOND, NOW(), expires_at) AS expires_in
     FROM prp_anticheat_bans
     WHERE expires_at IS NULL OR expires_at > NOW()
 ]]
+
+-- Momento (os.time) em que o ban acaba; nil = permanente
+local function expiresTs(row)
+    if row.expires_ts then return row.expires_ts end
+    if row.expires_in then return os.time() + row.expires_in end
+end
+
+local function isExpired(row)
+    local ts = expiresTs(row)
+    return ts ~= nil and ts <= os.time()
+end
 
 local function ensureSchema(cb)
     local sql = LoadResourceFile(GetCurrentResourceName(), 'sql/install.sql')
@@ -31,20 +45,29 @@ local function ensureSchema(cb)
     end)
 end
 
-local function cacheBan(row)
-    if row.license then cache['license:' .. row.license] = row end
-    if row.steam   then cache['steam:'   .. row.steam]   = row end
-    if row.discord then cache['discord:' .. row.discord] = row end
-    if row.fivem   then cache['fivem:'   .. row.fivem]   = row end
-    if row.ip      then cache['ip:'      .. row.ip]      = row end
+-- O IP só entra no match com Config.Punishment.BanMatchIP (ver config.lua)
+local function cacheKeys(row)
+    local keys = {}
+    if row.license then keys[#keys + 1] = 'license:' .. row.license end
+    if row.steam   then keys[#keys + 1] = 'steam:'   .. row.steam end
+    if row.discord then keys[#keys + 1] = 'discord:' .. row.discord end
+    if row.fivem   then keys[#keys + 1] = 'fivem:'   .. row.fivem end
+    if row.ip and Config.Punishment.BanMatchIP then keys[#keys + 1] = 'ip:' .. row.ip end
+    return keys
 end
 
+local function cacheBan(row)
+    row.expires_ts = expiresTs(row)
+    for _, key in ipairs(cacheKeys(row)) do cache[key] = row end
+end
+
+-- Só limpa as chaves que ainda apontam para este ban, para não levar outro
+-- ban que partilhe o mesmo identifier
 local function evictBan(row)
-    if row.license then cache['license:' .. row.license] = nil end
-    if row.steam   then cache['steam:'   .. row.steam]   = nil end
-    if row.discord then cache['discord:' .. row.discord] = nil end
-    if row.fivem   then cache['fivem:'   .. row.fivem]   = nil end
-    if row.ip      then cache['ip:'      .. row.ip]      = nil end
+    for _, key in ipairs(cacheKeys(row)) do
+        local cached = cache[key]
+        if cached and (cached == row or (row.id and cached.id == row.id)) then cache[key] = nil end
+    end
 end
 
 local function loadActive(cb)
@@ -77,8 +100,15 @@ end
 
 -- Lookup por identifier completo (com prefixo).
 -- Ex.: Bans.lookup('license:abc123') → banRow ou nil.
+-- A cache só é lida no arranque, por isso um ban temporário que já acabou é
+-- retirado aqui; antes ficava a bloquear até ao próximo restart.
 function Bans.lookup(idWithPrefix)
-    return cache[idWithPrefix]
+    local row = cache[idWithPrefix]
+    if row and isExpired(row) then
+        evictBan(row)
+        return nil
+    end
+    return row
 end
 
 -- Lookup considerando todos os identifiers de um source.
@@ -86,11 +116,18 @@ end
 function Bans.lookupBySource(source)
     local ids = PRP.Identifiers.fromSource(source)
     for kind, value in pairs(ids) do
-        if value and cache[value] then
-            return cache[value], kind
+        local row = value and Bans.lookup(value)
+        if row then
+            return row, kind
         end
     end
     return nil
+end
+
+-- Texto para mensagens: data de fim no fuso do servidor, ou 'permanente'
+function Bans.expiryText(row)
+    local ts = expiresTs(row)
+    return ts and os.date('%d/%m/%Y %H:%M', ts) or 'permanente'
 end
 
 -- Adiciona ban. ids = table com qualquer subset de {license, steam, discord, fivem, ip}.
@@ -107,19 +144,22 @@ function Bans.add(ids, reason, durationHours, bannedBy, cb)
         return
     end
 
-    local expiresAt = nil
+    -- O fim é calculado pelo NOW() da BD, o mesmo relógio do WHERE em SELECT_ACTIVE.
+    -- Com os.date, um MySQL noutro fuso horário deslocava a hora de fim.
+    local seconds = nil
     if durationHours and durationHours > 0 then
-        expiresAt = os.date('%Y-%m-%d %H:%M:%S', os.time() + durationHours * 3600)
+        seconds = math.floor(durationHours * 3600)
     end
 
+    local params = { clean.license, clean.steam, clean.discord, clean.fivem, clean.ip, reason or 'unspecified' }
+    if seconds then params[#params + 1] = seconds end
+    params[#params + 1] = bannedBy or 'system'
+
     MySQL.insert(
-        [[INSERT INTO prp_anticheat_bans
+        ([[INSERT INTO prp_anticheat_bans
             (license, steam, discord, fivem, ip, reason, expires_at, banned_by)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?)]],
-        {
-            clean.license, clean.steam, clean.discord, clean.fivem, clean.ip,
-            reason or 'unspecified', expiresAt, bannedBy or 'system'
-        },
+          VALUES (?, ?, ?, ?, ?, ?, %s, ?)]]):format(seconds and 'DATE_ADD(NOW(), INTERVAL ? SECOND)' or 'NULL'),
+        params,
         function(insertId)
             if not insertId or insertId == 0 then
                 if cb then cb(nil, 'INSERT falhou') end
@@ -134,9 +174,10 @@ function Bans.add(ids, reason, durationHours, bannedBy, cb)
                 fivem      = clean.fivem,
                 ip         = clean.ip,
                 reason     = reason,
-                expires_at = expiresAt,
+                expires_ts = seconds and os.time() + seconds,
                 banned_by  = bannedBy or 'system',
             }
+            row.expires_at = seconds and Bans.expiryText(row)
             cacheBan(row)
             PRP.State.countMetric('bansTotal')
             if cb then cb(row) end
@@ -191,7 +232,7 @@ function Bans.reload(cb)
 end
 
 function Bans.formatRow(row)
-    local expires = row.expires_at or 'permanente'
+    local expires = Bans.expiryText(row)
     return ('#%s | license=%s steam=%s discord=%s | reason=%s | expires=%s | by=%s'):format(
         row.id or '?',
         row.license or 'n/a',

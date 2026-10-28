@@ -25,6 +25,10 @@ function Database.ManagementOutfits.Add(outfitData)
     })
 end
 
+function Database.ManagementOutfits.GetByID(id)
+    return MySQL.single.await("SELECT * FROM management_outfits WHERE id = ?", {id})
+end
+
 function Database.ManagementOutfits.DeleteByID(id)
     MySQL.query.await("DELETE FROM management_outfits WHERE id = ?", {id})
 end

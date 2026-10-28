@@ -2,6 +2,35 @@ QBCore = exports['qb-core']:GetCoreObject()
 Inventories = {}
 Drops = {}
 RegisteredShops = {}
+-- Inventário que o servidor abriu a cada jogador, além do dele (stash, mala, drop,
+-- loja ou otherplayer-N). Mover, comprar e fechar só mexem neste; o nome que o
+-- cliente envia deixou de chegar para abrir caminho a inventários de outros.
+OpenedInventory = {}
+
+function IsWholeNumber(n)
+    return type(n) == 'number' and n == math.floor(n) and n > -math.huge and n < math.huge
+end
+
+-- Regista o inventário aberto e destranca o anterior, se o jogador abriu outro sem fechar
+function SetOpenedInventory(src, identifier)
+    local previous = OpenedInventory[src]
+    if previous and previous ~= identifier then
+        local inventory = Inventories[previous]
+        if inventory and inventory.isOpen == src then
+            inventory.isOpen = false
+            MySQL.prepare('INSERT INTO inventories (identifier, items) VALUES (?, ?) ON DUPLICATE KEY UPDATE items = ?', { previous, json.encode(inventory.items), json.encode(inventory.items) })
+        end
+        if Drops[previous] and Drops[previous].isOpen == src then Drops[previous].isOpen = false end
+    end
+    OpenedInventory[src] = identifier
+end
+
+function CopyTable(t)
+    if type(t) ~= 'table' then return t end
+    local copy = {}
+    for k, v in pairs(t) do copy[k] = CopyTable(v) end
+    return copy
+end
 
 CreateThread(function()
     MySQL.query('SELECT * FROM inventories', {}, function(result)
@@ -35,9 +64,16 @@ end)
 -- Handlers
 
 AddEventHandler('playerDropped', function()
+    local src = source
+    OpenedInventory[src] = nil
     for _, inv in pairs(Inventories) do
-        if inv.isOpen == source then
+        if inv.isOpen == src then
             inv.isOpen = false
+        end
+    end
+    for _, drop in pairs(Drops) do
+        if drop.isOpen == src then
+            drop.isOpen = false
         end
     end
 end)
@@ -150,18 +186,23 @@ RegisterNetEvent('qb-inventory:server:openVending', function(data)
     OpenShop(src, 'vending')
 end)
 
-RegisterNetEvent('qb-inventory:server:closeInventory', function(inventory)
+-- Fecha o que o servidor abriu a este jogador. O nome enviado pelo cliente é ignorado:
+-- antes servia para destrancar a stash ou o drop que outro jogador tinha aberto.
+RegisterNetEvent('qb-inventory:server:closeInventory', function()
     local src = source
     local QBPlayer = QBCore.Functions.GetPlayer(src)
     if not QBPlayer then return end
-    Player(source).state.inv_busy = false
-    if inventory:find('shop%-') then return end
+    Player(src).state.inv_busy = false
+    local inventory = OpenedInventory[src]
+    OpenedInventory[src] = nil
+    if not inventory or inventory:find('shop%-') then return end
     if inventory:find('otherplayer%-') then
         local targetId = tonumber(inventory:match('otherplayer%-(.+)'))
-        Player(targetId).state.inv_busy = false
+        if targetId and QBCore.Functions.GetPlayer(targetId) then Player(targetId).state.inv_busy = false end
         return
     end
     if Drops[inventory] then
+        if Drops[inventory].isOpen ~= src then return end
         Drops[inventory].isOpen = false
         if #Drops[inventory].items == 0 and not Drops[inventory].isOpen then -- if no listeed items in the drop on close
             TriggerClientEvent('qb-inventory:client:removeDropTarget', -1, Drops[inventory].entityId)
@@ -172,15 +213,19 @@ RegisterNetEvent('qb-inventory:server:closeInventory', function(inventory)
         end
         return
     end
-    if not Inventories[inventory] then return end
+    if not Inventories[inventory] or Inventories[inventory].isOpen ~= src then return end
     Inventories[inventory].isOpen = false
     MySQL.prepare('INSERT INTO inventories (identifier, items) VALUES (?, ?) ON DUPLICATE KEY UPDATE items = ?', { inventory, json.encode(Inventories[inventory].items), json.encode(Inventories[inventory].items) })
 end)
 
+-- O cartão de cidadão e a carta de condução mostram os dados do item que está no
+-- inventário (itemData), não os que o cliente envia: antes dava para mostrar um BI forjado.
 RegisterNetEvent('qb-inventory:server:useItem', function(item)
     local src = source
+    if type(item) ~= 'table' then return end
     local itemData = GetItemBySlot(src, item.slot)
     if not itemData then return end
+    item = itemData
     local itemInfo = QBCore.Shared.Items[itemData.name]
     if itemData.type == 'weapon' then
         TriggerClientEvent('qb-weapons:client:UseWeapon', src, itemData, itemData.info.quality and itemData.info.quality > 0)
@@ -250,6 +295,7 @@ RegisterNetEvent('qb-inventory:server:openDrop', function(dropId)
     if drop.isOpen then return end
     local distance = #(playerCoords - drop.coords)
     if distance > 2.5 then return end
+    SetOpenedInventory(src, dropId)
     local formattedInventory = {
         name = dropId,
         label = dropId,
@@ -257,18 +303,27 @@ RegisterNetEvent('qb-inventory:server:openDrop', function(dropId)
         slots = drop.slots,
         inventory = drop.items
     }
-    drop.isOpen = true
+    drop.isOpen = src
     TriggerClientEvent('qb-inventory:client:openInventory', source, Player.PlayerData.items, formattedInventory)
 end)
 
-RegisterNetEvent('qb-inventory:server:updateDrop', function(dropId, coords)
-    Drops[dropId].coords = coords
+-- Quem larga um saco que trazia na mão atualiza a posição dele. Antes qualquer
+-- cliente punha as coords de qualquer drop ao seu lado e abria-o do outro lado do mapa.
+RegisterNetEvent('qb-inventory:server:updateDrop', function(dropId)
+    local src = source
+    local drop = type(dropId) == 'string' and Drops[dropId]
+    if not drop then return end
+    local bag = NetworkGetEntityFromNetworkId(drop.entityId)
+    if not DoesEntityExist(bag) then return end
+    local playerCoords = GetEntityCoords(GetPlayerPed(src))
+    if #(playerCoords - GetEntityCoords(bag)) > 5.0 then return end
+    drop.coords = playerCoords
 end)
 
+-- Só o 'remove' é usado (qb-weapons, ao atirar uma bola de neve). O 'add' dava bolas
+-- de neve de graça a qualquer cliente e foi retirado.
 RegisterNetEvent('qb-inventory:server:snowball', function(action)
-    if action == 'add' then
-        AddItem(source, 'weapon_snowball', 1, false, false, 'qb-inventory:server:snowball')
-    elseif action == 'remove' then
+    if action == 'remove' then
         RemoveItem(source, 'weapon_snowball', 1, false, 'qb-inventory:server:snowball')
     end
 end)
@@ -286,9 +341,21 @@ QBCore.Functions.CreateCallback('qb-inventory:server:createDrop', function(sourc
         cb(false)
         return
     end
+    -- O saco leva uma cópia do item que estava no slot, não o que o cliente envia:
+    -- antes dava para largar quantidades negativas (o RemoveItem somava) e info forjada
+    local fromSlot = type(item) == 'table' and tonumber(item.fromSlot)
+    local amount = type(item) == 'table' and tonumber(item.amount)
+    local slotItem = fromSlot and GetItemBySlot(src, fromSlot)
+    if not slotItem or not IsWholeNumber(amount) or amount < 1 or amount > slotItem.amount then
+        cb(false)
+        return
+    end
+    item = CopyTable(slotItem)
+    item.amount = amount
+    item.slot = 1
     local playerPed = GetPlayerPed(src)
     local playerCoords = GetEntityCoords(playerPed)
-    if RemoveItem(src, item.name, item.amount, item.fromSlot, 'dropped item') then
+    if RemoveItem(src, item.name, amount, fromSlot, 'dropped item') then
         if item.type == 'weapon' then checkWeapon(src, item) end
         TaskPlayAnim(playerPed, 'pickup_object', 'pickup_low', 8.0, -8.0, 2000, 0, 0, false, false, false)
         local bag = CreateObjectNoOffset(Config.ItemDropObject, playerCoords.x + 0.5, playerCoords.y + 0.5, playerCoords.z, true, true, false)
@@ -311,25 +378,31 @@ QBCore.Functions.CreateCallback('qb-inventory:server:createDrop', function(sourc
                 coords = playerCoords,
                 maxweight = Config.DropSize.maxweight,
                 slots = Config.DropSize.slots,
-                isOpen = true
+                isOpen = src
             }
             TriggerClientEvent('qb-inventory:client:setupDropTarget', -1, dropId)
         else
             table.insert(Drops[newDropId].items, item)
         end
+        SetOpenedInventory(src, newDropId)
         cb(dropId)
     else
         cb(false)
     end
 end)
 
+-- Quantidade inteira (0.01 de uma arma custava 1% do preço e dava a arma inteira),
+-- só na loja que o servidor abriu a este jogador e com o item e a info da loja.
 QBCore.Functions.CreateCallback('qb-inventory:server:attemptPurchase', function(source, cb, data)
-    local itemInfo = data.item
-    local amount = data.amount
+    if type(data) ~= 'table' or type(data.item) ~= 'table' or type(data.shop) ~= 'string' then
+        cb(false)
+        return
+    end
+    local amount = tonumber(data.amount)
     local shop = string.gsub(data.shop, 'shop%-', '')
     local Player = QBCore.Functions.GetPlayer(source)
 
-    if amount < 0 then cb(false) return end
+    if not IsWholeNumber(amount) or amount < 1 then cb(false) return end
 
     if not Player then
         cb(false)
@@ -337,10 +410,17 @@ QBCore.Functions.CreateCallback('qb-inventory:server:attemptPurchase', function(
     end
 
     local shopInfo = RegisteredShops[shop]
-    if not shopInfo then
+    if not shopInfo or OpenedInventory[source] ~= 'shop-' .. shop then
         cb(false)
         return
     end
+
+    local shopItem = shopInfo.items[tonumber(data.item.slot)]
+    if not shopItem then
+        cb(false)
+        return
+    end
+    local itemInfo = { name = data.item.name, slot = shopItem.slot }
 
     local playerPed = GetPlayerPed(source)
     local playerCoords = GetEntityCoords(playerPed)
@@ -372,8 +452,8 @@ QBCore.Functions.CreateCallback('qb-inventory:server:attemptPurchase', function(
     local price = shopInfo.items[itemInfo.slot].price * amount
     if Player.PlayerData.money.cash >= price then
         Player.Functions.RemoveMoney('cash', price, 'shop-purchase')
-        AddItem(source, itemInfo.name, amount, nil, itemInfo.info, 'shop-purchase')
-        shopInfo.items[itemInfo.slot].amount -= amount
+        AddItem(source, shopItem.name, amount, nil, CopyTable(shopItem.info), 'shop-purchase')
+        shopItem.amount -= amount
         TriggerEvent('qb-shops:server:UpdateShopItems', shop, itemInfo, amount)
         cb(true)
     else
@@ -404,38 +484,42 @@ QBCore.Functions.CreateCallback('qb-inventory:server:giveItem', function(source,
         return
     end
 
-    local itemInfo = QBCore.Shared.Items[item:lower()]
+    local itemInfo = type(item) == 'string' and QBCore.Shared.Items[item:lower()]
     if not itemInfo then
         cb(false)
         return
     end
 
-    local hasItem = HasItem(source, item)
-    if not hasItem then
-        cb(false)
-        return
-    end
-
-    local itemAmount = GetItemByName(source, item).amount
-    if itemAmount <= 0 then
+    -- Quantidade inteira e positiva (com -N o RemoveItem somava itens ao jogador) e a
+    -- info do item que está no slot, não a que o cliente envia (forjar armas/documentos)
+    local slotItem = slot and GetItemBySlot(source, slot) or GetItemByName(source, item)
+    if not slotItem or slotItem.name:lower() ~= item:lower() then
         cb(false)
         return
     end
 
     local giveAmount = tonumber(amount)
-    if giveAmount > itemAmount then
+    if not IsWholeNumber(giveAmount) or giveAmount < 1 or giveAmount > slotItem.amount then
         cb(false)
         return
     end
 
-    local removeItem = RemoveItem(source, item, giveAmount, slot, 'Item given to ID #' .. target)
+    if not CanAddItem(target, slotItem.name, giveAmount) then
+        cb(false)
+        return
+    end
+
+    info = CopyTable(slotItem.info)
+    local fromSlot = slotItem.slot
+    local removeItem = RemoveItem(source, slotItem.name, giveAmount, fromSlot, 'Item given to ID #' .. target)
     if not removeItem then
         cb(false)
         return
     end
 
-    local giveItem = AddItem(target, item, giveAmount, false, info, 'Item given from ID #' .. source)
+    local giveItem = AddItem(target, slotItem.name, giveAmount, false, info, 'Item given from ID #' .. source)
     if not giveItem then
+        AddItem(source, slotItem.name, giveAmount, fromSlot, info, 'give failed, item returned')
         cb(false)
         return
     end
@@ -492,14 +576,60 @@ local function getIdentifier(inventoryId, src)
     end
 end
 
+-- O jogador só mexe no próprio inventário e no que o servidor lhe abriu. Antes o
+-- cliente escolhia os nomes e tirava itens de qualquer stash, mala, drop ou jogador.
+local function canAccess(src, inventoryId)
+    if inventoryId == 'player' then return true end
+    if OpenedInventory[src] ~= inventoryId then return false end
+    if inventoryId:find('otherplayer%-') then
+        local targetId = tonumber(inventoryId:match('otherplayer%-(.+)'))
+        if not targetId or not QBCore.Functions.GetPlayer(targetId) then return false end
+        return #(GetEntityCoords(GetPlayerPed(src)) - GetEntityCoords(GetPlayerPed(targetId))) <= 10.0
+    end
+    return true
+end
+
+local function getMaxSlots(inventoryId)
+    if inventoryId == 'player' or inventoryId:find('otherplayer%-') then return Config.MaxSlots end
+    local inventory = Drops[inventoryId] or Inventories[inventoryId]
+    return inventory and inventory.slots or 0
+end
+
+-- Se o destino recusar (peso, por exemplo), o item volta para onde estava em vez de desaparecer
+local function moveItem(fromId, toId, name, amount, fromSlot, toSlot, info, reason)
+    if not RemoveItem(fromId, name, amount, fromSlot, reason) then return end
+    if AddItem(toId, name, amount, toSlot, info, reason) then return end
+    AddItem(fromId, name, amount, fromSlot, info, reason .. ' (reverted)')
+end
+
+local function swapItems(fromId, toId, fromItem, toItem, fromSlot, toSlot)
+    local fromName, fromAmount, fromInfo = fromItem.name, fromItem.amount, fromItem.info
+    local toName, toAmount, toInfo = toItem.name, toItem.amount, toItem.info
+    if not RemoveItem(fromId, fromName, fromAmount, fromSlot, 'swapped item') then return end
+    if not RemoveItem(toId, toName, toAmount, toSlot, 'swapped item') then
+        AddItem(fromId, fromName, fromAmount, fromSlot, fromInfo, 'swap reverted')
+        return
+    end
+    local addedTo = AddItem(toId, fromName, fromAmount, toSlot, fromInfo, 'swapped item')
+    local addedFrom = AddItem(fromId, toName, toAmount, fromSlot, toInfo, 'swapped item')
+    if addedTo and addedFrom then return end
+    if addedTo then RemoveItem(toId, fromName, fromAmount, toSlot, 'swap reverted') end
+    if addedFrom then RemoveItem(fromId, toName, toAmount, fromSlot, 'swap reverted') end
+    AddItem(fromId, fromName, fromAmount, fromSlot, fromInfo, 'swap reverted')
+    AddItem(toId, toName, toAmount, toSlot, toInfo, 'swap reverted')
+end
+
 RegisterNetEvent('qb-inventory:server:SetInventoryData', function(fromInventory, toInventory, fromSlot, toSlot, fromAmount, toAmount)
-    if toInventory:find('shop%-') then return end
-    if not fromInventory or not toInventory or not fromSlot or not toSlot or not fromAmount or not toAmount or fromAmount < 0 or toAmount < 0 then return end
     local src = source
+    if type(fromInventory) ~= 'string' or type(toInventory) ~= 'string' then return end
+    if fromInventory:find('shop%-') or toInventory:find('shop%-') then return end
     local Player = QBCore.Functions.GetPlayer(src)
     if not Player then return end
+    if not canAccess(src, fromInventory) or not canAccess(src, toInventory) then return end
 
     fromSlot, toSlot, fromAmount, toAmount = tonumber(fromSlot), tonumber(toSlot), tonumber(fromAmount), tonumber(toAmount)
+    if not IsWholeNumber(toAmount) or toAmount < 1 or not fromAmount or fromAmount < 0 then return end
+    if not IsWholeNumber(toSlot) or toSlot < 1 or toSlot > getMaxSlots(toInventory) then return end
 
     local fromItem = getItem(fromInventory, src, fromSlot)
     local toItem = getItem(toInventory, src, toSlot)
@@ -511,28 +641,14 @@ RegisterNetEvent('qb-inventory:server:SetInventoryData', function(fromInventory,
         local fromId = getIdentifier(fromInventory, src)
         local toId = getIdentifier(toInventory, src)
 
-        if toItem and fromItem.name == toItem.name then
-            if RemoveItem(fromId, fromItem.name, toAmount, fromSlot, 'stacked item') then
-                AddItem(toId, toItem.name, toAmount, toSlot, toItem.info, 'stacked item')
-            end
+        if toItem and fromItem.name == toItem.name and not toItem.unique then
+            moveItem(fromId, toId, fromItem.name, toAmount, fromSlot, toSlot, toItem.info, 'stacked item')
         elseif not toItem and toAmount < fromAmount then
-            if RemoveItem(fromId, fromItem.name, toAmount, fromSlot, 'split item') then
-                AddItem(toId, fromItem.name, toAmount, toSlot, fromItem.info, 'split item')
-            end
+            moveItem(fromId, toId, fromItem.name, toAmount, fromSlot, toSlot, CopyTable(fromItem.info), 'split item')
+        elseif toItem then
+            swapItems(fromId, toId, fromItem, toItem, fromSlot, toSlot)
         else
-            if toItem then
-                local fromItemAmount = fromItem.amount
-                local toItemAmount = toItem.amount
-
-                if RemoveItem(fromId, fromItem.name, fromItemAmount, fromSlot, 'swapped item') and RemoveItem(toId, toItem.name, toItemAmount, toSlot, 'swapped item') then
-                    AddItem(toId, fromItem.name, fromItemAmount, toSlot, fromItem.info, 'swapped item')
-                    AddItem(fromId, toItem.name, toItemAmount, fromSlot, toItem.info, 'swapped item')
-                end
-            else
-                if RemoveItem(fromId, fromItem.name, toAmount, fromSlot, 'moved item') then
-                    AddItem(toId, fromItem.name, toAmount, toSlot, fromItem.info, 'moved item')
-                end
-            end
+            moveItem(fromId, toId, fromItem.name, toAmount, fromSlot, toSlot, fromItem.info, 'moved item')
         end
     end
 end)

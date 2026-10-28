@@ -503,6 +503,7 @@ function CloseInventory(source, identifier)
     if identifier and Inventories[identifier] then
         Inventories[identifier].isOpen = false
     end
+    OpenedInventory[source] = nil
     Player(source).state.inv_busy = false
     TriggerClientEvent('qb-inventory:client:closeInv', source)
 end
@@ -528,6 +529,7 @@ function OpenInventoryById(source, targetId)
     }
     Wait(1500)
     Player(targetId).state.inv_busy = true
+    SetOpenedInventory(source, 'otherplayer-' .. targetId)
     TriggerClientEvent('qb-inventory:client:openInventory', source, playerItems, formattedInventory)
 end
 
@@ -600,6 +602,7 @@ function OpenShop(source, name)
         slots = #RegisteredShops[name].items,
         inventory = RegisteredShops[name].items
     }
+    SetOpenedInventory(source, 'shop-' .. RegisteredShops[name].name)
     TriggerClientEvent('qb-inventory:client:openInventory', source, Player.PlayerData.items, formattedInventory)
 end
 
@@ -615,6 +618,7 @@ function OpenInventory(source, identifier, data)
 
     if not identifier then
         Player(source).state.inv_busy = true
+        SetOpenedInventory(source, nil)
         TriggerClientEvent('qb-inventory:client:openInventory', source, QBPlayer.PlayerData.items)
         return
     end
@@ -636,6 +640,7 @@ function OpenInventory(source, identifier, data)
     inventory.slots = (data and data.slots) or (inventory and inventory.slots) or Config.StashSize.slots
     inventory.label = (data and data.label) or (inventory and inventory.label) or identifier
     inventory.isOpen = source
+    SetOpenedInventory(source, identifier)
 
     local formattedInventory = {
         name = identifier,
@@ -715,13 +720,18 @@ function AddItem(identifier, item, amount, slot, info, reason)
         return false
     end
 
+    -- Quantidades negativas, fracionárias ou NaN nunca são legítimas e abriam dupes
+    amount = tonumber(amount) or 1
+    if not IsWholeNumber(amount) or amount < 1 then
+        print('AddItem: Invalid amount ' .. tostring(amount))
+        return false
+    end
+
     local totalWeight = GetTotalWeight(inventory)
     if totalWeight + (itemInfo.weight * amount) > inventoryWeight then
         print('AddItem: Not enough weight available')
         return false
     end
-
-    amount = tonumber(amount) or 1
     local updated = false
 
     if not itemInfo.unique then
@@ -843,6 +853,10 @@ function RemoveItem(identifier, item, amount, slot, reason)
     end
 
     amount = tonumber(amount)
+    if not IsWholeNumber(amount) or amount < 1 then
+        print('RemoveItem: Invalid amount ' .. tostring(amount))
+        return false
+    end
     if inventoryItem.amount < amount then
         print('RemoveItem: Not enough items in slot')
         return false

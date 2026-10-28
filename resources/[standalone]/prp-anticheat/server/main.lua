@@ -20,7 +20,7 @@ AddEventHandler('playerConnecting', function(playerName, _, deferrals)
 
     local ban, matchKind = PRP.Bans.lookupBySource(src)
     if ban then
-        local expires = ban.expires_at or 'permanente'
+        local expires = PRP.Bans.expiryText(ban)
         deferrals.done(
             ('[prp-anticheat] Estás banido.\nMotivo: %s\nExpira: %s\nReferência: ban #%s\nMatch: %s')
                 :format(ban.reason or 'n/a', expires, ban.id or '?', matchKind or 'n/a'))

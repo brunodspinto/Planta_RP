@@ -112,13 +112,38 @@ RegisterCommand('hotbar', function(source)
     TriggerClientEvent('qb-inventory:client:hotbar', source, hotbarItems)
 end, false)
 
+local function trimPlate(plate)
+    return (tostring(plate or ''):gsub('^%s+', ''):gsub('%s+$', ''))
+end
+
+-- O cliente diz que mala ou porta-luvas abrir. Sem confirmar no servidor, bastava
+-- enviar a matrícula de qualquer carro do mapa para lhe tirar as coisas.
+local function isVehicleStorageReachable(source, inventory)
+    local kind, plate = inventory:match('^(%a+)%-(.+)$')
+    plate = trimPlate(plate)
+    if plate == '' then return false end
+    local ped = GetPlayerPed(source)
+    if kind == 'glovebox' then
+        local vehicle = GetVehiclePedIsIn(ped, false)
+        return vehicle ~= 0 and trimPlate(GetVehicleNumberPlateText(vehicle)) == plate
+    elseif kind == 'trunk' then
+        local coords = GetEntityCoords(ped)
+        for _, vehicle in ipairs(GetAllVehicles()) do
+            if #(GetEntityCoords(vehicle) - coords) < 10.0 and trimPlate(GetVehicleNumberPlateText(vehicle)) == plate then
+                return true
+            end
+        end
+    end
+    return false
+end
+
 RegisterCommand('inventory', function(source)
     if Player(source).state.inv_busy then return end
     local QBPlayer = QBCore.Functions.GetPlayer(source)
     if not QBPlayer then return end
     if not QBPlayer or QBPlayer.PlayerData.metadata['isdead'] or QBPlayer.PlayerData.metadata['inlaststand'] or QBPlayer.PlayerData.metadata['ishandcuffed'] then return end
     QBCore.Functions.TriggerClientCallback('qb-inventory:client:vehicleCheck', source, function(inventory, class)
-        if not inventory then return OpenInventory(source) end
+        if type(inventory) ~= 'string' or not isVehicleStorageReachable(source, inventory) then return OpenInventory(source) end
         if inventory:find('trunk-') then
             OpenInventory(source, inventory, {
                 slots = VehicleStorage[class] and VehicleStorage[class].trunkSlots or VehicleStorage.default.slots,

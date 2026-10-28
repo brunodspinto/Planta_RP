@@ -7,9 +7,10 @@ author 'PlantaRP'
 description 'Anticheat server-side com persistência, detecções de gameplay e bans'
 version '2.0.0'
 
-shared_script 'config.lua'
-
+-- Só servidor: como shared_script ia para os clientes, que ficavam a saber os
+-- limites de cada deteção para ficar mesmo abaixo deles
 server_scripts {
+    'config.lua',
     '@oxmysql/lib/MySQL.lua',
     'server/state.lua',
     'server/identifiers.lua',

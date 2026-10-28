@@ -30,6 +30,29 @@ local function getOutfitsForPlayer(citizenid)
     end
 end
 
+-- Os eventos de outfits recebem só o id; sem isto qualquer cliente alterava ou apagava
+-- outfits de outros jogadores
+local function ownsOutfit(citizenID, outfitID)
+    if not citizenID or not outfitID then return false end
+    local outfit = Database.PlayerOutfits.GetByID(outfitID)
+    return outfit ~= nil and outfit.citizenid == citizenID
+end
+
+-- Fardas de emprego/gang: só o chefe desse emprego ou gang as guarda ou apaga
+local function isManagementBoss(src, mType, groupName)
+    local group = mType == "Gang" and Framework.GetGang(src) or Framework.GetJob(src)
+    return group ~= nil and group.name == groupName and group.isboss == true
+end
+
+-- Preço de cada tatuagem segundo shared/tattoos.lua. O cliente mandava a tatuagem com
+-- o próprio `cost`, por isso bastava pôr 0 para a ter de graça.
+local TattooCosts = {}
+for _, zone in pairs(Config.Tattoos or {}) do
+    for _, tattoo in ipairs(zone) do
+        TattooCosts[tostring(tattoo.collection) .. ":" .. tostring(tattoo.name)] = tattoo.cost or Config.TattooCost
+    end
+end
+
 local function GenerateUniqueCode()
     local code, exists
     repeat
@@ -41,7 +64,8 @@ end
 
 -- Callback(s)
 
-lib.callback.register("illenium-appearance:server:generateOutfitCode", function(_, outfitID)
+lib.callback.register("illenium-appearance:server:generateOutfitCode", function(source, outfitID)
+    if not ownsOutfit(Framework.GetPlayerID(source), outfitID) then return end
     local existingOutfitCode = Database.PlayerOutfitCodes.GetByOutfitID(outfitID)
     if not existingOutfitCode then
         local code = GenerateUniqueCode()
@@ -77,13 +101,16 @@ lib.callback.register("illenium-appearance:server:importOutfitCode", function(so
         return
     end
 
-    outfitCache[citizenID][#outfitCache[citizenID] + 1] = {
-        id = id,
-        name = outfitName,
-        model = playerOutfit.model,
-        components = json.decode(playerOutfit.components),
-        props = json.decode(playerOutfit.props)
-    }
+    -- Sem cache ainda, o próximo getOutfits lê da base de dados já com este outfit
+    if outfitCache[citizenID] then
+        outfitCache[citizenID][#outfitCache[citizenID] + 1] = {
+            id = id,
+            name = outfitName,
+            model = playerOutfit.model,
+            components = json.decode(playerOutfit.components),
+            props = json.decode(playerOutfit.props)
+        }
+    end
 
     return true
 end)
@@ -104,7 +131,9 @@ end)
 
 lib.callback.register("illenium-appearance:server:payForTattoo", function(source, tattoo)
     local src = source
-    local cost = tattoo.cost or Config.TattooCost
+    if type(tattoo) ~= "table" then return false end
+    local cost = TattooCosts[tostring(tattoo.collection) .. ":" .. tostring(tattoo.name)]
+    if not cost then return false end
 
     if Framework.RemoveMoney(src, "cash", cost) then
         lib.notify(src, {
@@ -224,6 +253,7 @@ RegisterNetEvent("illenium-appearance:server:updateOutfit", function(id, model, 
         getOutfitsForPlayer(citizenID)
     end
     if model and components and props then
+        if not ownsOutfit(citizenID, id) then return end
         if not Database.PlayerOutfits.Update(id, model, json.encode(components), json.encode(props)) then return end
         local outfitName = ""
         for i = 1, #outfitCache[citizenID], 1 do
@@ -247,6 +277,7 @@ end)
 
 RegisterNetEvent("illenium-appearance:server:saveManagementOutfit", function(outfitData)
     local src = source
+    if type(outfitData) ~= "table" or not isManagementBoss(src, outfitData.Type, outfitData.JobName) then return end
     local id = Database.ManagementOutfits.Add(outfitData)
     if not id then
         return
@@ -261,6 +292,8 @@ RegisterNetEvent("illenium-appearance:server:saveManagementOutfit", function(out
 end)
 
 RegisterNetEvent("illenium-appearance:server:deleteManagementOutfit", function(id)
+    local outfit = Database.ManagementOutfits.GetByID(id)
+    if not outfit or not isManagementBoss(source, outfit.type, outfit.job_name) then return end
     Database.ManagementOutfits.DeleteByID(id)
 end)
 
@@ -272,6 +305,7 @@ end)
 RegisterNetEvent("illenium-appearance:server:deleteOutfit", function(id)
     local src = source
     local citizenID = Framework.GetPlayerID(src)
+    if not ownsOutfit(citizenID, id) then return end
     Database.PlayerOutfitCodes.DeleteByOutfitID(id)
     Database.PlayerOutfits.DeleteByID(id)
 
@@ -291,13 +325,20 @@ RegisterNetEvent("illenium-appearance:server:resetOutfitCache", function()
     end
 end)
 
+-- O bucket próprio só é usado na criação de personagem (InitializeCharacter), quando
+-- ainda não há skin gravada. Antes qualquer cliente se isolava a qualquer momento e
+-- ficava invisível e intocável para os outros.
 RegisterNetEvent("illenium-appearance:server:ChangeRoutingBucket", function()
     local src = source
+    local citizenID = Framework.GetPlayerID(src)
+    if not citizenID or Database.PlayerSkins.GetByCitizenID(citizenID) then return end
     SetPlayerRoutingBucket(src, src)
 end)
 
+-- Só volta ao bucket 0 quem está no bucket da criação; não serve para sair de instâncias
 RegisterNetEvent("illenium-appearance:server:ResetRoutingBucket", function()
     local src = source
+    if GetPlayerRoutingBucket(src) ~= src then return end
     SetPlayerRoutingBucket(src, 0)
 end)
 
