@@ -1,5 +1,5 @@
 Cfx/FiveM Parser Mismatch Report
-Generated at: 2026-07-07 13:18:22
+Generated at: 2026-10-28 00:10:35
 Scanned files: 1303
 Skipped mismatches: 14
 
@@ -8,7 +8,7 @@ resources\[qb]\qb-garbagejob\client\main.lua -> resources\[qb]\qb-garbagejob\cli
 resources\[qb]\qb-hud\client.lua -> resources\[qb]\qb-hud\client.lua:709: unexpected symbol near '`'
 resources\[qb]\qb-inventory\server\functions.lua -> resources\[qb]\qb-inventory\server\functions.lua:450: unexpected symbol near '`'
 resources\[qb]\qb-target\client.lua -> resources\[qb]\qb-target\client.lua:81: unexpected symbol near '?'
-resources\[qb]\qb-taxijob\client\main.lua -> resources\[qb]\qb-taxijob\client\main.lua:256: syntax error near '+'
+resources\[qb]\qb-taxijob\client\main.lua -> resources\[qb]\qb-taxijob\client\main.lua:258: syntax error near '+'
 resources\[qb]\qb-vehiclekeys\client\main.lua -> resources\[qb]\qb-vehiclekeys\client\main.lua:124: unexpected symbol near '`'
 resources\[qb]\qb-weapons\client\main.lua -> resources\[qb]\qb-weapons\client\main.lua:104: 'then' expected near '?'
 resources\[standalone]\ox_lib\imports\callback\client.lua -> resources\[standalone]\ox_lib\imports\callback\client.lua:97: 'then' expected near '?'
