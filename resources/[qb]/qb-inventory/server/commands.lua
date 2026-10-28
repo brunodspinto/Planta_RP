@@ -118,23 +118,43 @@ end
 
 -- O cliente diz que mala ou porta-luvas abrir. Sem confirmar no servidor, bastava
 -- enviar a matrícula de qualquer carro do mapa para lhe tirar as coisas.
-local function isVehicleStorageReachable(source, inventory)
+-- Devolve o veículo dessa mala/porta-luvas, ou nil.
+local function findVehicleStorage(source, inventory)
     local kind, plate = inventory:match('^(%a+)%-(.+)$')
     plate = trimPlate(plate)
-    if plate == '' then return false end
+    if plate == '' then return end
     local ped = GetPlayerPed(source)
     if kind == 'glovebox' then
         local vehicle = GetVehiclePedIsIn(ped, false)
-        return vehicle ~= 0 and trimPlate(GetVehicleNumberPlateText(vehicle)) == plate
+        if vehicle ~= 0 and trimPlate(GetVehicleNumberPlateText(vehicle)) == plate then return vehicle end
     elseif kind == 'trunk' then
         local coords = GetEntityCoords(ped)
         for _, vehicle in ipairs(GetAllVehicles()) do
             if #(GetEntityCoords(vehicle) - coords) < 10.0 and trimPlate(GetVehicleNumberPlateText(vehicle)) == plate then
-                return true
+                return vehicle
             end
         end
     end
-    return false
+end
+
+-- Classe GTA (a de GetVehicleClass) de cada categoria de qb-core/shared/vehicles.lua
+local CategoryClass = {
+    compacts = 0, sedans = 1, suvs = 2, coupes = 3, muscle = 4, sportsclassics = 5, sports = 6, super = 7,
+    motorcycles = 8, offroad = 9, industrial = 10, utility = 11, vans = 12, cycles = 13, boats = 14,
+    helicopters = 15, planes = 16, service = 17, emergency = 18, military = 19, commercial = 20, openwheel = 22,
+}
+
+-- O tamanho dependia da classe enviada pelo cliente: um compacto passava por barco
+-- (120 kg) ou mandava uma classe que não existe e caía no tamanho de stash (2000 kg).
+-- Modelos fora de QBCore.Shared.Vehicles (addons, alguns carros de empregos) ficam
+-- com a classe do cliente, mas uma classe desconhecida já só dá o tamanho default.
+local function vehicleStorage(vehicle, clientClass)
+    local hashes = QBCore.Shared.VehicleHashes or {}
+    local model = GetEntityModel(vehicle)
+    -- joaat e GetEntityModel podem não concordar no sinal do hash de 32 bits
+    local shared = hashes[model] or hashes[model & 0xFFFFFFFF] or hashes[model - 0x100000000]
+    local class = shared and CategoryClass[shared.category] or tonumber(clientClass)
+    return VehicleStorage[class] or VehicleStorage.default
 end
 
 RegisterCommand('inventory', function(source)
@@ -143,18 +163,14 @@ RegisterCommand('inventory', function(source)
     if not QBPlayer then return end
     if not QBPlayer or QBPlayer.PlayerData.metadata['isdead'] or QBPlayer.PlayerData.metadata['inlaststand'] or QBPlayer.PlayerData.metadata['ishandcuffed'] then return end
     QBCore.Functions.TriggerClientCallback('qb-inventory:client:vehicleCheck', source, function(inventory, class)
-        if type(inventory) ~= 'string' or not isVehicleStorageReachable(source, inventory) then return OpenInventory(source) end
+        local vehicle = type(inventory) == 'string' and findVehicleStorage(source, inventory)
+        if not vehicle then return OpenInventory(source) end
+        local storage = vehicleStorage(vehicle, class)
         if inventory:find('trunk-') then
-            OpenInventory(source, inventory, {
-                slots = VehicleStorage[class] and VehicleStorage[class].trunkSlots or VehicleStorage.default.slots,
-                maxweight = VehicleStorage[class] and VehicleStorage[class].trunkWeight or VehicleStorage.default.maxWeight
-            })
+            OpenInventory(source, inventory, { slots = storage.trunkSlots, maxweight = storage.trunkWeight })
             return
         elseif inventory:find('glovebox-') then
-            OpenInventory(source, inventory, {
-                slots = VehicleStorage[class] and VehicleStorage[class].gloveboxSlots or VehicleStorage.default.slots,
-                maxweight = VehicleStorage[class] and VehicleStorage[class].gloveboxWeight or VehicleStorage.default.maxWeight
-            })
+            OpenInventory(source, inventory, { slots = storage.gloveboxSlots, maxweight = storage.gloveboxWeight })
             return
         end
     end)
