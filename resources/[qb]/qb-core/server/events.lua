@@ -263,11 +263,50 @@ RegisterNetEvent('QBCore:CallCommand', function(command, args)
     end
 end)
 
+-- Os empregos, garagens e stands pedem o veículo sempre junto do jogador (menu ao
+-- lado do ponto de spawn). Sem estes limites qualquer cliente criava veículos em
+-- qualquer ponto do mapa, em spam, e com warp = true teletransportava-se para lá.
+-- Os admins não têm limites (ps-adminmenu usa o mesmo callback). O CreateVehicle,
+-- pensado para spawn à distância, não é usado por nenhum recurso daqui e leva os
+-- mesmos limites.
+local VehicleSpawnMaxDistance = 150.0
+local VehicleSpawnCooldown = 2000 -- ms
+local LastVehicleSpawn = {}
+
+local function CanSpawnVehicle(source, coords)
+    if QBCore.Functions.HasPermission(source, 'admin') then return true end
+    local now = GetGameTimer()
+    if LastVehicleSpawn[source] and now - LastVehicleSpawn[source] < VehicleSpawnCooldown then
+        return false, 'cooldown'
+    end
+    if coords ~= nil then
+        local coordsType = type(coords)
+        if coordsType ~= 'table' and coordsType ~= 'vector3' and coordsType ~= 'vector4' then
+            return false, 'coords inválidas'
+        end
+        local x, y, z = tonumber(coords.x), tonumber(coords.y), tonumber(coords.z)
+        if not x or not y or not z then return false, 'coords inválidas' end
+        local distance = #(GetEntityCoords(GetPlayerPed(source)) - vector3(x, y, z))
+        if distance > VehicleSpawnMaxDistance then
+            return false, ('a %.0f m do jogador'):format(distance)
+        end
+    end
+    LastVehicleSpawn[source] = now
+    return true
+end
+
+local function RefuseVehicleSpawn(source, callback, model, reason)
+    -- Sem cb: o cliente fica sem resposta em vez de receber um netId inválido
+    print(('[qb-core] %s recusado para %s (ID %s), modelo %s: %s'):format(callback, GetPlayerName(source), source, tostring(model), reason))
+end
+
 -- Use this for player vehicle spawning
 -- Vehicle server-side spawning callback (netId)
 -- use the netid on the client with the NetworkGetEntityFromNetworkId native
 -- convert it to a vehicle via the NetToVeh native
 QBCore.Functions.CreateCallback('QBCore:Server:SpawnVehicle', function(source, cb, model, coords, warp)
+    local allowed, reason = CanSpawnVehicle(source, coords)
+    if not allowed then return RefuseVehicleSpawn(source, 'SpawnVehicle', model, reason) end
     local veh = QBCore.Functions.SpawnVehicle(source, model, coords, warp)
     cb(NetworkGetNetworkIdFromEntity(veh))
 end)
@@ -277,6 +316,8 @@ end)
 -- use the netid on the client with the NetworkGetEntityFromNetworkId native
 -- convert it to a vehicle via the NetToVeh native
 QBCore.Functions.CreateCallback('QBCore:Server:CreateVehicle', function(source, cb, model, coords, warp)
+    local allowed, reason = CanSpawnVehicle(source, coords)
+    if not allowed then return RefuseVehicleSpawn(source, 'CreateVehicle', model, reason) end
     local veh = QBCore.Functions.CreateAutomobile(source, model, coords, warp)
     cb(NetworkGetNetworkIdFromEntity(veh))
 end)

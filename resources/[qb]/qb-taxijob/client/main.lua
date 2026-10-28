@@ -144,7 +144,7 @@ end
 local function GetDeliveryLocation()
     NpcData.CurrentDeliver = math.random(1, #Config.NPCLocations.DeliverLocations)
     if NpcData.LastDeliver ~= nil then
-        while NpcData.LastDeliver ~= NpcData.CurrentDeliver do
+        while NpcData.LastDeliver == NpcData.CurrentDeliver do
             NpcData.CurrentDeliver = math.random(1, #Config.NPCLocations.DeliverLocations)
         end
     end
@@ -409,7 +409,7 @@ RegisterNetEvent('qb-taxi:client:DoTaxiNpc', function()
         if not NpcData.Active then
             NpcData.CurrentNpc = math.random(1, #Config.NPCLocations.TakeLocations)
             if NpcData.LastNpc ~= nil then
-                while NpcData.LastNpc ~= NpcData.CurrentNpc do
+                while NpcData.LastNpc == NpcData.CurrentNpc do
                     NpcData.CurrentNpc = math.random(1, #Config.NPCLocations.TakeLocations)
                 end
             end

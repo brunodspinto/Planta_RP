@@ -77,7 +77,9 @@ RegisterNetEvent('qb-shops:server:RestockShopItems', function(shop)
     TriggerClientEvent('qb-shops:client:SetShopItems', -1, shop, Config.Locations[shop].products)
 end)
 
-RegisterNetEvent('qb-shops:server:UpdateShopItems', function(shop, itemData, amount) -- called from inventory
+-- Só o qb-inventory (servidor) o dispara, com TriggerEvent. Como RegisterNetEvent,
+-- qualquer cliente mexia no stock (amount negativo = stock infinito).
+AddEventHandler('qb-shops:server:UpdateShopItems', function(shop, itemData, amount) -- called from inventory
     if not shop or not itemData or not amount then return end
     if not Config.Locations[shop] then return end
     if not Config.Locations[shop].useStock then return end

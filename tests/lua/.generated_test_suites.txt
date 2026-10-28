@@ -1,2 +1,8 @@
 tests\lua\unit\all-resources\lua_syntax_spec.lua
+tests\lua\unit\qb-core\spawn_vehicle_spec.lua
+tests\lua\unit\qb-hotdogjob\payouts_spec.lua
+tests\lua\unit\qb-pawnshop\payouts_spec.lua
+tests\lua\unit\qb-shops\deliveries_spec.lua
+tests\lua\unit\qb-taxijob\payouts_spec.lua
+tests\lua\unit\qb-towjob\payouts_spec.lua
 tests\lua\unit\qb-weapons\aiming_logic_spec.lua
