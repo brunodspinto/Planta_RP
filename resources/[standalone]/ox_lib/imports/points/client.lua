@@ -28,6 +28,7 @@ local nearbyCount = 0
 ---@type CPoint?
 local closestPoint
 local tick
+local lastCellX, lastCellY
 
 local function removePoint(self)
     if closestPoint?.id == self.id then
@@ -39,15 +40,19 @@ local function removePoint(self)
     points[self.id] = nil
 end
 
+local function hasRemovePoint(entry)
+    return entry.remove == removePoint
+end
+
 CreateThread(function()
     while true do
         local coords = GetEntityCoords(cache.ped)
-        local newPoints = lib.grid.getNearbyEntries(coords, function(entry) return entry.remove == removePoint end) --[[@as CPoint[] ]]
+        local newPoints = lib.grid.getNearbyEntries(coords, hasRemovePoint) --[[@as CPoint[] ]]
         local cellX, cellY = lib.grid.getCellPosition(coords)
         cache.coords = coords
         closestPoint = nil
 
-        if cellX ~= cache.lastCellX or cellY ~= cache.lastCellY then
+        if cellX ~= lastCellX or cellY ~= lastCellY then
             for i = 1, nearbyCount do
                 local point = nearbyPoints[i]
 
@@ -63,8 +68,8 @@ CreateThread(function()
                 end
             end
 
-            cache.lastCellX = cellX
-            cache.lastCellY = cellY
+            lastCellX = cellX
+            lastCellY = cellY
         end
 
         if nearbyCount ~= 0 then
@@ -89,9 +94,11 @@ CreateThread(function()
                 nearbyCount += 1
                 nearbyPoints[nearbyCount] = point
 
-                if point.onEnter and not point.inside then
+                if not point.inside then
                     point.inside = true
-                    point:onEnter()
+                    if point.onEnter then
+                        point:onEnter()
+                    end
                 end
             elseif point.currentDistance then
                 if point.onExit then point:onExit() end

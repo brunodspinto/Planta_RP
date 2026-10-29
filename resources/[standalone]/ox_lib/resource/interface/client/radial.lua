@@ -26,6 +26,8 @@
 
 local isOpen = false
 
+local isDisabled = false
+
 ---@type table<string, RadialMenuProps>
 local menus = {}
 
@@ -37,6 +39,10 @@ local menuHistory = {}
 
 ---@type RadialMenuProps?
 local currentRadial = nil
+
+---The registered menu opened directly with lib.showRadialMenu.
+---@type RadialMenuProps?
+local rootRadial = nil
 
 ---Open a the global radial menu or a registered radial submenu with the given id.
 ---@param id string?
@@ -65,7 +71,7 @@ local function showRadial(id, option)
         action = 'openRadialMenu',
         data = {
             items = radial and radial.items or menuItems,
-            sub = radial and true or nil,
+            sub = radial and radial ~= rootRadial or nil,
             option = option
         }
     })
@@ -110,6 +116,46 @@ local function refreshRadial(menuId)
     showRadial()
 end
 
+---Validates requirements and shows the requested radial menu.
+---@param id string? If not provided, the global radial menu will be shown.
+local function onRadialOpen(id)
+    local radial = id and menus[id]
+
+    if isDisabled or (id and not radial) then return end
+
+    if isOpen then
+        if rootRadial == radial then
+            return lib.hideRadial()
+        end
+
+        rootRadial = radial
+        table.wipe(menuHistory)
+        return showRadial(id)
+    end
+
+    local items = radial and radial.items or menuItems
+    if #items == 0 or IsNuiFocused() or IsPauseMenuActive() then return end
+
+    isOpen = true
+    rootRadial = radial
+    table.wipe(menuHistory)
+
+    lib.setNuiFocus(true)
+    SetCursorLocation(0.5, 0.5)
+
+    showRadial(id)
+
+    while isOpen do
+        DisablePlayerFiring(cache.playerId, true)
+        DisableControlAction(0, 1, true)
+        DisableControlAction(0, 2, true)
+        DisableControlAction(0, 142, true)
+        DisableControlAction(2, 199, true)
+        DisableControlAction(2, 200, true)
+        Wait(0)
+    end
+end
+
 ---Registers a radial sub menu with predefined options.
 ---@param radial RadialMenuProps
 function lib.registerRadial(radial)
@@ -138,12 +184,25 @@ function lib.hideRadial()
 
     isOpen = false
     currentRadial = nil
+    rootRadial = nil
 end
 
 ---Registers an item or array of items in the global radial menu.
 ---@param items RadialMenuItem | RadialMenuItem[]
-function lib.addRadialItem(items)
-    local menuSize = #menuItems
+---@param parentMenuId string? If provided, the item(s) will be added to the specified radial submenu instead of the global menu.
+function lib.addRadialItem(items, parentMenuId)
+    local targetMenu
+    if parentMenuId then
+        if not menus[parentMenuId] then
+            return error('No radial submenu with such parent id found.')
+        end
+
+        targetMenu = menus[parentMenuId].items
+    else
+        targetMenu = menuItems
+    end
+
+    local menuSize = #targetMenu
     local invokingResource = GetInvokingResource()
 
     items = table.type(items) == 'array' and items or { items }
@@ -154,17 +213,17 @@ function lib.addRadialItem(items)
 
         if menuSize == 0 then
             menuSize += 1
-            menuItems[menuSize] = item
+            targetMenu[menuSize] = item
         else
             for j = 1, menuSize do
-                if menuItems[j].id == item.id then
-                    menuItems[j] = item
+                if targetMenu[j].id == item.id then
+                    targetMenu[j] = item
                     break
                 end
 
                 if j == menuSize then
                     menuSize += 1
-                    menuItems[menuSize] = item
+                    targetMenu[menuSize] = item
                 end
             end
         end
@@ -175,23 +234,34 @@ function lib.addRadialItem(items)
     end
 end
 
----Removes an item from the global radial menu with the given id.
+---Removes an item from the global radial menu or a specific radial submenu with the given id.
 ---@param id string
-function lib.removeRadialItem(id)
+---@param parentMenuId string? If provided, the item will be removed from the specified radial submenu instead of the global menu.
+function lib.removeRadialItem(id, parentMenuId)
     local menuItem
+    local targetMenu
+    if parentMenuId then
+        if not menus[parentMenuId] then
+            return error('No radial sub menu with such parent id found.')
+        end
 
-    for i = 1, #menuItems do
-        menuItem = menuItems[i]
+        targetMenu = menus[parentMenuId].items
+    else
+        targetMenu = menuItems
+    end
+
+    for i = 1, #targetMenu do
+        menuItem = targetMenu[i]
 
         if menuItem.id == id then
-            table.remove(menuItems, i)
+            table.remove(targetMenu, i)
             break
         end
     end
 
     if not isOpen then return end
 
-    refreshRadial(id)
+    refreshRadial()
 end
 
 ---Removes all items from the global radial menu.
@@ -281,6 +351,7 @@ RegisterNUICallback('radialClose', function(_, cb)
 
     isOpen = false
     currentRadial = nil
+    rootRadial = nil
 end)
 
 RegisterNUICallback('radialTransition', function(_, cb)
@@ -292,8 +363,6 @@ RegisterNUICallback('radialTransition', function(_, cb)
     cb(true)
 end)
 
-local isDisabled = false
-
 ---Disallow players from opening the radial menu.
 ---@param state boolean
 function lib.disableRadial(state)
@@ -304,40 +373,18 @@ function lib.disableRadial(state)
     end
 end
 
+---Shows a registered menu as root without affecting global menus.
+---@param id string
+function lib.showRadialMenu(id)
+    onRadialOpen(id)
+end
+
 lib.addKeybind({
     name = 'ox_lib-radial',
     description = locale('open_radial_menu'),
     defaultKey = 'z',
     onPressed = function()
-        if isDisabled then return end
-
-        if isOpen then
-            return lib.hideRadial()
-        end
-
-        if #menuItems == 0 or IsNuiFocused() or IsPauseMenuActive() then return end
-
-        isOpen = true
-
-        SendNUIMessage({
-            action = 'openRadialMenu',
-            data = {
-                items = menuItems
-            }
-        })
-
-        lib.setNuiFocus(true)
-        SetCursorLocation(0.5, 0.5)
-
-        while isOpen do
-            DisablePlayerFiring(cache.playerId, true)
-            DisableControlAction(0, 1, true)
-            DisableControlAction(0, 2, true)
-            DisableControlAction(0, 142, true)
-            DisableControlAction(2, 199, true)
-            DisableControlAction(2, 200, true)
-            Wait(0)
-        end
+        onRadialOpen()
     end,
     -- onReleased = lib.hideRadial,
 })

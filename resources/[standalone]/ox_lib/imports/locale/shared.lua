@@ -8,6 +8,7 @@
 
 ---@type { [string]: string }
 local dict = {}
+local path = GetResourceMetadata(cache.resource, 'locales_path', 0) or 'locales'
 
 ---@param source { [string]: string }
 ---@param target { [string]: string }
@@ -48,10 +49,10 @@ function lib.getLocales()
 end
 
 local function loadLocale(key)
-    local data = LoadResourceFile(cache.resource, ('locales/%s.json'):format(key))
+    local data = LoadResourceFile(cache.resource, ('%s/%s.json'):format(path, key))
 
     if not data then
-        warn(("could not load 'locales/%s.json'"):format(key))
+        warn(("could not load '%s/%s.json'"):format(path, key))
     end
 
     return json.decode(data) or {}
@@ -71,10 +72,12 @@ function lib.locale(key)
 
     table.wipe(dict)
 
-    for k, v in pairs(flattenDict(locales, {})) do
+    local flat = flattenDict(locales, {})
+
+    for k, v in pairs(flat) do
         if type(v) == 'string' then
             for var in v:gmatch('${[%w%s%p]-}') do
-                local locale = locales[var:sub(3, -2)]
+                local locale = flat[var:sub(3, -2)]
 
                 if locale then
                     locale = locale:gsub('%%', '%%%%')

@@ -11,6 +11,7 @@ local DisableControlAction = DisableControlAction
 local DisablePlayerFiring = DisablePlayerFiring
 local playerState = LocalPlayer.state
 local createdProps = {}
+local maxProps = GetConvarInt('ox:progressPropLimit', 2)
 
 ---@class ProgressPropProps
 ---@field model string
@@ -33,14 +34,38 @@ local createdProps = {}
 ---@field prop? ProgressPropProps | ProgressPropProps[]
 ---@field disable? { move?: boolean, sprint?: boolean, car?: boolean, combat?: boolean, mouse?: boolean }
 
+---@param model string | number
+---@return boolean
+---@return number | string
+local function loadPropModel(model)
+    local ok, result = pcall(lib.requestModel, model)
+
+    if not ok then return false, result end
+
+    SetModelAsNoLongerNeeded(result)
+
+    if IsModelAPed(result) or IsModelAVehicle(result) then return false, ("model '%s' is not a valid object"):format(model) end
+
+    local min, max = GetModelDimensions(result)
+    local size = max - min
+    local largestDimension = math.max(size.x, size.y, size.z)
+
+    if largestDimension > 2.5 then return false, ("model '%s' is too large"):format(model) end
+
+    return true, result
+end
+
 local function createProp(ped, prop)
-    lib.requestModel(prop.model)
+    local ok, result = loadPropModel(prop.model)
+
+    if not ok or not result then return lib.print.error(result or '') end
+
     local coords = GetEntityCoords(ped)
-    local object = CreateObject(prop.model, coords.x, coords.y, coords.z, false, false, false)
+    local object = CreateObject(result, coords.x, coords.y, coords.z, false, false, false)
 
     AttachEntityToEntity(object, ped, GetPedBoneIndex(ped, prop.bone or 60309), prop.pos.x, prop.pos.y, prop.pos.z, prop.rot.x, prop.rot.y, prop.rot.z, true,
         true, false, true, prop.rotOrder or 0, true)
-    SetModelAsNoLongerNeeded(prop.model)
+    SetModelAsNoLongerNeeded(result)
 
     return object
 end
@@ -71,10 +96,68 @@ local controls = {
     INPUT_VEH_MOUSE_CONTROL_OVERRIDE = isFivem and 106 or 0x39CCABD5
 }
 
+local setBusyState = setmetatable({}, {
+    __call = function(self)
+        self[1] = playerState.invBusy
+        playerState.invBusy = true
+
+        return self
+    end,
+
+    __close = function(self)
+        playerState.invBusy = self[1]
+        self[1] = nil
+        progress = nil
+    end
+})
+
+local invalidPropData = "lib.requestModel received invalid prop data from resource '%s' (%s)"
+
 ---@param data ProgressProps
-local function startProgress(data)
-    playerState.invBusy = true
+local function startProgress(data, nuiMessage)
+    local invBusy <close> = setBusyState()
     progress = data
+
+    if data.prop then
+        local ttype = table.type(data.prop)
+
+        if ttype == 'empty' then
+            lib.print.warn(invalidPropData:format(GetInvokingResource(), 'table is empty'))
+        elseif ttype == 'array' then
+            for i = #data.prop, 1, -1 do
+                local model = data.prop[i].model
+
+                if model then
+                    local ok, err = loadPropModel(model)
+    
+                    if not ok then
+                        lib.print.warn(invalidPropData:format(GetInvokingResource(), err))
+                        table.remove(data.prop, i)
+                    end
+                else
+                    lib.print.warn(invalidPropData:format(GetInvokingResource(), 'model is undefined'))
+                    table.remove(data.prop, i)
+                end
+            end
+        else
+            local model = data.prop.model
+
+            if model then
+                local ok, err = loadPropModel(model)
+    
+                if not ok then
+                    lib.print.warn(invalidPropData:format(GetInvokingResource(), err))
+                    data.prop = nil
+                end
+            else
+                lib.print.warn(invalidPropData:format(GetInvokingResource(), 'model is undefined'))
+                data.prop = nil
+            end
+        end
+
+        TriggerServerEvent('ox_lib:progressProps', data.prop)
+    end
+
     local anim = data.anim
 
     if anim then
@@ -89,12 +172,10 @@ local function startProgress(data)
         end
     end
 
-    if data.prop then
-        playerState:set('lib:progressProps', data.prop, true)
-    end
-
     local disable = data.disable
     local startTime = GetGameTimer()
+
+    SendNUIMessage(nuiMessage)
 
     while progress do
         if disable then
@@ -137,7 +218,7 @@ local function startProgress(data)
     end
 
     if data.prop then
-        playerState:set('lib:progressProps', nil, true)
+        TriggerServerEvent('ox_lib:progressProps', nil)
     end
 
     if anim then
@@ -149,7 +230,6 @@ local function startProgress(data)
         end
     end
 
-    playerState.invBusy = false
     local duration = progress ~= false and GetGameTimer() - startTime + 100 -- give slight leeway
 
     if progress == false or duration <= data.duration then
@@ -166,15 +246,13 @@ function lib.progressBar(data)
     while progress ~= nil do Wait(0) end
 
     if not interruptProgress(data) then
-        SendNUIMessage({
+        return startProgress(data, {
             action = 'progress',
             data = {
                 label = data.label,
                 duration = data.duration
             }
         })
-
-        return startProgress(data)
     end
 end
 
@@ -184,7 +262,7 @@ function lib.progressCircle(data)
     while progress ~= nil do Wait(0) end
 
     if not interruptProgress(data) then
-        SendNUIMessage({
+        return startProgress(data, {
             action = 'circleProgress',
             data = {
                 duration = data.duration,
@@ -192,8 +270,6 @@ function lib.progressCircle(data)
                 label = data.label
             }
         })
-
-        return startProgress(data)
     end
 end
 
@@ -225,14 +301,18 @@ end
 
 local function deleteProgressProps(serverId)
     local playerProps = createdProps[serverId]
+
     if not playerProps then return end
+
+    createdProps[serverId] = nil
+
     for i = 1, #playerProps do
         local prop = playerProps[i]
+
         if DoesEntityExist(prop) then
             DeleteEntity(prop)
         end
     end
-    createdProps[serverId] = nil
 end
 
 RegisterNetEvent('onPlayerDropped', function(serverId)
@@ -248,22 +328,29 @@ AddStateBagChangeHandler('lib:progressProps', nil, function(bagName, key, value,
     local ped = GetPlayerPed(ply)
     local serverId = GetPlayerServerId(ply)
 
-    if not value then
+    if not value or createdProps[serverId] then
         return deleteProgressProps(serverId)
     end
 
-    createdProps[serverId] = {}
-    local playerProps = createdProps[serverId]
+    local playerProps = {}
 
     if value.model then
-        playerProps[#playerProps + 1] = createProp(ped, value)
+        local prop = createProp(ped, value)
+
+        if prop then
+            playerProps[#playerProps + 1] = prop
+        end
     else
-        for i = 1, #value do
-            local prop = value[i]
+        local propCount = math.min(maxProps, #value)
+
+        for i = 1, propCount do
+            local prop = createProp(ped, value[i])
 
             if prop then
-                playerProps[#playerProps + 1] = createProp(ped, prop)
+                playerProps[#playerProps + 1] = prop
             end
         end
     end
+
+    createdProps[serverId] = playerProps
 end)

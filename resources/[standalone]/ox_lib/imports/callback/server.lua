@@ -15,6 +15,12 @@ RegisterNetEvent(cbEvent:format(cache.resource), function(key, ...)
 
     if not cb then return end
 
+    local keyPlayerId = key:match(':(%d+)$')
+
+    if not keyPlayerId or tonumber(keyPlayerId) ~= source then
+        return warn(("Player %d triggered callback event with invalid key '%s'."):format(source, key))
+    end
+
     pendingCallbacks[key] = nil
 
     cb(...)
@@ -114,7 +120,7 @@ local pcall = pcall
 ---Registers an event handler and callback function to respond to client requests.
 ---@diagnostic disable-next-line: duplicate-set-field
 function lib.callback.register(name, cb)
-    event = cbEvent:format(name)
+    local event = cbEvent:format(name)
 
     lib.setValidCallback(name, true)
 

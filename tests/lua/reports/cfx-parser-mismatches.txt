@@ -1,7 +1,7 @@
 Cfx/FiveM Parser Mismatch Report
-Generated at: 2026-10-28 00:10:35
-Scanned files: 1303
-Skipped mismatches: 14
+Generated at: 2026-10-29 00:47:25
+Scanned files: 1332
+Skipped mismatches: 15
 
 resources\[qb]\illenium-appearance\game\util.lua -> resources\[qb]\illenium-appearance\game\util.lua:160: unexpected symbol near '`'
 resources\[qb]\qb-garbagejob\client\main.lua -> resources\[qb]\qb-garbagejob\client\main.lua:178: unexpected symbol near '`'
@@ -12,8 +12,9 @@ resources\[qb]\qb-taxijob\client\main.lua -> resources\[qb]\qb-taxijob\client\ma
 resources\[qb]\qb-vehiclekeys\client\main.lua -> resources\[qb]\qb-vehiclekeys\client\main.lua:124: unexpected symbol near '`'
 resources\[qb]\qb-weapons\client\main.lua -> resources\[qb]\qb-weapons\client\main.lua:104: 'then' expected near '?'
 resources\[standalone]\ox_lib\imports\callback\client.lua -> resources\[standalone]\ox_lib\imports\callback\client.lua:97: 'then' expected near '?'
-resources\[standalone]\ox_lib\imports\callback\server.lua -> resources\[standalone]\ox_lib\imports\callback\server.lua:78: 'then' expected near '?'
-resources\[standalone]\ox_lib\imports\points\client.lua -> resources\[standalone]\ox_lib\imports\points\client.lua:33: 'then' expected near '?'
-resources\[standalone]\ox_lib\imports\require\shared.lua -> resources\[standalone]\ox_lib\imports\require\shared.lua:35: unexpected symbol near '?'
-resources\[standalone]\ox_lib\imports\zones\shared.lua -> resources\[standalone]\ox_lib\imports\zones\shared.lua:313: ')' expected near '?'
-resources\[standalone]\ox_lib\resource\interface\client\progress.lua -> ...tandalone]\ox_lib\resource\interface\client\progress.lua:219: 'then' expected near '?'
+resources\[standalone]\ox_lib\imports\callback\server.lua -> resources\[standalone]\ox_lib\imports\callback\server.lua:84: 'then' expected near '?'
+resources\[standalone]\ox_lib\imports\points\client.lua -> resources\[standalone]\ox_lib\imports\points\client.lua:34: 'then' expected near '?'
+resources\[standalone]\ox_lib\imports\zones\shared.lua -> resources\[standalone]\ox_lib\imports\zones\shared.lua:375: ')' expected near '?'
+resources\[standalone]\ox_lib\init.lua -> resources\[standalone]\ox_lib\init.lua:17: 'then' expected near '?'
+resources\[standalone]\ox_lib\resource\interface\client\progress.lua -> ...tandalone]\ox_lib\resource\interface\client\progress.lua:295: 'then' expected near '?'
+resources\[standalone]\require\init.lua -> resources\[standalone]\require\init.lua:9: 'then' expected near '?'

@@ -76,6 +76,7 @@ ensure baseevents
 ensure chat
 
 # --- DEPENDÊNCIAS IMPORTANTES ---
+ensure require # cfxlua-require: o ox_lib >= 3.41 depende dele (tem de arrancar antes)
 ensure ox_lib
 ensure qb-core
 ensure bob74_ipl

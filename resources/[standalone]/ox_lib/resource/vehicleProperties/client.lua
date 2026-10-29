@@ -12,6 +12,7 @@ if cache.game == 'redm' then return end
 ---@field model? number
 ---@field plate? string
 ---@field plateIndex? number
+---@field lockState? number
 ---@field bodyHealth? number
 ---@field engineHealth? number
 ---@field tankHealth? number
@@ -108,7 +109,7 @@ RegisterNetEvent('ox_lib:setVehicleProperties', function(netid, data)
     end
 end)
 
-AddStateBagChangeHandler('ox_lib:setVehicleProperties', '', function(bagName, _, value)
+AddStateBagChangeHandler('ox_lib:setVehicleProperties', '', function(bagName, key, value)
     if not value or not GetEntityFromStateBagName then return end
 
     while NetworkIsInTutorialSession() do Wait(0) end
@@ -121,14 +122,20 @@ AddStateBagChangeHandler('ox_lib:setVehicleProperties', '', function(bagName, _,
 
     if not entityExists then return end
 
-    lib.setVehicleProperties(entity, value)
-    Wait(200)
+    local vehicle = lib.vehicle:new(entity)
 
-    -- this delay and second-setting of vehicle properties hopefully counters the
-    -- weird sync/ownership/shitfuckery when setting props on server-side vehicles
-    if NetworkGetEntityOwner(entity) == cache.playerId then
-        lib.setVehicleProperties(entity, value)
-        Entity(entity).state:set('ox_lib:setVehicleProperties', nil, true)
+    for i = 1, 10 do
+        local isEntityOwner = NetworkGetEntityOwner(entity) == cache.playerId
+
+        if isEntityOwner then
+            lib.setVehicleProperties(entity, value)
+
+            if not vehicle:setr(key, nil) then break end
+        end
+
+        Wait(400)
+
+        if not vehicle:has(key) then break end
     end
 end)
 
@@ -188,7 +195,11 @@ function lib.getVehicleProperties(vehicle)
 
         for i = 0, 7 do
             if IsVehicleTyreBurst(vehicle, i, false) then
-                damage.tyres[i] = IsVehicleTyreBurst(vehicle, i, true) and 2 or 1
+                if not IsVehicleWheelBrokenOff(vehicle, i) then
+                    damage.tyres[i] = IsVehicleTyreBurst(vehicle, i, true) and 2 or 1
+                else
+                    damage.tyres[i] = 3
+                end
             end
         end
 
@@ -202,6 +213,7 @@ function lib.getVehicleProperties(vehicle)
             model = GetEntityModel(vehicle),
             plate = GetVehicleNumberPlateText(vehicle),
             plateIndex = GetVehicleNumberPlateTextIndex(vehicle),
+            lockState = GetVehicleDoorLockStatus(vehicle),
             bodyHealth = math.floor(GetVehicleBodyHealth(vehicle) + 0.5),
             engineHealth = math.floor(GetVehicleEngineHealth(vehicle) + 0.5),
             tankHealth = math.floor(GetVehiclePetrolTankHealth(vehicle) + 0.5),
@@ -282,7 +294,7 @@ function lib.getVehicleProperties(vehicle)
             windows = damage.windows,
             doors = damage.doors,
             tyres = damage.tyres,
-            bulletProofTyres = GetVehicleTyresCanBurst(vehicle),
+            bulletProofTyres = GetVehicleTyresCanBurst(vehicle), -- inverted; do not change for compatibility
             driftTyres = gameBuild >= 2372 and GetDriftTyresEnabled(vehicle),
             -- no setters?
             -- leftHeadlight = GetIsLeftVehicleHeadlightDamaged(vehicle),
@@ -292,6 +304,8 @@ function lib.getVehicleProperties(vehicle)
         }
     end
 end
+
+local setLockState = GetConvarBool('ox:setLockState', false)
 
 ---@param vehicle number
 ---@param props VehicleProperties
@@ -320,6 +334,10 @@ function lib.setVehicleProperties(vehicle, props, fixVehicle)
 
     if props.plateIndex then
         SetVehicleNumberPlateTextIndex(vehicle, props.plateIndex)
+    end
+
+    if props.lockState ~= nil and setLockState then
+        SetVehicleDoorsLocked(vehicle, props.lockState)
     end
 
     if props.bodyHealth then
@@ -416,7 +434,11 @@ function lib.setVehicleProperties(vehicle, props, fixVehicle)
 
     if props.tyres then
         for tyre, state in pairs(props.tyres) do
-            SetVehicleTyreBurst(vehicle, tonumber(tyre) --[[@as number]], state == 2, 1000.0)
+            if state == 3 then
+                BreakOffVehicleWheel(vehicle, tonumber(tyre) --[[@as number]], false, true, true, false)
+            else
+                SetVehicleTyreBurst(vehicle, tonumber(tyre) --[[@as number]], state == 2, 1000.0)
+            end
         end
     end
 
@@ -640,12 +662,12 @@ function lib.setVehicleProperties(vehicle, props, fixVehicle)
         SetVehicleLivery(vehicle, props.livery)
     end
 
-    if props.bulletProofTyres ~= nil then
+    if props.bulletProofTyres ~= nil then -- inverted; do not change for compatibility
         SetVehicleTyresCanBurst(vehicle, props.bulletProofTyres)
     end
 
-    if gameBuild >= 2372 and props.driftTyres then
-        SetDriftTyresEnabled(vehicle, true)
+    if gameBuild >= 2372 and props.driftTyres ~= nil then
+        SetDriftTyresEnabled(vehicle, props.driftTyres)
     end
 
     if fixVehicle then

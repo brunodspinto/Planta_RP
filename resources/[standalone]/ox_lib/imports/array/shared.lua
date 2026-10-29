@@ -7,7 +7,8 @@
 ]]
 
 ---@class Array<T> : OxClass, { [number]: T }
-lib.array = lib.class('Array')
+---@field private new ArrayConstructor
+lib.array = Class('Array')
 
 local table_unpack = table.unpack
 local table_remove = table.remove
@@ -17,6 +18,8 @@ local table_type = table.type
 
 ---@alias ArrayLike<T> Array | { [number]: T }
 
+---@class ArrayConstructor
+---@overload fun(self: Array, ...: unknown): Array
 ---@private
 function lib.array:constructor(...)
     local arr = { ... }
@@ -113,6 +116,8 @@ function lib.array:fill(value, start, endIndex)
     start = start or 1
     endIndex = endIndex or length
 
+    if start < 0 then start = length + start + 1 end
+    if endIndex < 0 then endIndex = length + endIndex + 1 end
     if start < 1 then start = 1 end
     if endIndex > length then endIndex = length end
 
@@ -211,10 +216,10 @@ function lib.array:includes(element, fromIndex)
     return false
 end
 
----Concatenates all array elements into a string, seperated by commas or the specified seperator.
----@param seperator? string
-function lib.array:join(seperator)
-    return table_concat(self, seperator or ',')
+---Concatenates all array elements into a string, separated by commas or the specified separator.
+---@param separator? string
+function lib.array:join(separator)
+    return table_concat(self, separator or ',')
 end
 
 ---Create a new array containing the results from calling the provided function on every element in an array.
@@ -257,16 +262,20 @@ end
 ---@return T
 function lib.array:reduce(reducer, initialValue, reverse)
     local length = #self
-    local initialIndex = initialValue and 1 or 2
-    local accumulator = initialValue or self[1]
+    local accumulator, startIdx
 
     if reverse then
-        for i = initialIndex, length do
-            local index = length - i + initialIndex
-            accumulator = reducer(accumulator, self[index], index)
+        accumulator = initialValue or self[length]
+        startIdx = initialValue and length or length - 1
+
+        for i = startIdx, 1, -1 do
+            accumulator = reducer(accumulator, self[i], i)
         end
     else
-        for i = initialIndex, length do
+        accumulator = initialValue or self[1]
+        startIdx = initialValue and 1 or 2
+
+        for i = startIdx, length do
             accumulator = reducer(accumulator, self[i], i)
         end
     end
