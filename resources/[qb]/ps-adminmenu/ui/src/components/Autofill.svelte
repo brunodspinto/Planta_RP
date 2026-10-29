@@ -7,6 +7,7 @@
 
     export let action
     export let label_title
+    export let id_key = undefined
     export let data
 
     export let selectedData;
@@ -22,7 +23,7 @@
         selectedData({
             label: label,
             value: value,
-            id: label_title
+            id: id_key ?? label_title
         });
     }
 

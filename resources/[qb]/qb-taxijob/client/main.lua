@@ -643,7 +643,7 @@ CreateThread(function()
                                     if PlayerJob.onduty then
                                         TaxiGarage()
                                     else
-                                        QBCore.Functions.Notify('You need to be on duty')
+                                        QBCore.Functions.Notify('Tens de estar em serviço')
                                     end
                                 end
                             end
@@ -681,7 +681,7 @@ function setupTarget()
                         type = 'client',
                         event = 'qb-taxijob:client:requestcab',
                         icon = 'fas fa-sign-in-alt',
-                        label = '🚕 Request Taxi Cab',
+                        label = '🚕 Chamar táxi',
                         job = jobRequired,
                     }
                 },

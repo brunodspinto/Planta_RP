@@ -9,12 +9,12 @@ Config.IllegalActions = {
     ['storerobbery'] = {
         minimumPolice = 1,
         busy = false,
-        label = 'Store Robbery',
+        label = 'Assalto a loja',
     },
     ['bankrobbery'] = {
         minimumPolice = 3,
         busy = false,
-        label = 'Bank Robbery'
+        label = 'Assalto a banco'
     },
     ['jewellery'] = {
         minimumPolice = 2,
@@ -29,6 +29,6 @@ Config.IllegalActions = {
     ['paleto'] = {
         minimumPolice = 4,
         busy = false,
-        label = 'Paleto Bay Bank'
+        label = 'Banco de Paleto Bay'
     }
 }

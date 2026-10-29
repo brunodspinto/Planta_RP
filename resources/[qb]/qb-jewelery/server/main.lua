@@ -36,7 +36,7 @@ local function exploitBan(id, reason)
         })
     TriggerEvent('qb-log:server:CreateLog', 'jewelery', 'Player Banned', 'red',
         string.format('%s was banned by %s for %s', GetPlayerName(id), 'qb-jewelery', reason), true)
-    DropPlayer(id, 'You were permanently banned by the server for: Exploiting')
+    DropPlayer(id, 'Foste banido permanentemente do servidor por: exploração de falhas')
 end
 
 local function getRewardBasedOnProbability(table)

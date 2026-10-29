@@ -168,7 +168,7 @@ QBCore.Commands.Add('closeserver', Lang:t('command.closeserver.help'), { { name 
         return
     end
     if QBCore.Functions.HasPermission(source, 'admin') then
-        local reason = args[1] or 'No reason specified'
+        local reason = args[1] or 'Sem motivo indicado'
         QBCore.Config.Server.Closed = true
         QBCore.Config.Server.ClosedReason = reason
         for k in pairs(QBCore.Players) do
@@ -293,7 +293,7 @@ QBCore.Commands.Add('ooc', Lang:t('command.ooc.help'), {}, false, function(sourc
                 TriggerClientEvent('chat:addMessage', v, {
                     color = QBCore.Config.Commands.OOCColor,
                     multiline = true,
-                    args = { 'Proximity OOC | ' .. GetPlayerName(source), message }
+                    args = { 'OOC local | ' .. GetPlayerName(source), message }
                 })
                 TriggerEvent('qb-log:server:CreateLog', 'ooc', 'OOC', 'white', '**' .. GetPlayerName(source) .. '** (CitizenID: ' .. Player.PlayerData.citizenid .. ' | ID: ' .. source .. ') **Message:** ' .. message, false)
             end

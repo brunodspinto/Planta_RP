@@ -83,9 +83,9 @@ function populateVehicleList(garageLabel, vehicles) {
         financeInfo.classList.add("finance-info");
 
         if (v.balance && v.balance > 0) {
-            financeInfo.textContent = "Balance: $" + v.balance.toFixed(0);
+            financeInfo.textContent = "Em dívida: $" + v.balance.toFixed(0);
         } else {
-            financeInfo.textContent = "Paid Off";
+            financeInfo.textContent = "Pago";
         }
 
         financeDriveContainer.appendChild(financeInfo);
@@ -128,7 +128,7 @@ function populateVehicleList(garageLabel, vehicles) {
 
         const driveButton = document.createElement("button");
         driveButton.classList.add("drive-btn");
-        driveButton.textContent = status;
+        driveButton.textContent = { Depot: "No depósito", Out: "Fora", Drive: "Conduzir", Impound: "Apreendido" }[status] ?? status;
 
         if (status === "Depot" || status === "Impound") {
             driveButton.style.backgroundColor = "#222";

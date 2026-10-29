@@ -127,7 +127,7 @@ if GetConvarInt('voice_externalDisallowJoin', 0) == 1 then
 	AddEventHandler('playerConnecting', function(_, _, deferral)
 		deferral.defer()
 		Wait(0)
-		deferral.done('This server is not accepting connections.')
+		deferral.done('Este servidor não está a aceitar ligações.')
 	end)
 end
 

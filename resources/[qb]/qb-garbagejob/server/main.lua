@@ -127,7 +127,7 @@ RegisterNetEvent('qb-garbagejob:server:PayShift', function(continue)
     end
 end)
 
-QBCore.Commands.Add('cleargarbroutes', 'Removes garbo routes for user (admin only)', { { name = 'id', help = 'Player ID (may be empty)' } }, false, function(source, args)
+QBCore.Commands.Add('cleargarbroutes', 'Remove as rotas do lixo de um jogador (só admin)', { { name = 'id', help = 'ID do jogador (pode ficar vazio)' } }, false, function(source, args)
     local Player = QBCore.Functions.GetPlayer(tonumber(args[1]))
     local CitizenId = Player.PlayerData.citizenid
     local count = 0

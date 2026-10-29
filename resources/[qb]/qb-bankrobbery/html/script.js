@@ -73,11 +73,11 @@ function getDistance(nodeA,nodeB) {
 function init($param) {
     var angle = Math.floor((Math.random() * 720) - 360);
     $("#circle2").rotate(angle);
-    $("#container > p").html("KLIK");
+    $("#container > p").html("CLICA");
     if($param!=1)
-        $("#container > p").append("<br><h4>at the right time</h4>");
+        $("#container > p").append("<br><h4>no momento certo</h4>");
     else
-        $("#container > p").append("<br><h4>at the right time</h4>");
+        $("#container > p").append("<br><h4>no momento certo</h4>");
     $('.time').addClass('done');
 }
 

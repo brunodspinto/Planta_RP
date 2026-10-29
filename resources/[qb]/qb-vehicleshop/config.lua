@@ -109,7 +109,7 @@ Config.Shops = {
             ['size'] = 2.75    -- size of the vehicles zones
         },
         ['Job'] = 'cardealer', -- Name of job or none
-        ['ShopLabel'] = 'Luxury Vehicle Shop',
+        ['ShopLabel'] = 'Stand de luxo',
         ['showBlip'] = true,   -- true or false
         ['blipSprite'] = 326,  -- Blip sprite
         ['blipColor'] = 3,     -- Blip color
@@ -191,7 +191,7 @@ Config.Shops = {
             ['size'] = 6.2                                             -- size of the vehicles zones
         },
         ['Job'] = 'none',                                              -- Name of job or none
-        ['ShopLabel'] = 'Marina Shop',                                 -- Blip name
+        ['ShopLabel'] = 'Stand náutico',                                 -- Blip name
         ['showBlip'] = true,                                           -- true or false
         ['blipSprite'] = 410,                                          -- Blip sprite
         ['blipColor'] = 3,                                             -- Blip color
@@ -238,7 +238,7 @@ Config.Shops = {
             ['size'] = 7.0,                                              -- size of the vehicles zones
         },
         ['Job'] = 'none',                                                -- Name of job or none
-        ['ShopLabel'] = 'Air Shop',                                      -- Blip name
+        ['ShopLabel'] = 'Stand de aeronaves',                                      -- Blip name
         ['showBlip'] = true,                                             -- true or false
         ['blipSprite'] = 251,                                            -- Blip sprite
         ['blipColor'] = 3,                                               -- Blip color
@@ -291,7 +291,7 @@ Config.Shops = {
             ['size'] = 5.75                                          -- size of the vehicles zones
         },
         ['Job'] = 'none',                                            -- Name of job or none
-        ['ShopLabel'] = 'Truck Motor Shop',                          -- Blip name
+        ['ShopLabel'] = 'Stand de camiões',                          -- Blip name
         ['showBlip'] = true,                                         -- true or false
         ['blipSprite'] = 477,                                        -- Blip sprite
         ['blipColor'] = 2,                                           -- Blip color

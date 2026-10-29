@@ -50,6 +50,9 @@ local Translations = {
         rear_left_seat = "Assento Traseiro Esquerda",
         rear_right_seat = "Assento Traseiro Direita"
     },
+    progress = {
+        flipping_car = 'A virar o veículo..',
+    },
 }
 
 if GetConvar('qb_locale', 'en') == 'pt' then

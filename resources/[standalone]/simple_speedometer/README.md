@@ -9,7 +9,7 @@ Quando o jogador conduz (apenas o **condutor**), desenha no ecrã:
 - **Velocidade** em km/h
 - **Mudança** (com `R` para marcha-atrás, `N` para ponto-morto) — cor muda com as RPM
 - **Gasolina** em % — fica vermelho abaixo de 20%
-- **Cinto de segurança** — `CINTO ON` (verde) / `CINTO OFF` (vermelho)
+- **Cinto de segurança** — `COM CINTO` (verde) / `SEM CINTO` (vermelho)
 
 O estado do cinto escuta o evento `seatbelt:client:ToggleSeatbelt` (padrão QBCore).
 

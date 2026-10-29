@@ -257,8 +257,8 @@ const bankingApp = Vue.createApp({
                             balance: this.createAccountAmount,
                             users: JSON.stringify([this.playerName]),
                         });
-                        this.addStatement(this.accountNumber, "checking", "Initial deposit for " + this.createAccountName, this.createAccountAmount, "withdraw");
-                        this.addStatement(this.accountNumber, this.createAccountName, "Initial deposit", this.createAccountAmount, "deposit");
+                        this.addStatement(this.accountNumber, "checking", "Depósito inicial para " + this.createAccountName, this.createAccountAmount, "withdraw");
+                        this.addStatement(this.accountNumber, this.createAccountName, "Depósito inicial", this.createAccountAmount, "deposit");
                         this.createAccountName = "";
                         this.createAccountAmount = 0;
                         this.addNotification(response.data.message, "success");
@@ -369,6 +369,9 @@ const bankingApp = Vue.createApp({
             }
 
             this.statements[accountName].push(newStatement);
+        },
+        accountLabel(name) {
+            return name === "checking" ? "Conta à ordem" : name;
         },
         addNotification(message, type) {
             this.notification = {

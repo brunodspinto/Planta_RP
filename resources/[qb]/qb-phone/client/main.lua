@@ -338,7 +338,7 @@ local function CancelCall()
             action = 'PhoneNotification',
             PhoneNotify = {
                 title = 'Phone',
-                text = 'The call has been ended',
+                text = 'A chamada terminou',
                 icon = 'fas fa-phone',
                 color = '#e84118',
             },
@@ -348,7 +348,7 @@ local function CancelCall()
             action = 'PhoneNotification',
             PhoneNotify = {
                 title = 'Phone',
-                text = 'The call has been ended',
+                text = 'A chamada terminou',
                 icon = 'fas fa-phone',
                 color = '#e84118',
             },
@@ -608,7 +608,7 @@ RegisterNUICallback('SharedLocation', function(data, cb)
         action = 'PhoneNotification',
         PhoneNotify = {
             title = 'Whatsapp',
-            text = 'Location has been set!',
+            text = 'Localização marcada!',
             icon = 'fab fa-whatsapp',
             color = '#25D366',
             timeout = 1500,
@@ -770,7 +770,7 @@ RegisterNUICallback('PostNewTweet', function(data, cb)
             action = 'PhoneNotification',
             PhoneNotify = {
                 title = 'Twitter',
-                text = 'Invalid Tweet',
+                text = 'Tweet inválido',
                 icon = 'fab fa-twitter',
                 color = '#1DA1F2',
                 timeout = 1000,
@@ -878,9 +878,9 @@ end)
 RegisterNUICallback('track-vehicle', function(data, cb)
     local veh = data.veh
     if findVehFromPlateAndLocate(veh.plate) then
-        QBCore.Functions.Notify('Your vehicle has been marked', 'success')
+        QBCore.Functions.Notify('O teu veículo foi marcado no GPS', 'success')
     else
-        QBCore.Functions.Notify('This vehicle cannot be located', 'error')
+        QBCore.Functions.Notify('Não é possível localizar este veículo', 'error')
     end
     cb('ok')
 end)
@@ -897,7 +897,7 @@ RegisterNUICallback('DeleteContact', function(data, cb)
                 action = 'PhoneNotification',
                 PhoneNotify = {
                     title = 'Phone',
-                    text = 'You deleted contact!',
+                    text = 'Contacto eliminado!',
                     icon = 'fa fa-phone-alt',
                     color = '#04b543',
                     timeout = 1500,
@@ -968,7 +968,7 @@ end)
 
 RegisterNUICallback('SetAlertWaypoint', function(data, cb)
     local coords = data.alert.coords
-    QBCore.Functions.Notify('GPS Location set: ' .. data.alert.title)
+    QBCore.Functions.Notify('Localização GPS definida: ' .. data.alert.title)
     SetNewWaypoint(coords.x, coords.y)
     cb('ok')
 end)
@@ -1079,7 +1079,7 @@ RegisterNUICallback('RaceDistanceCheck', function(data, cb)
             end
             cb(true)
         else
-            QBCore.Functions.Notify('You\'re too far away from the race. GPS has been set to the race.', 'error', 5000)
+            QBCore.Functions.Notify('Estás demasiado longe da corrida. O GPS foi marcado para a corrida.', 'error', 5000)
             SetNewWaypoint(checkpointcoords.x, checkpointcoords.y)
             cb(false)
         end
@@ -1114,7 +1114,7 @@ end)
 
 RegisterNUICallback('SetHouseLocation', function(data, cb)
     SetNewWaypoint(data.HouseData.HouseData.coords.enter.x, data.HouseData.HouseData.coords.enter.y)
-    QBCore.Functions.Notify('GPS has been set to ' .. data.HouseData.HouseData.adress .. '!', 'success')
+    QBCore.Functions.Notify('GPS marcado para ' .. data.HouseData.HouseData.adress .. '!', 'success')
     cb('ok')
 end)
 
@@ -1142,7 +1142,7 @@ end)
 
 RegisterNUICallback('SetGPSLocation', function(data, cb)
     SetNewWaypoint(data.coords.x, data.coords.y)
-    QBCore.Functions.Notify('GPS has been set!', 'success')
+    QBCore.Functions.Notify('GPS marcado!', 'success')
     cb('ok')
 end)
 
@@ -1150,7 +1150,7 @@ RegisterNUICallback('SetApartmentLocation', function(data, cb)
     local ApartmentData = data.data.appartmentdata
     local TypeData = Apartments.Locations[ApartmentData.type]
     SetNewWaypoint(TypeData.coords.enter.x, TypeData.coords.enter.y)
-    QBCore.Functions.Notify('GPS has been set!', 'success')
+    QBCore.Functions.Notify('GPS marcado!', 'success')
     cb('ok')
 end)
 
@@ -1468,7 +1468,7 @@ RegisterNUICallback('TakePhoto', function(_, cb)
                     -- Fallback: capture locally as a data URI so the camera still works without a webhook.
                     exports['screenshot-basic']:requestScreenshot(function(data)
                         if not data then
-                            QBCore.Functions.Notify('Camera not setup', 'error')
+                            QBCore.Functions.Notify('Câmara não configurada', 'error')
                             DestroyMobilePhone()
                             CellCamActivate(false, false)
                             takePhoto = false
@@ -1529,7 +1529,7 @@ end)
 
 RegisterCommand('ping', function(_, args)
     if not args[1] then
-        QBCore.Functions.Notify('You need to input a Player ID', 'error')
+        QBCore.Functions.Notify('Tens de indicar o ID de um jogador', 'error')
     else
         TriggerServerEvent('qb-phone:server:sendPing', args[1])
     end
@@ -1634,7 +1634,7 @@ RegisterNetEvent('qb-phone:client:UpdateTweets', function(src, Tweets, NewTweetD
                 action = 'PhoneNotification',
                 PhoneNotify = {
                     title = 'Twitter',
-                    text = 'The Tweet has been deleted!',
+                    text = 'O tweet foi apagado!',
                     icon = 'fab fa-twitter',
                     color = '#1DA1F2',
                     timeout = 1000,
@@ -1727,7 +1727,7 @@ RegisterNetEvent('qb-phone:client:UpdateAdverts', function(Adverts, LastAd)
         action = 'PhoneNotification',
         PhoneNotify = {
             title = 'Anúncio',
-            text = 'A new ad has been posted by ' .. LastAd,
+            text = 'Novo anúncio publicado por ' .. LastAd,
             icon = 'fas fa-ad',
             color = '#ff8f1a',
             timeout = 2500,
@@ -1768,7 +1768,7 @@ RegisterNetEvent('qb-phone:client:CancelCall', function()
             action = 'PhoneNotification',
             NotifyData = {
                 title = 'Phone',
-                content = 'The call has been ended',
+                content = 'A chamada terminou',
                 icon = 'fas fa-phone',
                 timeout = 3500,
                 color = '#e84118',
@@ -1779,7 +1779,7 @@ RegisterNetEvent('qb-phone:client:CancelCall', function()
             action = 'PhoneNotification',
             PhoneNotify = {
                 title = 'Phone',
-                text = 'The call has been ended',
+                text = 'A chamada terminou',
                 icon = 'fas fa-phone',
                 color = '#e84118',
             },
@@ -2016,7 +2016,7 @@ RegisterNetEvent('qb-phone:client:RemoveBankMoney', function(amount)
             action = 'PhoneNotification',
             PhoneNotify = {
                 title = 'Bank',
-                text = '$' .. amount .. ' has been removed from your balance!',
+                text = '$' .. amount .. ' foram retirados do teu saldo!',
                 icon = 'fas fa-university',
                 color = '#ff002f',
                 timeout = 3500,
@@ -2065,7 +2065,7 @@ RegisterNetEvent('qb-phone:client:AddNewSuggestion', function(SuggestionData)
         action = 'PhoneNotification',
         PhoneNotify = {
             title = 'Phone',
-            text = 'You have a new suggested contact!',
+            text = 'Tens um novo contacto sugerido!',
             icon = 'fa fa-phone-alt',
             color = '#04b543',
             timeout = 1500,
@@ -2159,7 +2159,7 @@ RegisterNetEvent('qb-phone:client:GiveContactDetails', function()
         local PlayerId = GetPlayerServerId(player)
         TriggerServerEvent('qb-phone:server:GiveContactDetails', PlayerId)
     else
-        QBCore.Functions.Notify('No one nearby!', 'error')
+        QBCore.Functions.Notify('Não há ninguém por perto!', 'error')
     end
 end)
 

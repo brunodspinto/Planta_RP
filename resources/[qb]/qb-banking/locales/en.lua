@@ -27,6 +27,21 @@ local Translations = {
     },
     progress = {
         atm = 'Accessing ATM',
+    },
+    target = {
+        bank = 'Open Bank',
+        atm = 'Open ATM',
+    },
+    reason = {
+        external_deposit = 'External Deposit',
+        external_withdrawal = 'External Withdrawal',
+        initial_deposit = 'Initial deposit',
+        initial_deposit_for = 'Initial deposit for %{account}',
+    },
+    commands = {
+        givecash = 'Give Cash',
+        player_id = 'Player ID',
+        amount = 'Amount',
     }
 }
 

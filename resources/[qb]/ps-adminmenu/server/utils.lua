@@ -1,5 +1,5 @@
 local function noPerms(source)
-    QBCore.Functions.Notify(source, "You are not Admin or God.", 'error')
+    QBCore.Functions.Notify(source, locale('not_admin'), 'error')
 end
 
 --- @param perms string

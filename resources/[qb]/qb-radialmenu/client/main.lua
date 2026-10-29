@@ -97,7 +97,7 @@ local function SetupVehicleMenu()
         if not IsVehicleOnAllWheels(Vehicle) then
             VehicleMenu.items[#VehicleMenu.items + 1] = {
                 id = 'vehicle-flip',
-                title = 'Flip Vehicle',
+                title = 'Virar veículo',
                 icon = 'car-burst',
                 type = 'client',
                 event = 'qb-radialmenu:flipVehicle',

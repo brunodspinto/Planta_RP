@@ -1250,7 +1250,7 @@ CreateThread(function()
 				CreateThread(EnableTarget)
 			end
 		end, false)
-		RegisterKeyMapping('playerTarget', 'Toggle targeting', 'keyboard', Config.OpenKey)
+		RegisterKeyMapping('playerTarget', 'Ativar/desativar o olho', 'keyboard', Config.OpenKey)
 		TriggerEvent('chat:removeSuggestion', '/playerTarget')
 	else
 		RegisterCommand('+playerTarget', function()

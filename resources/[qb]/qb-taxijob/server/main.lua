@@ -38,7 +38,7 @@ RegisterNetEvent('qb-taxi:server:NpcPay', function(payment, hasReceivedBonus)
     local Player = QBCore.Functions.GetPlayer(src)
     if not Player then return end
     if Player.PlayerData.job.name ~= Config.jobRequired then
-        return DropPlayer(src, 'Attempting To Exploit')
+        return DropPlayer(src, 'Tentativa de exploração de falhas')
     end
 
     -- Só se paga uma viagem que o servidor viu começar, e só uma vez
@@ -49,7 +49,7 @@ RegisterNetEvent('qb-taxi:server:NpcPay', function(payment, hasReceivedBonus)
 
     local coords = GetEntityCoords(GetPlayerPed(src))
     if not NearDelivery(coords, ride.deliver) then
-        return DropPlayer(src, 'Attempting To Exploit')
+        return DropPlayer(src, 'Tentativa de exploração de falhas')
     end
 
     local distance = #(coords - ride.start)

@@ -31,22 +31,22 @@
 	}
 
 	let banData = [
-		{ label: 'Permanent', value: '2147483647' },
-		{ label: '10 Minutes', value: '600' },
-		{ label: '30 Minutes', value: '1800' },
-		{ label: '1 Hour', value: '3600' },
-		{ label: '6 Hours', value: '21600' },
-		{ label: '12 Hours', value: '43200' },
-		{ label: '1 Day', value: '86400' },
-		{ label: '3 Days', value: '259200' },
-		{ label: '1 Week', value: '604800' },
-		{ label: '3 Weeks', value: '1814400' },
+		{ label: 'Permanente', value: '2147483647' },
+		{ label: '10 minutos', value: '600' },
+		{ label: '30 minutos', value: '1800' },
+		{ label: '1 hora', value: '3600' },
+		{ label: '6 horas', value: '21600' },
+		{ label: '12 horas', value: '43200' },
+		{ label: '1 dia', value: '86400' },
+		{ label: '3 dias', value: '259200' },
+		{ label: '1 semana', value: '604800' },
+		{ label: '3 semanas', value: '1814400' },
 	]
 </script>
 
 <div class="h-full w-[33vh] px-[2vh]">
 	<Header
-		title={'Players'}
+		title={'Jogadores'}
 		hasSearch={true}
 		onSearchInput={(event) => (search = event.target.value)}
 	/>
@@ -60,7 +60,7 @@
 				<div
 					class="text-tertiary text-center text-[1.7vh] font-medium mt-[1vh]"
 				>
-					No Player Found.
+					Nenhum jogador encontrado.
 				</div>
 			{:else}
 				{#each $PLAYER.filter((player) => player.name
@@ -79,17 +79,17 @@
 			<div
 				class="h-full w-full flex flex-col items-center justify-center"
 			>
-				<div class="text-4xl text-tertiary">No Player Selected.</div>
+				<div class="text-4xl text-tertiary">Nenhum jogador selecionado.</div>
 			</div>
 		{:else}
 			<p class="text-[2vh] font-medium">
 				ID: {$SELECTED_PLAYER.id} - {$SELECTED_PLAYER.name}
 			</p>
 			<div class="w-full h-[96.5%] pt-[2vh] flex flex-col gap-[1vh]">
-				<p class="font-medium text-[1.7vh]">Quick Actions</p>
+				<p class="font-medium text-[1.7vh]">Ações rápidas</p>
 				<div class="w-full bg-tertiary flex rounded-[0.5vh]">
 					<button
-						title="Kick Player"
+						title="Expulsar jogador"
 						class="h-[4.5vh] w-full rounded-l-[0.5vh] hover:bg-secondary
 						relative
 						before:content-[attr(data-tip)]
@@ -115,13 +115,13 @@
 
 						hover:before:opacity-100 hover:after:opacity-100
 						"
-						data-tip="Kick Player"
+						data-tip="Expulsar jogador"
 						on:click={() => (kickPlayer = true)}
 					>
 						<i class="fas fa-user-minus"></i>
 					</button>
 					<button
-						title="Ban Player"
+						title="Banir jogador"
 						class="h-[4.5vh] w-full hover:bg-secondary
 						relative
 						before:content-[attr(data-tip)]
@@ -147,13 +147,13 @@
 
 						hover:before:opacity-100 hover:after:opacity-100
 						"
-						data-tip="Ban Player"
+						data-tip="Banir jogador"
 						on:click={() => (banPlayer = true)}
 					>
 						<i class="fas fa-ban"></i>
 					</button>
 					<button
-						title="Teleport To Player"
+						title="Teleportar até ao jogador"
 						class="h-[4.5vh] w-full hover:bg-secondary
 						relative
 						before:content-[attr(data-tip)]
@@ -179,7 +179,7 @@
 
 						hover:before:opacity-100 hover:after:opacity-100
 						"
-						data-tip="Teleport To Player"
+						data-tip="Teleportar até ao jogador"
 						on:click={() =>
 							SendNUI('clickButton', {
 								data: 'teleportToPlayer',
@@ -193,7 +193,7 @@
 						<i class="fas fa-person-walking-arrow-right"></i>
 					</button>
 					<button
-						title="Bring Player"
+						title="Trazer jogador"
 						class="h-[4.5vh] w-full hover:bg-secondary
 						relative
 						before:content-[attr(data-tip)]
@@ -219,7 +219,7 @@
 
 						hover:before:opacity-100 hover:after:opacity-100
 						"
-						data-tip="Bring Player"
+						data-tip="Trazer jogador"
 						on:click={() =>
 							SendNUI('clickButton', {
 								data: 'bringPlayer',
@@ -233,7 +233,7 @@
 						<i class="fas fa-person-walking-arrow-loop-left"></i>
 					</button>
 					<button
-						title="Revive Player"
+						title="Reanimar jogador"
 						class="h-[4.5vh] w-full hover:bg-secondary
 						relative
 						before:content-[attr(data-tip)]
@@ -259,7 +259,7 @@
 
 						hover:before:opacity-100 hover:after:opacity-100
 						"
-						data-tip="Revive Player"
+						data-tip="Reanimar jogador"
 						on:click={() =>
 							SendNUI('clickButton', {
 								data: 'revivePlayer',
@@ -273,7 +273,7 @@
 						<i class="fas fa-heart-pulse"></i>
 					</button>
 					<button
-						title="Spectate Player"
+						title="Observar jogador"
 						class="h-[4.5vh] w-full hover:bg-secondary
 						relative
 						before:content-[attr(data-tip)]
@@ -299,7 +299,7 @@
 
 						hover:before:opacity-100 hover:after:opacity-100
 						"
-						data-tip="Spectate Player"
+						data-tip="Observar jogador"
 						on:click={() =>
 							SendNUI('clickButton', {
 								data: 'spectate_player',
@@ -316,7 +316,7 @@
 				<div
 					class="h-[90%] overflow-auto flex flex-col gap-[1vh] select-text"
 				>
-					<p class="font-medium text-[1.7vh]">Licenses</p>
+					<p class="font-medium text-[1.7vh]">Licenças</p>
 					<div
 						class="w-full bg-tertiary rounded-[0.5vh] p-[1.5vh] text-[1.5vh]"
 					>
@@ -344,18 +344,18 @@
 								: ''}
 						</p>
 					</div>
-					<p class="font-medium text-[1.7vh]">Information</p>
+					<p class="font-medium text-[1.7vh]">Informação</p>
 					<div
 						class="w-full bg-tertiary rounded-[0.5vh] p-[1.5vh] text-[1.5vh]"
 					>
 						<p>CID: {$SELECTED_PLAYER.cid}</p>
-						<p>Name: {$SELECTED_PLAYER.name}</p>
-						<p>Job: {$SELECTED_PLAYER.job}</p>
-						<p>Cash: ${$SELECTED_PLAYER.cash}</p>
-						<p>Bank: ${$SELECTED_PLAYER.bank}</p>
-						<p>Phone: {$SELECTED_PLAYER.phone}</p>
+						<p>Nome: {$SELECTED_PLAYER.name}</p>
+						<p>Emprego: {$SELECTED_PLAYER.job}</p>
+						<p>Dinheiro: ${$SELECTED_PLAYER.cash}</p>
+						<p>Banco: ${$SELECTED_PLAYER.bank}</p>
+						<p>Telemóvel: {$SELECTED_PLAYER.phone}</p>
 					</div>
-					<p class="font-medium text-[1.7vh]">Vehicles</p>
+					<p class="font-medium text-[1.7vh]">Veículos</p>
 					{#each $SELECTED_PLAYER.vehicles as vehicle}
 						<div
 							class="w-full bg-tertiary flex flex-row rounded-[0.5vh] p-[1.5vh] text-[1.5vh]"
@@ -364,7 +364,7 @@
 								<p class=" font-medium text-[1.7vh]">
 									{vehicle.label}
 								</p>
-								<p>Plate: {vehicle.plate}</p>
+								<p>Matrícula: {vehicle.plate}</p>
 							</div>
 							<div class="ml-auto h-full flex items-center">
 								<button
@@ -379,7 +379,7 @@
 											},
 										})}
 								>
-									Spawn
+									Criar
 								</button>
 							</div>
 						</div>
@@ -393,7 +393,7 @@
 {#if banPlayer}
 	<Modal>
 		<div class="flex justify-between">
-			<p class="font-medium text-[1.8vh]">Ban {$SELECTED_PLAYER.name}</p>
+			<p class="font-medium text-[1.8vh]">Banir {$SELECTED_PLAYER.name}</p>
 			<button
 				class="hover:text-accent"
 				on:click={() => (banPlayer = false)}
@@ -403,19 +403,20 @@
 		</div>
 		<Input
 			data={{
-				label: 'Reason',
+				label: 'Motivo',
 				value: 'reason',
-				id: 'reason',
+				id: 'Reason',
 			}}
 			selectedData={SelectData}
 		/>
 		<Autofill
 			action={{
-				label: 'Duration',
+				label: 'Duração',
 				value: 'duration',
-				id: 'duration',
+				id: 'Duration',
 			}}
-			label_title="Duration"
+			label_title="Duração"
+			id_key="Duration"
 			data={banData}
 			selectedData={SelectData}
 		/>
@@ -440,7 +441,7 @@
 				})
 			}}
 		>
-			<p>Ban</p>
+			<p>Banir</p>
 		</button>
 	</Modal>
 {/if}
@@ -448,7 +449,7 @@
 {#if kickPlayer}
 	<Modal>
 		<div class="flex justify-between">
-			<p class="font-medium text-[1.8vh]">Kick {$SELECTED_PLAYER.name}</p>
+			<p class="font-medium text-[1.8vh]">Expulsar {$SELECTED_PLAYER.name}</p>
 			<button
 				class="hover:text-accent"
 				on:click={() => (kickPlayer = false)}
@@ -458,9 +459,9 @@
 		</div>
 		<Input
 			data={{
-				label: 'Reason',
+				label: 'Motivo',
 				value: 'reason',
-				id: 'reason',
+				id: 'Reason',
 			}}
 			selectedData={SelectData}
 		/>
@@ -474,13 +475,13 @@
 							value: $SELECTED_PLAYER.id,
 						},
 						['Reason']: {
-							value: $SELECTED_PLAYER.id,
+							value: selectedDataArray['Reason']?.value,
 						},
 					},
 				})
 			}}
 		>
-			<p>Kick</p>
+			<p>Expulsar</p>
 		</button>
 	</Modal>
 {/if}

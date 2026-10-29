@@ -136,7 +136,7 @@ RegisterNUICallback('closeMenu', function(_, cb)
     cb('ok')
 end)
 
-RegisterKeyMapping('menu', 'Open Menu', 'keyboard', config.OpenMenu)
+RegisterKeyMapping('menu', 'Abrir menu do HUD', 'keyboard', config.OpenMenu)
 
 CreateThread(function()
     while true do

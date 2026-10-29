@@ -65,7 +65,7 @@ const playSound = (snd, vol) => {
 
 const tryFinish = () => {
     if (solved.every((val) => val)) {
-        document.getElementById("infobox").textContent = "Success";
+        document.getElementById("infobox").textContent = "Sucesso";
         setTimeout(() => {
             playSound("audiofinish", 1);
             fetch(`https://${GetParentResourceName()}/hackSuccess`, {
@@ -118,7 +118,7 @@ const writeTime = () => {
 const seedTable = (timestamp) => {
     now = new Date().getTime();
     if (now >= endTime) {
-        infobox.textContent = "Failure";
+        infobox.textContent = "Falhaste";
         setTimeout(() => {
             playSound("audiofail", 1);
             fetch(`https://${GetParentResourceName()}/hackFail`, {

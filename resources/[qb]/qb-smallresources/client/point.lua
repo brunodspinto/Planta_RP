@@ -55,4 +55,4 @@ RegisterCommand('point', function()
     end
 end, false)
 
-RegisterKeyMapping('point', 'Toggles Point', 'keyboard', 'B')
+RegisterKeyMapping('point', 'Apontar', 'keyboard', 'B')

@@ -61,7 +61,7 @@ local Translations = {
         ["open_stash"] = "Abrir baú",
         ["stash"] = "Baú",
         ["change_outfit"] = "Mudar outfit",
-        ["outfits"] = "Outfits",
+        ["outfits"] = "Roupas",
         ["change_character"] = "Alterar personagem",
         ["characters"] = "Personagens",
         ["enter_unlocked_house"] = "Entrar na casa",
@@ -69,7 +69,7 @@ local Translations = {
     },
     target = {
         ["open_stash"] = "[E] Abrir baú",
-        ["outfits"] = "[E] Mudar outfits",
+        ["outfits"] = "[E] Mudar de roupa",
         ["change_character"] = "[E] Alterar personagem",
     },
     log = {

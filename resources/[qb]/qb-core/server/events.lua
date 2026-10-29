@@ -64,7 +64,7 @@ local function onPlayerConnecting(name, _, deferrals)
     end
 
     Wait(0)
-    deferrals.update(string.format('Hello %s. Your license is being checked', name))
+    deferrals.update(string.format('Olá %s. A tua licença está a ser verificada', name))
     local license = QBCore.Functions.GetIdentifier(src, 'license')
 
     if not license then
@@ -98,7 +98,7 @@ AddEventHandler('playerConnecting', onPlayerConnecting)
 RegisterNetEvent('QBCore:Server:CloseServer', function(reason)
     local src = source
     if QBCore.Functions.HasPermission(src, 'admin') then
-        reason = reason or 'No reason specified'
+        reason = reason or 'Sem motivo indicado'
         QBCore.Config.Server.Closed = true
         QBCore.Config.Server.ClosedReason = reason
         for k in pairs(QBCore.Players) do

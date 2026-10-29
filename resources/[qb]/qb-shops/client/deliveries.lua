@@ -60,7 +60,7 @@ local function setupZones(type, number)
             options = {
                 {
                     icon = 'fas fa-box',
-                    label = 'Start Delivering',
+                    label = 'Começar entregas',
                     action = function()
                         TriggerServerEvent('qb-shops:server:DoBail', true)
                     end

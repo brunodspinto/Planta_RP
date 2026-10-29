@@ -37,17 +37,22 @@ local Translations = {
         ["unavailable"] = "Cruise control indisponível"
     },
     editor = {
+        started = 'Gravação iniciada!',
+        delete = 'Gravação apagada!',
         ["record"] = "Gravação Iniciada!",
         ["save"] = "Gravação Guardada!",
         ["delete_clip"] = "Gravação Apagada!",
-        ["editor"] = "Later aligator!"
+        ["editor"] = "Até logo!"
     },
     firework = {
+        place_progress = 'A colocar o fogo de artifício...',
         ["canceled"] = "Cancelado...",
         ["time_left"] = "Fogo de Artifício em ",
         ["place_firework"] = "A colocar fogo de artifício..."
     },
     seatbelt = {
+        use_harness_progress = 'A colocar o arnês de corrida',
+        remove_harness_progress = 'A tirar o arnês de corrida',
         ["no_car"] = "Não estás dentro de um carro.",
         ["use_harness"] = "A colocar Arnês de Corrida",
         ["remove_harness"] = "A remover Arnês de Corrida"
@@ -58,7 +63,34 @@ local Translations = {
     pushcar = {
         ["stop_push"] = "[E] Parar de Empurrar",
         ["notDamaged"] = "O veículo não está danificado o suficiente para empurrar!"
-    }
+    },
+    consumables = {
+        use_parachute_progress = 'A colocar o paraquedas...',
+        remove_armor_progress = 'A tirar o colete...',
+        pack_parachute_progress = 'A dobrar o paraquedas...',
+        no_parachute = 'Não tens paraquedas!',
+        meth_progress = 'A fumar meta...',
+        liqour_progress = 'A beber álcool...',
+        joint_progress = 'A acender o charro...',
+        heavy_armor_progress = 'A vestir o colete pesado...',
+        healing_progress = 'A tratar ferimentos...',
+        ecstasy_progress = 'A tomar comprimidos...',
+        eat_progress = 'A comer...',
+        drink_progress = 'A beber...',
+        crack_progress = 'A fumar crack...',
+        coke_progress = 'Uma snifadela rápida...',
+        canceled = 'Cancelado...',
+        armor_progress = 'A vestir o colete...',
+        armor_full = 'Já tens colete suficiente!',
+        armor_empty = 'Não tens nenhum colete vestido...',
+    },
+    wash = {
+        wash_vehicle_target = 'Lavar veículo',
+        wash_vehicle = '[E] Lavar veículo',
+        in_progress = 'O veículo está a ser lavado...',
+        dirty = 'O veículo não está sujo',
+        cancel = 'Lavagem cancelada...',
+    },
 }
 
 if GetConvar('qb_locale', 'en') == 'pt' then

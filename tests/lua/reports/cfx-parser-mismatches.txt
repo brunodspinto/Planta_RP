@@ -1,6 +1,6 @@
 Cfx/FiveM Parser Mismatch Report
-Generated at: 2026-10-29 00:47:25
-Scanned files: 1332
+Generated at: 2026-10-29 02:29:00
+Scanned files: 1334
 Skipped mismatches: 15
 
 resources\[qb]\illenium-appearance\game\util.lua -> resources\[qb]\illenium-appearance\game\util.lua:160: unexpected symbol near '`'

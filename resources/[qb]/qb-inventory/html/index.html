@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -28,8 +28,8 @@
                             </div>
                         </div>
                         <div class="inventory-meta">
-                            <p>{{ playerUsedSlots }} / {{ totalSlots }} slots</p>
-                            <p>Shift + Click para dividir</p>
+                            <p>{{ playerUsedSlots }} / {{ totalSlots }} espaços</p>
+                            <p>Shift + Clique para dividir</p>
                         </div>
                         <div class="weight-bar">
                             <div class="weight-bar-fill" :style="{ width: Math.min((playerWeight / maxWeight) * 100, 100) + '%' }" :class="weightBarClass"></div>
@@ -95,8 +95,8 @@
                             </div>
                         </div>
                         <div class="inventory-meta">
-                            <p>{{ otherUsedSlots }} / {{ otherInventorySlots }} slots</p>
-                            <p>Click direito: mover rapido</p>
+                            <p>{{ otherUsedSlots }} / {{ otherInventorySlots }} espaços</p>
+                            <p>Clique direito: mover rápido</p>
                         </div>
                         <div class="weight-bar">
                             <div class="weight-bar-fill" :style="{ width: Math.min((otherInventoryWeight / otherInventoryMaxWeight) * 100, 100) + '%' }" :class="otherWeightBarClass"></div>
@@ -137,7 +137,7 @@
             </div>
             <div class="inventory-help" v-if="isInventoryOpen">
                 <div class="help-chip"><kbd>LMB</kbd> Arrastar / Soltar</div>
-                <div class="help-chip"><kbd>RMB</kbd> Mover rapido / Menu</div>
+                <div class="help-chip"><kbd>RMB</kbd> Mover rápido / Menu</div>
                 <div class="help-chip"><kbd>Shift</kbd> Dividir stack</div>
                 <div class="help-chip"><kbd>Esc</kbd> Fechar</div>
             </div>
@@ -218,26 +218,26 @@
                 </div>
             </div>
             <ul v-if="showContextMenu" class="context-menu" :style="{ top: contextMenuPosition.top, left: contextMenuPosition.left }">
-                <li v-if="contextMenuItem.useable" @click="useItem(contextMenuItem)">Use</li>
+                <li v-if="contextMenuItem.useable" @click="useItem(contextMenuItem)">Usar</li>
                 <li @mouseover="showSubmenu = true" @mouseleave="showSubmenu = false">
-                    Give
+                    Dar
                     <ul v-if="showSubmenu" class="submenu">
-                        <li @click="giveItem(contextMenuItem, 1)">Single</li>
-                        <li @click="giveItem(contextMenuItem, 'half')">Half</li>
-                        <li @click="giveItem(contextMenuItem, 'all')">All</li>
+                        <li @click="giveItem(contextMenuItem, 1)">Um</li>
+                        <li @click="giveItem(contextMenuItem, 'half')">Metade</li>
+                        <li @click="giveItem(contextMenuItem, 'all')">Tudo</li>
                     </ul>
                 </li>
                 <li @mouseover="showSubmenu = true" @mouseleave="showSubmenu = false">
-                    Drop
+                    Largar
                     <ul v-if="showSubmenu" class="submenu">
-                        <li @click="dropItem(contextMenuItem, 1)">Single</li>
-                        <li @click="dropItem(contextMenuItem, 'half')">Half</li>
-                        <li @click="dropItem(contextMenuItem, 'all')">All</li>
+                        <li @click="dropItem(contextMenuItem, 1)">Um</li>
+                        <li @click="dropItem(contextMenuItem, 'half')">Metade</li>
+                        <li @click="dropItem(contextMenuItem, 'all')">Tudo</li>
                     </ul>
                 </li>
-                <li @click="splitAndPlaceItem(contextMenuItem, 'player')">Split</li>
-                <li v-if="contextMenuItem.name.includes('weapon_')" @click="copySerial(contextMenuItem)">Copy Serial</li>
-                <li v-if="contextMenuItem.name.includes('weapon_')" @click="openWeaponAttachments(contextMenuItem)">Attachments</li>
+                <li @click="splitAndPlaceItem(contextMenuItem, 'player')">Dividir</li>
+                <li v-if="contextMenuItem.name.includes('weapon_')" @click="copySerial(contextMenuItem)">Copiar nº de série</li>
+                <li v-if="contextMenuItem.name.includes('weapon_')" @click="openWeaponAttachments(contextMenuItem)">Acessórios</li>
             </ul>
         </div>
     </body>

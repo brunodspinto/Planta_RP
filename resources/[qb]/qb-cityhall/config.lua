@@ -5,11 +5,11 @@ Config.UseTarget = GetConvar('UseTarget', 'false') == 'true' -- Use qb-target in
 Config.AvailableJobs = {                                     -- Only used when not using qb-jobs.
     ['trucker'] = { ['label'] = 'Trucker', ['isManaged'] = false },
     ['taxi'] = { ['label'] = 'Taxi', ['isManaged'] = false },
-    ['tow'] = { ['label'] = 'Tow Truck', ['isManaged'] = false },
-    ['reporter'] = { ['label'] = 'News Reporter', ['isManaged'] = false },
-    ['garbage'] = { ['label'] = 'Garbage Collector', ['isManaged'] = false },
-    ['bus'] = { ['label'] = 'Bus Driver', ['isManaged'] = false },
-    ['hotdog'] = { ['label'] = 'Hot Dog Stand', ['isManaged'] = false }
+    ['tow'] = { ['label'] = 'Reboques', ['isManaged'] = false },
+    ['reporter'] = { ['label'] = 'Jornalista', ['isManaged'] = false },
+    ['garbage'] = { ['label'] = 'Recolha do lixo', ['isManaged'] = false },
+    ['bus'] = { ['label'] = 'Motorista de autocarro', ['isManaged'] = false },
+    ['hotdog'] = { ['label'] = 'Banca de cachorros', ['isManaged'] = false }
 }
 
 Config.Cityhalls = {
@@ -21,20 +21,20 @@ Config.Cityhalls = {
             display = 4,
             scale = 0.65,
             colour = 0,
-            title = 'City Services'
+            title = 'Serviços municipais'
         },
         licenses = {
             ['id_card'] = {
-                label = 'ID Card',
+                label = 'Cartão de cidadão',
                 cost = 300,
             },
             ['driver_license'] = {
-                label = 'Driver License',
+                label = 'Carta de condução',
                 cost = 750,
                 metadata = 'driver'
             },
             ['weaponlicense'] = {
-                label = 'Weapon License',
+                label = 'Licença de porte de arma',
                 cost = 15000,
                 metadata = 'weapon'
             },
@@ -51,7 +51,7 @@ Config.DrivingSchools = {
             display = 4,
             scale = 0.65,
             colour = 3,
-            title = 'Driving School'
+            title = 'Escola de condução'
         },
         instructors = {
             'DJD56142',

@@ -44,7 +44,7 @@ RegisterNetEvent('ps-adminmenu:server:ClearInventoryOffline', function(data, sel
                 if result and result[1] then
                     MySQL.Async.execute("UPDATE players SET inventory = '{}' WHERE citizenid = @citizenid",
                         { ['@citizenid'] = citizenId })
-                    QBCore.Functions.Notify(src, "Player's inventory cleared", 'success', 7500)
+                    QBCore.Functions.Notify(src, locale('invcleared_offline'), 'success', 7500)
                 else
                     QBCore.Functions.Notify(src, locale("player_not_found"), 'error', 7500)
                 end

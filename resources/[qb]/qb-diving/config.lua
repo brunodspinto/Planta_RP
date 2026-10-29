@@ -6,7 +6,7 @@ Config.RemoveDivingGear = false -- Whether or not to remove the diving gear when
 
 Config.CoralLocations = {
     [1] = {
-        label = "This is Location 1",
+        label = "Local de mergulho 1",
         coords = {
             Area = vector3(-2838.8, -376.1, 3.55),
             Coral = {

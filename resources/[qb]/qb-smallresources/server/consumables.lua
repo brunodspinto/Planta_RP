@@ -75,12 +75,12 @@ QBCore.Functions.CreateUseableItem('heavyarmor', function(source)
     TriggerClientEvent('consumables:client:UseHeavyArmor', source)
 end)
 
-QBCore.Commands.Add('resetarmor', 'Resets Vest (Police Only)', {}, false, function(source)
+QBCore.Commands.Add('resetarmor', 'Repor colete (só polícia)', {}, false, function(source)
     local Player = QBCore.Functions.GetPlayer(source)
     if Player.PlayerData.job.name == 'police' then
         TriggerClientEvent('consumables:client:ResetArmor', source)
     else
-        TriggerClientEvent('QBCore:Notify', source, 'For Police Officer Only', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'Só para agentes da polícia', 'error')
     end
 end)
 
@@ -93,7 +93,7 @@ QBCore.Functions.CreateUseableItem('parachute', function(source, item)
     TriggerClientEvent('consumables:client:UseParachute', source)
 end)
 
-QBCore.Commands.Add('resetparachute', 'Resets Parachute', {}, false, function(source)
+QBCore.Commands.Add('resetparachute', 'Repor paraquedas', {}, false, function(source)
     TriggerClientEvent('consumables:client:ResetParachute', source)
 end)
 

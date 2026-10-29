@@ -31,6 +31,11 @@ local Translations = {
         ['cgitem'] = 'Can\'t give item!',
         ['idne'] = 'Item Does Not Exist',
         ['pdne'] = 'Player Is Not Online',
+        ['gun_and_bag'] = 'You can not be holding a Gun and a Bag!',
+        ['holding_bag'] = 'You are already holding a bag, go drop it!',
+        ['inv_in_use'] = 'This inventory is currently in use',
+        ['no_stock'] = 'Cannot purchase larger quantity than currently in stock',
+        ['cannot_hold'] = 'Cannot hold item',
     },
     inf_mapping = {
         ['opn_inv'] = 'Open Inventory',
@@ -42,9 +47,20 @@ local Translations = {
         ['bin'] = 'Open Dumpster',
         ['craft'] = 'Craft',
         ['o_bag'] = 'Open Bag',
+        ['pickup_bag'] = 'Pick up bag',
+        ['drop'] = 'Drop',
     },
     interaction = {
+        ['drop_bag'] = 'Press [G] to drop the bag',
         ['craft'] = '~g~E~w~ - Craft',
+    },
+    commands = {
+        ['giveitem'] = 'Give An Item (Admin Only)',
+        ['randomitems'] = 'Receive random items',
+        ['clearinv'] = 'Clear Inventory (Admin Only)',
+        ['player_id'] = 'Player ID',
+        ['item_name'] = 'Name of the item (not a label)',
+        ['item_amount'] = 'Amount of items',
     },
 }
 

@@ -235,7 +235,7 @@ $(document).on('click', '.phone-application', function(e){
         }
     } else {
         if (PressedApplication != null){
-            QB.Phone.Notifications.Add("fas fa-exclamation-circle", "System", QB.Phone.Data.Applications[PressedApplication].tooltipText+" não está disponível!")
+            QB.Phone.Notifications.Add("fas fa-exclamation-circle", "Sistema", QB.Phone.Data.Applications[PressedApplication].tooltipText+" não está disponível!")
         }
     }
 });
@@ -623,7 +623,7 @@ $(document).ready(function(){
                         $(".call-notifications").animate({right: 5+"vh"});
                     }
                     $(".call-notifications-title").html("In conversation ("+timeString+")");
-                    $(".call-notifications-content").html("Calling with "+event.data.Name);
+                    $(".call-notifications-content").html("Em chamada com "+event.data.Name);
                     $(".call-notifications").removeClass('call-notifications-shake');
                 } else {
                     $(".call-notifications").animate({

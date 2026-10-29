@@ -60,7 +60,7 @@ const setup = (data) => {
     playersBeam.className = "scoreboard-info-beam";
     const playersTitle = document.createElement("div");
     playersTitle.className = "info-beam-title";
-    playersTitle.innerHTML = "<p>Total Players</p>";
+    playersTitle.innerHTML = "<p>Total de jogadores</p>";
     const playersStatus = document.createElement("div");
     playersStatus.className = "info-beam-status";
     playersStatus.id = "total-players";

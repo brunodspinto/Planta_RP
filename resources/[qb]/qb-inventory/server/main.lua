@@ -178,7 +178,7 @@ RegisterNetEvent('qb-inventory:server:openVending', function(data)
     if not Player then return end
     CreateShop({
         name = 'vending',
-        label = 'Vending Machine',
+        label = Lang:t('menu.vending'),
         coords = data.coords,
         slots = #Config.VendingItems,
         items = Config.VendingItems
@@ -242,9 +242,9 @@ RegisterNetEvent('qb-inventory:server:useItem', function(item)
             local dist = #(playerCoords - GetEntityCoords(targetPed))
             if dist < 3.0 then
                 TriggerClientEvent('chat:addMessage', v, {
-                    template = '<div class="chat-message advert" style="background: linear-gradient(to right, rgba(5, 5, 5, 0.6), #74807c); display: flex;"><div style="margin-right: 10px;"><i class="far fa-id-card" style="height: 100%;"></i><strong> {0}</strong><br> <strong>Civ ID:</strong> {1} <br><strong>First Name:</strong> {2} <br><strong>Last Name:</strong> {3} <br><strong>Birthdate:</strong> {4} <br><strong>Gender:</strong> {5} <br><strong>Nationality:</strong> {6}</div></div>',
+                    template = '<div class="chat-message advert" style="background: linear-gradient(to right, rgba(5, 5, 5, 0.6), #74807c); display: flex;"><div style="margin-right: 10px;"><i class="far fa-id-card" style="height: 100%;"></i><strong> {0}</strong><br> <strong>N.º de cidadão:</strong> {1} <br><strong>Nome:</strong> {2} <br><strong>Apelido:</strong> {3} <br><strong>Data de nascimento:</strong> {4} <br><strong>Género:</strong> {5} <br><strong>Nacionalidade:</strong> {6}</div></div>',
                     args = {
-                        'ID Card',
+                        'Cartão de cidadão',
                         item.info.citizenid,
                         item.info.firstname,
                         item.info.lastname,
@@ -266,9 +266,9 @@ RegisterNetEvent('qb-inventory:server:useItem', function(item)
             local dist = #(playerCoords - GetEntityCoords(targetPed))
             if dist < 3.0 then
                 TriggerClientEvent('chat:addMessage', v, {
-                    template = '<div class="chat-message advert" style="background: linear-gradient(to right, rgba(5, 5, 5, 0.6), #657175); display: flex;"><div style="margin-right: 10px;"><i class="far fa-id-card" style="height: 100%;"></i><strong> {0}</strong><br> <strong>First Name:</strong> {1} <br><strong>Last Name:</strong> {2} <br><strong>Birth Date:</strong> {3} <br><strong>Licenses:</strong> {4}</div></div>',
+                    template = '<div class="chat-message advert" style="background: linear-gradient(to right, rgba(5, 5, 5, 0.6), #657175); display: flex;"><div style="margin-right: 10px;"><i class="far fa-id-card" style="height: 100%;"></i><strong> {0}</strong><br> <strong>Nome:</strong> {1} <br><strong>Apelido:</strong> {2} <br><strong>Data de nascimento:</strong> {3} <br><strong>Licenças:</strong> {4}</div></div>',
                     args = {
-                        'Drivers License',
+                        'Carta de condução',
                         item.info.firstname,
                         item.info.lastname,
                         item.info.birthdate,
@@ -371,7 +371,7 @@ QBCore.Functions.CreateCallback('qb-inventory:server:createDrop', function(sourc
         if not Drops[newDropId] then
             Drops[newDropId] = {
                 name = newDropId,
-                label = 'Drop',
+                label = Lang:t('menu.drop'),
                 items = itemsTable,
                 entityId = dropId,
                 createdTime = os.time(),
@@ -438,13 +438,13 @@ QBCore.Functions.CreateCallback('qb-inventory:server:attemptPurchase', function(
     end
 
     if amount > shopInfo.items[itemInfo.slot].amount or shopInfo.items[itemInfo.slot].amount <= 0 then
-        TriggerClientEvent('QBCore:Notify', source, 'Cannot purchase larger quantity than currently in stock', 'error')
+        TriggerClientEvent('QBCore:Notify', source, Lang:t('notify.no_stock'), 'error')
         cb(false)
         return
     end
 
     if not CanAddItem(source, itemInfo.name, amount) then
-        TriggerClientEvent('QBCore:Notify', source, 'Cannot hold item', 'error')
+        TriggerClientEvent('QBCore:Notify', source, Lang:t('notify.cannot_hold'), 'error')
         cb(false)
         return
     end
@@ -457,7 +457,7 @@ QBCore.Functions.CreateCallback('qb-inventory:server:attemptPurchase', function(
         TriggerEvent('qb-shops:server:UpdateShopItems', shop, itemInfo, amount)
         cb(true)
     else
-        TriggerClientEvent('QBCore:Notify', source, 'You do not have enough money', 'error')
+        TriggerClientEvent('QBCore:Notify', source, Lang:t('notify.notencash'), 'error')
         cb(false)
     end
 end)

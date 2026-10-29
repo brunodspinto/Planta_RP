@@ -78,12 +78,12 @@ const InventoryContainer = Vue.createApp({
                 errorSlot: null,
                 // Player Inventory
                 playerInventory: {},
-                inventoryLabel: "Inventory",
+                inventoryLabel: "Inventário",
                 totalWeight: 0,
                 // Other inventory
                 otherInventory: {},
                 otherInventoryName: "",
-                otherInventoryLabel: "Drop",
+                otherInventoryLabel: "Chão",
                 otherInventoryMaxWeight: 1000000,
                 otherInventorySlots: 100,
                 isShopInventory: false,
@@ -787,7 +787,7 @@ const InventoryContainer = Vue.createApp({
         showItemNotification(itemData) {
             this.notificationText = itemData.item.label;
             this.notificationImage = "images/" + itemData.item.image;
-            this.notificationType = itemData.type === "add" ? "Received" : itemData.type === "use" ? "Used" : "Removed";
+            this.notificationType = itemData.type === "add" ? "Recebido" : itemData.type === "use" ? "Usado" : "Removido";
             this.notificationAmount = itemData.amount || 1;
             this.showNotification = true;
             setTimeout(() => {
@@ -890,13 +890,13 @@ const InventoryContainer = Vue.createApp({
                 return "";
             }
             let content = `<div class="custom-tooltip"><div class="tooltip-header">${item.label}</div><hr class="tooltip-divider">`;
-            const description = item.info && item.info.description ? item.info.description.replace(/\n/g, "<br>") : item.description ? item.description.replace(/\n/g, "<br>") : "No description available.";
+            const description = item.info && item.info.description ? item.info.description.replace(/\n/g, "<br>") : item.description ? item.description.replace(/\n/g, "<br>") : "Sem descrição.";
             if (item.info && Object.keys(item.info).length > 0 && item.info.display !== false) {
                 for (const [key, value] of Object.entries(item.info)) {
                     if (key !== "description" && key !== "display") {
                         let valueStr = value;
                         if (key === "attachments") {
-                            valueStr = Object.keys(value).length > 0 ? "true" : "false";
+                            valueStr = Object.keys(value).length > 0 ? "sim" : "não";
                         }
                         content += `<div class="tooltip-info"><span class="tooltip-info-key">${this.formatKey(key)}:</span> ${valueStr}</div>`;
                     }
@@ -908,6 +908,27 @@ const InventoryContainer = Vue.createApp({
             return content;
         },
         formatKey(key) {
+            const labels = {
+                quality: "Qualidade",
+                ammo: "Munições",
+                serie: "Nº de série",
+                attachments: "Acessórios",
+                firstname: "Nome",
+                lastname: "Apelido",
+                birthdate: "Data de nascimento",
+                gender: "Género",
+                nationality: "Nacionalidade",
+                citizenid: "ID de cidadão",
+                type: "Tipo",
+                uses: "Usos",
+                tint: "Pintura",
+                fuel: "Combustível",
+                worth: "Valor",
+                phone: "Telemóvel",
+                plate: "Matrícula",
+                model: "Modelo",
+            };
+            if (labels[key]) return labels[key];
             return key.replace(/_/g, " ").charAt(0).toUpperCase() + key.slice(1);
         },
         postInventoryData(fromInventory, toInventory, fromSlot, toSlot, fromAmount, toAmount) {

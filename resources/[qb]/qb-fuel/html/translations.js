@@ -20,4 +20,11 @@ export const TRANSLATIONS = {
         price: "Prijs: $",
         refill: "Bijvullen",
     },
+    pt: {
+        fuel: "Combustível",
+        vehicle_fuel: "O teu veículo tem %{capacity} litros de combustível.",
+        liters: "Litros: ",
+        price: "Preço: $",
+        refill: "Abastecer",
+    },
 };

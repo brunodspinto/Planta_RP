@@ -49,7 +49,7 @@
             <div class="options-wrapper">
                 {#if dropdownValues.length < 1}
                     <div class="no-items-found">
-                        No items found
+                        Nenhum resultado
                     </div>
                 {:else}
                     {#each dropdownValues as ddValue}

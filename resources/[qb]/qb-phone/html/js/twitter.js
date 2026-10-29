@@ -89,7 +89,7 @@ QB.Phone.Notifications.LoadTweets = function(Tweets) {
                 ALLOWED_TAGS: [],
                 ALLOWED_ATTR: []
             });
-            if (clean == '') clean = 'Hmm, I shouldn\'t be able to do this...'
+            if (clean == '') clean = 'Hmm, não devia conseguir fazer isto...'
             var TwtMessage = QB.Phone.Functions.FormatTwitterMessage(clean);
             var TimeAgo = moment(Tweet.date).format('MM/DD/YYYY hh:mm');
 
@@ -147,7 +147,7 @@ QB.Phone.Notifications.LoadMentionedTweets = function(Tweets) {
                 ALLOWED_TAGS: [],
                 ALLOWED_ATTR: []
             });
-            if (clean == '') clean = 'Hmm, I shouldn\'t be able to do this...'
+            if (clean == '') clean = 'Hmm, não devia conseguir fazer isto...'
             var TwtMessage = QB.Phone.Functions.FormatTwitterMessage(clean);
             var TimeAgo = moment(Tweet.date).format('MM/DD/YYYY hh:mm');
 
@@ -297,9 +297,9 @@ QB.Phone.Notifications.LoadHashtags = function(hashtags) {
                TweetHandle = "Tweets";
             }
             if (hashtag.messages.length >= MinimumTrending) {
-                Elem = '<div class="twitter-hashtag" id="tag-'+hashtag.hashtag+'"><div class="twitter-hashtag-status">Trending in City</div> <div class="twitter-hashtag-tag">#'+hashtag.hashtag+'</div> <div class="twitter-hashtag-messages">'+hashtag.messages.length+' '+TweetHandle+'</div> </div>';
+                Elem = '<div class="twitter-hashtag" id="tag-'+hashtag.hashtag+'"><div class="twitter-hashtag-status">Em tendência na cidade</div> <div class="twitter-hashtag-tag">#'+hashtag.hashtag+'</div> <div class="twitter-hashtag-messages">'+hashtag.messages.length+' '+TweetHandle+'</div> </div>';
             } else {
-                Elem = '<div class="twitter-hashtag" id="tag-'+hashtag.hashtag+'"><div class="twitter-hashtag-status">Not trending in City</div> <div class="twitter-hashtag-tag">#'+hashtag.hashtag+'</div> <div class="twitter-hashtag-messages">'+hashtag.messages.length+' '+TweetHandle+'</div> </div>';
+                Elem = '<div class="twitter-hashtag" id="tag-'+hashtag.hashtag+'"><div class="twitter-hashtag-status">Fora das tendências na cidade</div> <div class="twitter-hashtag-tag">#'+hashtag.hashtag+'</div> <div class="twitter-hashtag-messages">'+hashtag.messages.length+' '+TweetHandle+'</div> </div>';
             }
 
             $(".twitter-hashtags").append(Elem);
@@ -317,7 +317,7 @@ QB.Phone.Notifications.LoadHashtagMessages = function(Tweets) {
                 ALLOWED_TAGS: [],
                 ALLOWED_ATTR: []
             });
-            if (clean == '') clean = 'Hmm, I shouldn\'t be able to do this...'
+            if (clean == '') clean = 'Hmm, não devia conseguir fazer isto...'
             var TwtMessage = QB.Phone.Functions.FormatTwitterMessage(clean);
             var TimeAgo = moment(Tweet.date).format('MM/DD/YYYY hh:mm');
 

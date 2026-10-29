@@ -129,8 +129,8 @@ function OpenShop(config, isPedMenu, shopType)
     lib.callback("illenium-appearance:server:hasMoney", false, function(hasMoney, money)
         if not hasMoney and not isPedMenu then
             lib.notify({
-                title = "Cannot Enter Shop",
-                description = "Not enough cash. Need $" .. money,
+                title = "Não podes entrar na loja",
+                description = "Dinheiro insuficiente. Precisas de $" .. money,
                 type = "error",
                 position = Config.NotifyOptions.position
             })

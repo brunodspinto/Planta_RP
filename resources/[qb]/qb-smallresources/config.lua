@@ -252,12 +252,12 @@ Config.Teleports = {
         [1] = {
             poly = { coords = vector3(909.49, -1589.22, 30.51), heading = 92.24, length = 2, width = 2 },
             allowVeh = false,
-            label = '[E] Enter Coke Processing'
+            label = '[E] Entrar no laboratório de coca'
         },
         [2] = {
             poly = { coords = vector3(1088.81, -3187.57, -38.99), heading = 181.7, length = 2, width = 2 },
             allowVeh = false,
-            label = '[E] Leave'
+            label = '[E] Sair'
         }
     }
 }

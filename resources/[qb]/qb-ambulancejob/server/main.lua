@@ -220,7 +220,7 @@ RegisterNetEvent('hospital:server:RevivePlayer', function(playerId, isOldMan)
 				'qb-ambulancejob'
 			})
 			TriggerEvent('qb-log:server:CreateLog', 'ambulancejob', 'Player Banned', 'red', string.format('%s was banned by %s for %s', GetPlayerName(src), 'qb-ambulancejob', 'Trying to revive theirselves or other players'), true)
-			DropPlayer(src, 'You were permanently banned by the server for: Exploiting')
+			DropPlayer(src, 'Foste banido permanentemente do servidor por: exploração de falhas')
 		end
 	end
 end)
@@ -239,7 +239,7 @@ RegisterNetEvent('hospital:server:SendDoctorAlert', function(hospitalName)
 			doctorCalled = false
 		end)
 	else
-		TriggerClientEvent('QBCore:Notify', src, 'Doctor has already been notified', 'error')
+		TriggerClientEvent('QBCore:Notify', src, 'O médico já foi avisado', 'error')
 	end
 end)
 

@@ -76,12 +76,12 @@ RegisterNetEvent('ps-adminmenu:server:SetJob', function(data, selectedData)
     local grade = jobInfo["grades"][selectedData["Grade"].value]
 
     if not jobInfo then
-        TriggerClientEvent('QBCore:Notify', source, "Not a valid job", 'error')
+        TriggerClientEvent('QBCore:Notify', source, locale('invalid_job'), 'error')
         return
     end
 
     if not grade then
-        TriggerClientEvent('QBCore:Notify', source, "Not a valid grade", 'error')
+        TriggerClientEvent('QBCore:Notify', source, locale('invalid_grade'), 'error')
         return
     end
 
@@ -104,12 +104,12 @@ RegisterNetEvent('ps-adminmenu:server:SetGang', function(data, selectedData)
     local grade = GangInfo["grades"][selectedData["Grade"].value]
 
     if not GangInfo then
-        TriggerClientEvent('QBCore:Notify', source, "Not a valid Gang", 'error')
+        TriggerClientEvent('QBCore:Notify', source, locale('invalid_gang'), 'error')
         return
     end
 
     if not grade then
-        TriggerClientEvent('QBCore:Notify', source, "Not a valid grade", 'error')
+        TriggerClientEvent('QBCore:Notify', source, locale('invalid_grade'), 'error')
         return
     end
 

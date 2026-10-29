@@ -359,7 +359,7 @@ Locales["pt-PT"] = {
                 description = "Pagaste %s€ a %s!"
             },
             failure = {
-                title = "Exploit!",
+                title = "Batota detetada!",
                 description = "Não tinhas dinheiro suficiente! Tentativa de batota detetada!"
             }
         }

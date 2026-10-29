@@ -70,7 +70,7 @@ local function SetLocationBlip()
     SetBlipScale(RecycleBlip, 0.8)
     SetBlipAsShortRange(RecycleBlip, true)
     BeginTextCommandSetBlipName('STRING')
-    AddTextComponentSubstringPlayerName('Recycle Center')
+    AddTextComponentSubstringPlayerName('Centro de reciclagem')
     EndTextCommandSetBlipName(RecycleBlip)
 end
 

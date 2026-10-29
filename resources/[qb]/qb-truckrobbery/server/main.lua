@@ -8,7 +8,7 @@ RegisterServerEvent('AttackTransport:akceptujto', function()
 	local accountMoney = xPlayer.PlayerData.money['bank']
 	if ActiveMission == 0 then
 		if accountMoney < Config.ActivationCost then
-			TriggerClientEvent('QBCore:Notify', _source, 'You need ' .. Config.Currency .. '' .. Config.ActivationCost .. ' in the bank to accept the mission')
+			TriggerClientEvent('QBCore:Notify', _source, 'Precisas de ' .. Config.Currency .. '' .. Config.ActivationCost .. ' no banco para aceitar a missão')
 		else
 			for _, v in pairs(QBCore.Functions.GetPlayers()) do
 				local Player = QBCore.Functions.GetPlayer(v)
@@ -23,11 +23,11 @@ RegisterServerEvent('AttackTransport:akceptujto', function()
 				xPlayer.Functions.RemoveMoney('bank', Config.ActivationCost, 'armored-truck')
 				OdpalTimer()
 			else
-				TriggerClientEvent('QBCore:Notify', _source, 'Need at least ' .. Config.ActivePolice .. ' police to activate the mission.')
+				TriggerClientEvent('QBCore:Notify', _source, 'São precisos pelo menos ' .. Config.ActivePolice .. ' polícias para ativar a missão.')
 			end
 		end
 	else
-		TriggerClientEvent('QBCore:Notify', _source, 'Someone is already carrying out this mission')
+		TriggerClientEvent('QBCore:Notify', _source, 'Já há alguém a fazer esta missão')
 	end
 end)
 
@@ -60,7 +60,7 @@ RegisterServerEvent('AttackTransport:graczZrobilnapad', function()
 	TriggerClientEvent('qb-inventory:client:ItemBox', _source, QBCore.Shared.Items['markedbills'], 'add')
 
 	local chance = math.random(1, 100)
-	TriggerClientEvent('QBCore:Notify', _source, 'You took ' .. bags .. ' bags of cash from the van')
+	TriggerClientEvent('QBCore:Notify', _source, 'Levaste ' .. bags .. ' sacos de dinheiro da carrinha')
 
 	if chance >= 95 then
 		exports['qb-inventory']:AddItem(_source, 'security_card_01', 1, false, false, 'AttackTransport:graczZrobilnapad')

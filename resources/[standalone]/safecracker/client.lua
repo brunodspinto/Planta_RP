@@ -140,7 +140,7 @@ function EndMinigame(won)
 		PlaySoundFrontend(SafeCracker.SoundID, SafeCracker.Config.SafeFinalSound, SafeCracker.Config.SafeSoundset, true)
 		QBCore.Functions.Notify("Safe opened..", "success")
 	else
-		QBCore.Functions.Notify("Safe opening failed..", "error")
+		QBCore.Functions.Notify("Falhaste a abertura do cofre..", "error")
 	end
   	TriggerEvent('SafeCracker:EndMinigame', won)
 	FreezeEntityPosition(PlayerPedId(), false)

@@ -40,9 +40,9 @@ RegisterNetEvent('ps-adminmenu:server:WarnPlayer', function(data, selectedData)
     local warnId = 'WARN-' .. math.random(1111, 9999)
     if target ~= nil then
         QBCore.Functions.Notify(target.PlayerData.source,
-            locale("warned") .. ", for: " .. locale("reason") .. ": " .. reason, 'inform', 10000)
+            locale("warned") .. "- " .. locale("reason") .. reason, 'inform', 10000)
         QBCore.Functions.Notify(source,
-            locale("warngiven") .. GetPlayerName(target.PlayerData.source) .. ", for: " .. reason)
+            locale("warngiven") .. GetPlayerName(target.PlayerData.source) .. " - " .. locale("reason") .. reason)
         MySQL.insert('INSERT INTO player_warns (senderIdentifier, targetIdentifier, reason, warnId) VALUES (?, ?, ?, ?)',
             {
                 sender.PlayerData.license,
@@ -211,13 +211,13 @@ RegisterNetEvent('ps-adminmenu:server:ToggleBlackout', function(data)
     local src = source
 
     if Blackout then
-        TriggerClientEvent('QBCore:Notify', src, locale("blackout", "enabled"), 'primary')
+        TriggerClientEvent('QBCore:Notify', src, locale("blackout", locale("enabled")), 'primary')
         while Blackout do
             Wait(0)
             exports["qb-weathersync"]:setBlackout(true)
         end
         exports["qb-weathersync"]:setBlackout(false)
-        TriggerClientEvent('QBCore:Notify', src, locale("blackout", "disabled"), 'primary')
+        TriggerClientEvent('QBCore:Notify', src, locale("blackout", locale("disabled")), 'primary')
     end
 end)
 

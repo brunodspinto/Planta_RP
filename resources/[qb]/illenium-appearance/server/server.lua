@@ -349,7 +349,7 @@ if Config.EnablePedMenu then
             {
                 name = "playerID",
                 type = "number",
-                help = "Target player's server id",
+                help = "ID do jogador",
                 optional = true
             },
         },

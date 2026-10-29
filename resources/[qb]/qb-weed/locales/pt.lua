@@ -10,6 +10,9 @@ local Translations = {
         you_dont_have_enough_resealable_bags = "Tu não tens sacos lacráveis suficientes",
     },
     text = {
+        stage = 'Fase atual:',
+        progress = 'Progresso:',
+        highestStage = 'Fase de colheita:',
         sort = 'Organizar:',
         harvest_plant = 'Carrega no ~g~ E ~w~ para colher a planta',
         nutrition = "Nutrição:",

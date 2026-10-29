@@ -64,7 +64,7 @@ RegisterNetEvent('qb-gangmenu:server:GradeUpdate', function(data)
 		return
 	end
 	if data.grade > Player.PlayerData.gang.grade.level then
-		TriggerClientEvent('QBCore:Notify', src, 'You cannot promote to this rank!', 'error')
+		TriggerClientEvent('QBCore:Notify', src, 'Não podes promover para este cargo!', 'error')
 		return
 	end
 
@@ -74,10 +74,10 @@ RegisterNetEvent('qb-gangmenu:server:GradeUpdate', function(data)
 			Employee.Functions.Save()
 
 			if Employee.PlayerData.source then
-				TriggerClientEvent('QBCore:Notify', Employee.PlayerData.source, 'You have been promoted to ' .. data.gradename .. '.', 'success')
+				TriggerClientEvent('QBCore:Notify', Employee.PlayerData.source, 'Foste promovido a ' .. data.gradename .. '.', 'success')
 			end
 		else
-			TriggerClientEvent('QBCore:Notify', src, 'Grade does not exist.', 'error')
+			TriggerClientEvent('QBCore:Notify', src, 'Esse cargo não existe.', 'error')
 		end
 	end
 	TriggerClientEvent('qb-gangmenu:client:OpenMenu', src)
@@ -96,19 +96,19 @@ RegisterNetEvent('qb-gangmenu:server:FireMember', function(target)
 
 	if Employee then
 		if target == Player.PlayerData.citizenid then
-			TriggerClientEvent('QBCore:Notify', src, 'You can\'t kick yourself out of the gang!', 'error')
+			TriggerClientEvent('QBCore:Notify', src, 'Não te podes expulsar a ti próprio do gang!', 'error')
 			return
 		elseif Employee.PlayerData.gang.grade.level > Player.PlayerData.gang.grade.level then
-			TriggerClientEvent('QBCore:Notify', src, 'You cannot fire this citizen!', 'error')
+			TriggerClientEvent('QBCore:Notify', src, 'Não podes despedir este cidadão!', 'error')
 			return
 		end
 		if Employee.Functions.SetGang('none', '0') then
 			Employee.Functions.Save()
 			TriggerEvent('qb-log:server:CreateLog', 'gangmenu', 'Gang Fire', 'orange', Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname .. ' successfully fired ' .. Employee.PlayerData.charinfo.firstname .. ' ' .. Employee.PlayerData.charinfo.lastname .. ' (' .. Player.PlayerData.gang.name .. ')', false)
-			TriggerClientEvent('QBCore:Notify', src, 'Gang Member fired!', 'success')
+			TriggerClientEvent('QBCore:Notify', src, 'Membro expulso da gang!', 'success')
 
 			if Employee.PlayerData.source then -- Player is online
-				TriggerClientEvent('QBCore:Notify', Employee.PlayerData.source, 'You have been expelled from the gang!', 'error')
+				TriggerClientEvent('QBCore:Notify', Employee.PlayerData.source, 'Foste expulso do gang!', 'error')
 			end
 		else
 			TriggerClientEvent('QBCore:Notify', src, 'Error.', 'error')
@@ -129,8 +129,8 @@ RegisterNetEvent('qb-gangmenu:server:HireMember', function(recruit)
 	end
 
 	if Target and Target.Functions.SetGang(Player.PlayerData.gang.name, 0) then
-		TriggerClientEvent('QBCore:Notify', src, 'You hired ' .. (Target.PlayerData.charinfo.firstname .. ' ' .. Target.PlayerData.charinfo.lastname) .. ' come ' .. Player.PlayerData.gang.label .. '', 'success')
-		TriggerClientEvent('QBCore:Notify', Target.PlayerData.source, 'You have been hired as ' .. Player.PlayerData.gang.label .. '', 'success')
+		TriggerClientEvent('QBCore:Notify', src, 'Contrataste ' .. (Target.PlayerData.charinfo.firstname .. ' ' .. Target.PlayerData.charinfo.lastname) .. ' para ' .. Player.PlayerData.gang.label, 'success')
+		TriggerClientEvent('QBCore:Notify', Target.PlayerData.source, 'Entraste no gang ' .. Player.PlayerData.gang.label, 'success')
 		TriggerEvent('qb-log:server:CreateLog', 'gangmenu', 'Recruit', 'yellow', (Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname) .. ' successfully recruited ' .. Target.PlayerData.charinfo.firstname .. ' ' .. Target.PlayerData.charinfo.lastname .. ' (' .. Player.PlayerData.gang.name .. ')', false)
 	end
 	TriggerClientEvent('qb-gangmenu:client:OpenMenu', src)

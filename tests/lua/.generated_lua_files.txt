@@ -3,8 +3,6 @@ resources\[cfx-default]\[gamemodes]\[maps]\fivem-map-hipster\fxmanifest.lua
 resources\[cfx-default]\[gamemodes]\[maps]\fivem-map-hipster\map.lua
 resources\[cfx-default]\[gamemodes]\[maps]\fivem-map-skater\fxmanifest.lua
 resources\[cfx-default]\[gamemodes]\[maps]\fivem-map-skater\map.lua
-resources\[cfx-default]\[gamemodes]\[maps]\redm-map-one.disabled\fxmanifest.lua
-resources\[cfx-default]\[gamemodes]\[maps]\redm-map-one.disabled\map.lua
 resources\[cfx-default]\[gamemodes]\basic-gamemode\basic_client.lua
 resources\[cfx-default]\[gamemodes]\basic-gamemode\fxmanifest.lua
 resources\[cfx-default]\[gameplay]\[examples]\money\client.lua
@@ -269,6 +267,7 @@ resources\[qb]\qb-banking\locales\en.lua
 resources\[qb]\qb-banking\locales\es.lua
 resources\[qb]\qb-banking\locales\it.lua
 resources\[qb]\qb-banking\locales\nl.lua
+resources\[qb]\qb-banking\locales\pt.lua
 resources\[qb]\qb-banking\server.lua
 resources\[qb]\qb-bankrobbery\cl_config.lua
 resources\[qb]\qb-bankrobbery\client\doors.lua
@@ -426,6 +425,7 @@ resources\[qb]\qb-fuel\fxmanifest.lua
 resources\[qb]\qb-fuel\locales\en.lua
 resources\[qb]\qb-fuel\locales\es.lua
 resources\[qb]\qb-fuel\locales\nl.lua
+resources\[qb]\qb-fuel\locales\pt.lua
 resources\[qb]\qb-fuel\server\main.lua
 resources\[qb]\qb-garages\client\main.lua
 resources\[qb]\qb-garages\config.lua
@@ -556,6 +556,7 @@ resources\[qb]\qb-inventory\locales\de.lua
 resources\[qb]\qb-inventory\locales\en.lua
 resources\[qb]\qb-inventory\locales\es.lua
 resources\[qb]\qb-inventory\locales\nl.lua
+resources\[qb]\qb-inventory\locales\pt.lua
 resources\[qb]\qb-inventory\server\commands.lua
 resources\[qb]\qb-inventory\server\functions.lua
 resources\[qb]\qb-inventory\server\main.lua
@@ -569,6 +570,7 @@ resources\[qb]\qb-jewelery\locale\de.lua
 resources\[qb]\qb-jewelery\locale\en.lua
 resources\[qb]\qb-jewelery\locale\es.lua
 resources\[qb]\qb-jewelery\locale\nl.lua
+resources\[qb]\qb-jewelery\locale\pt.lua
 resources\[qb]\qb-jewelery\locale\pt-br.lua
 resources\[qb]\qb-jewelery\locale\tr.lua
 resources\[qb]\qb-jewelery\server\main.lua

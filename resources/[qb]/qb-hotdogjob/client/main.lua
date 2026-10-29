@@ -853,7 +853,7 @@ CreateThread(function()
         }, {
             options = {
                 {
-                    label = 'Toggle Work',
+                    label = 'Começar/parar de trabalhar',
                     job = 'hotdog',
                     icon = 'fa-solid fa-hotdog',
                     action = function()

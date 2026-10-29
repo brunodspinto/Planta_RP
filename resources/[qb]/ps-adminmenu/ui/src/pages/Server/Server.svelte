@@ -12,14 +12,14 @@
 
 <div class="h-full w-[33vh] px-[2vh]">
 	<Header 
-		title={'Server'} 
+		title={'Servidor'} 
 		hasSearch={true} 
 		onSearchInput={event => (search = event.target.value)} 
 	/>
 	<div class="w-full h-[84%] flex flex-col gap-[1vh] mt-[1vh] overflow-auto">
 		{#if $RESOURCE}
 			{#if $RESOURCE && $RESOURCE.filter((resource) => resource.name.toLowerCase().includes(search.toLowerCase())).length === 0}
-				<div class="text-tertiary text-center text-[1.7vh] font-medium mt-[1vh]">No Resource Found.</div>
+				<div class="text-tertiary text-center text-[1.7vh] font-medium mt-[1vh]">Nenhum recurso encontrado.</div>
 			{:else}
 				{#each SortedResources.filter((resource) => resource.name.toLowerCase().includes(search.toLowerCase())) as resource}
 					<ResourceCard
@@ -37,6 +37,6 @@
 
 {#if $MENU_WIDE}
 	<div class="h-full w-[66vh] border-l-[0.2vh] border-tertiary px-[2vh]">
-		<Header title={'Dashboard'} />
+		<Header title={'Painel'} />
 	</div>
 {/if}

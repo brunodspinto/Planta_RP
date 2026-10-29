@@ -257,9 +257,9 @@ RadialMenu.prototype.createMenu = function (classValue, levelItems, nested) {
     }
 
     if (nested) {
-        self.createCenter(svg, "Close", "arrow-left", 10);
+        self.createCenter(svg, "Fechar", "arrow-left", 10);
     } else {
-        self.createCenter(svg, "Close", "circle-xmark", 10);
+        self.createCenter(svg, "Fechar", "circle-xmark", 10);
     }
 
     svg.addEventListener("mousedown", function (event) {

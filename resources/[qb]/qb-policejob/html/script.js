@@ -29,8 +29,8 @@ const CameraApp = new Vue({
                 $("#connectedlabel").addClass("connect");
             } else {
                 $("#blockscreen").css("display", "block");
-                this.cameraLabel = "ERROR #400: BAD REQUEST";
-                this.connectLabel = "CONNECTION FAILED";
+                this.cameraLabel = "ERRO #400: PEDIDO INVÁLIDO";
+                this.connectLabel = "FALHA NA LIGAÇÃO";
                 this.dateLabel = "ERROR";
                 this.timeLabel = "ERROR";
 
@@ -73,14 +73,14 @@ HeliCam.UpdateVehicleInfo = function (data) {
     $(".scanBar").css("height", "100%");
     $(".heli-model")
         .find("p")
-        .html("MODEL: " + data.model);
+        .html("MODELO: " + data.model);
     $(".heli-plate")
         .find("p")
-        .html("PLATE: " + data.plate);
+        .html("MATRÍCULA: " + data.plate);
     $(".heli-street").find("p").html(data.street);
     $(".heli-speed")
         .find("p")
-        .html(data.speed + " KM/U");
+        .html(data.speed + " KM/H");
 };
 
 HeliCam.DisableVehicleInfo = function () {
@@ -110,7 +110,7 @@ Databank.Close = function () {
 
 Fingerprint.Open = function () {
     $(".fingerprint-container").fadeIn(150);
-    $(".fingerprint-id").html("Fingerprint ID<p>No result</p>");
+    $(".fingerprint-id").html("ID da impressão digital<p>Sem resultado</p>");
 };
 
 Fingerprint.Close = function () {
@@ -119,7 +119,7 @@ Fingerprint.Close = function () {
 };
 
 Fingerprint.Update = function (data) {
-    $(".fingerprint-id").html("Fingerprint ID<p>" + data.fingerprintId + "</p>");
+    $(".fingerprint-id").html("ID da impressão digital<p>" + data.fingerprintId + "</p>");
 };
 
 $(document).on("click", ".take-fingerprint", function () {

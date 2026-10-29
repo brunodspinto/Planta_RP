@@ -1176,13 +1176,13 @@ end)
 RegisterNetEvent('qb-phone:server:sendPing', function(data)
     local src = source
     if src == data then
-        TriggerClientEvent('QBCore:Notify', src, 'You cannot ping yourself', 'error')
+        TriggerClientEvent('QBCore:Notify', src, 'Não podes enviar a tua localização a ti próprio', 'error')
     end
 end)
 
 -- Command
 
-QBCore.Commands.Add('setmetadata', 'Set Player Metadata (God Only)', {}, false, function(source, args)
+QBCore.Commands.Add('setmetadata', 'Definir metadados do jogador (só god)', {}, false, function(source, args)
     local Player = QBCore.Functions.GetPlayer(source)
     if args[1] then
         if args[1] == 'trucker' then
@@ -1195,7 +1195,7 @@ QBCore.Commands.Add('setmetadata', 'Set Player Metadata (God Only)', {}, false, 
     end
 end, 'god')
 
-QBCore.Commands.Add('bill', 'Bill A Player', { { name = 'id', help = 'Player ID' }, { name = 'amount', help = 'Fine Amount' } }, false, function(source, args)
+QBCore.Commands.Add('bill', 'Passar uma fatura a um jogador', { { name = 'id', help = 'ID do jogador' }, { name = 'amount', help = 'Valor da fatura' } }, false, function(source, args)
     local biller = QBCore.Functions.GetPlayer(source)
     local billed = QBCore.Functions.GetPlayer(tonumber(args[1]))
     local amount = tonumber(args[2])
@@ -1208,19 +1208,19 @@ QBCore.Commands.Add('bill', 'Bill A Player', { { name = 'id', help = 'Player ID'
                         { billed.PlayerData.citizenid, amount, biller.PlayerData.job.name,
                             biller.PlayerData.charinfo.firstname, biller.PlayerData.citizenid })
                     TriggerClientEvent('qb-phone:RefreshPhone', billed.PlayerData.source)
-                    TriggerClientEvent('QBCore:Notify', source, 'Invoice Successfully Sent', 'success')
-                    TriggerClientEvent('QBCore:Notify', billed.PlayerData.source, 'New Invoice Received')
+                    TriggerClientEvent('QBCore:Notify', source, 'Fatura enviada com sucesso', 'success')
+                    TriggerClientEvent('QBCore:Notify', billed.PlayerData.source, 'Recebeste uma nova fatura')
                 else
-                    TriggerClientEvent('QBCore:Notify', source, 'Must Be A Valid Amount Above 0', 'error')
+                    TriggerClientEvent('QBCore:Notify', source, 'Tem de ser um valor válido acima de 0', 'error')
                 end
             else
-                TriggerClientEvent('QBCore:Notify', source, 'You Cannot Bill Yourself', 'error')
+                TriggerClientEvent('QBCore:Notify', source, 'Não podes passar uma fatura a ti próprio', 'error')
             end
         else
-            TriggerClientEvent('QBCore:Notify', source, 'Player Not Online', 'error')
+            TriggerClientEvent('QBCore:Notify', source, 'O jogador não está online', 'error')
         end
     else
-        TriggerClientEvent('QBCore:Notify', source, 'No Access', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'Sem acesso', 'error')
     end
 end)
 

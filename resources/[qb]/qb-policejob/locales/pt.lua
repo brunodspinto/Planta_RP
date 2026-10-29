@@ -29,6 +29,7 @@ local Translations = {
         not_online = "???"
     },
     success = {
+        impounded = 'Veículo apreendido',
         uncuffed = 'Foste desalgemado',
         granted_license = 'Foi-te atribuída uma licença',
         grant_license = 'Atribuíste uma licença',
@@ -44,6 +45,7 @@ local Translations = {
         impound_vehicle_removed = 'Veículo retirado dos apreendidos!',
     },
     info = {
+        flagged_vehicle_radar = 'Veículo sinalizado detetado pelo radar: %{plate}',
         mr = 'Sr.',
         mrs = 'Sra.',
         impound_price = 'Preço que o jogador paga para retirar o veículo dos apreendidos (pode ser 0)',
@@ -85,7 +87,7 @@ local Translations = {
         vehicle_info = 'Motor: %{value} % | Combu: %{value2} %',
         evidence_stash_prompt = 'Baú de Evidências',
         evidence_stash = 'Baú de Evidências | %{value}',
-        slot = 'Slot no. (1,2,3)',
+        slot = 'N.º da ranhura (1,2,3)',
         current_evidence = '%{value} | Gaveta %{value2}',
         on_duty = '[E] - Entrar em serviço',
         off_duty = '[E] - Sair de serviço',
@@ -180,11 +182,20 @@ local Translations = {
         fine = '???'
     },
     progressbar = {
+        impound = 'A apreender o veículo..',
         blood_clear = 'A limpar sangue..',
         bullet_casing = 'A remover invólucros de balas..',
         robbing = 'A roubar pessoa..',
         place_object = 'A colocar objecto..',
         remove_object = 'A remover objeto..',
+    },
+    target = {
+        sign_in = 'Entrar/sair de serviço',
+        open_trash = 'Abrir lixo',
+        open_personal_stash = 'Abrir cacifo pessoal',
+        open_fingerprint = 'Recolher impressões digitais',
+        open_evidence_stash = 'Abrir cacifo de provas',
+        open_armory = 'Abrir armeiro',
     },
 }
 

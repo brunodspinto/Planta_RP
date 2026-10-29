@@ -4,11 +4,11 @@
 	import { SendNUI } from '@utils/SendNUI'
 
 	let navigation = [
-		{ value: 'Staffchat', icon: 'fas fa-message' },
-		{ value: 'Players', icon: 'fas fa-users' },
-		{ value: 'Server', icon: 'fas fa-server' },
-		{ value: 'Commands', icon: 'fas fa-slash' },
-		{ value: 'Actions', icon: 'fas fa-wand-magic-sparkles' },
+		{ value: 'Staffchat', label: 'Chat da staff', icon: 'fas fa-message' },
+		{ value: 'Players', label: 'Jogadores', icon: 'fas fa-users' },
+		{ value: 'Server', label: 'Servidor', icon: 'fas fa-server' },
+		{ value: 'Commands', label: 'Comandos', icon: 'fas fa-slash' },
+		{ value: 'Actions', label: 'Ações', icon: 'fas fa-wand-magic-sparkles' },
 	]
 </script>
 
@@ -29,7 +29,7 @@
 	</div>
 
 	{#each navigation as nav}
-		<Button tooltiptext={nav.value} icon={nav.icon} value={nav.value} />
+		<Button tooltiptext={nav.label} icon={nav.icon} value={nav.value} />
 	{/each}
 
 	<button
@@ -61,7 +61,7 @@
 
 		hover:before:opacity-100 hover:after:opacity-100
 		"
-		data-tip="Dev Mode"
+		data-tip="Modo dev"
 		on:click={() => {
 			DEV_MODE.update((wide) => !wide)
 			SendNUI('clickButton', {

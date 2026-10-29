@@ -4,13 +4,13 @@
 		<audio id="audio_off" src="mic_click_off.ogg"></audio>
 		<div v-if="voice.uiEnabled" class="voiceInfo">
 			<p v-if="voice.callInfo !== 0" :class="{ talking: voice.talking }">
-				[Call]
+				[Chamada]
 			</p>
 			<p v-if="voice.radioEnabled && voice.radioChannel !== 0" :class="{ talking: voice.usingRadio }">
-				{{ voice.radioChannel }} Mhz [Radio]
+				{{ voice.radioChannel }} MHz [Rádio]
 			</p>
 			<p v-if="voice.voiceModes.length" :class="{ talking: voice.talking }">
-				{{ voice.voiceModes[voice.voiceMode][1] }} [Range]
+				{{ voice.voiceModes[voice.voiceMode][1] }} [Alcance]
 			</p>
 		</div>
 	</body>
@@ -44,7 +44,7 @@ export default {
 				voice.voiceModes = JSON.parse(data.voiceModes);
 				// Push our own custom type for modes that have their range changed
 				let voiceModes = [...voice.voiceModes]
-				voiceModes.push([0.0, "Custom"])
+				voiceModes.push([0.0, "Personalizado"])
 				voice.voiceModes = voiceModes
 			}
 

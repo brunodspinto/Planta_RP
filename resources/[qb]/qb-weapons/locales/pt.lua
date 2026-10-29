@@ -1,5 +1,6 @@
 local Translations = {
     error = {
+        wrong_ammo = 'O tipo de munição está errado.',
         canceled = 'Cancelado',
         max_ammo = 'Capacidade máxima de munição',
         no_weapon = 'Não tens uma arma.',

@@ -172,7 +172,7 @@ $(document).on('click', '#accept-profilepicture', function(e){
     e.preventDefault();
     var ProfilePicture = QB.Phone.Data.MetaData.profilepicture;
     if (ProfilePicture === "default") {
-        QB.Phone.Notifications.Add("fas fa-paint-brush", "Definições", "Avatar padrão definido!")
+        QB.Phone.Notifications.Add("fas fa-paint-brush", "Definições", "Avatar predefinido definido!")
         QB.Phone.Animations.TopSlideUp(".settings-"+QB.Phone.Settings.OpenedTab+"-tab", 200, -100);
         $("[data-settingstab='profilepicture']").find('.settings-tab-icon').html('<img src="./img/default.png">');
     } else {

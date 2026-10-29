@@ -583,7 +583,7 @@ function QBCore.Player.ForceDeleteCharacter(citizenid)
         local Player = QBCore.Functions.GetPlayerByCitizenId(citizenid)
 
         if Player then
-            DropPlayer(Player.PlayerData.source, 'An admin deleted the character which you are currently using')
+            DropPlayer(Player.PlayerData.source, 'Um admin apagou a personagem que estavas a usar')
         end
         for i = 1, tableCount do
             local v = playertables[i]

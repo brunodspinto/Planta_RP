@@ -4,23 +4,23 @@ Config.UseableItems = true -- Set to false if you want to use commands instead o
 
 Config.Locations = {
     ["main"] = {
-        label = "Weazle News HQ",
+        label = "Sede da Weazel News",
         coords = vector4(-597.89, -929.95, 24.0, 271.5),
     },
     ["inside"] = {
-        label = "Weazle News HQ Inside",
+        label = "Sede da Weazel News (interior)",
         coords = vector4(-77.46, -833.77, 243.38, 67.5),
     },
     ["outside"] = {
-        label = "Weazle News HQ Outside",
+        label = "Sede da Weazel News (exterior)",
         coords = vector4(-598.25, -929.86, 23.86, 86.5),
     },
     ["vehicle"] = {
-        label = "Vehicle Storage",
+        label = "Garagem de veículos",
         coords = vector4(-552.24, -925.61, 23.86, 242.5),
     },
     ["heli"] = {
-        label = "Helicopter Storage",
+        label = "Garagem de helicópteros",
         coords = vector4(-583.08, -930.55, 36.83, 89.26),
     }
 }

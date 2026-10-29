@@ -82,7 +82,7 @@ if Config.Toggle then
         end
     end, false)
 
-    RegisterKeyMapping('scoreboard', 'Open Scoreboard', 'keyboard', Config.OpenKey)
+    RegisterKeyMapping('scoreboard', 'Abrir lista de jogadores', 'keyboard', Config.OpenKey)
 else
     RegisterCommand('+scoreboard', function()
         if scoreboardOpen then return end
@@ -110,7 +110,7 @@ else
         scoreboardOpen = false
     end, false)
 
-    RegisterKeyMapping('+scoreboard', 'Open Scoreboard', 'keyboard', Config.OpenKey)
+    RegisterKeyMapping('+scoreboard', 'Abrir lista de jogadores', 'keyboard', Config.OpenKey)
 end
 
 -- Threads

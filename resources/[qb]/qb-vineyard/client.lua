@@ -63,7 +63,7 @@ local function CreateBlip()
     SetBlipScale(blip, 1.0)
     SetBlipAsShortRange(blip, false)
     BeginTextCommandSetBlipName("STRING")
-    AddTextComponentSubstringPlayerName("Drop Off")
+    AddTextComponentSubstringPlayerName("Entrega")
     EndTextCommandSetBlipName(blip)
 end
 

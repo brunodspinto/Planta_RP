@@ -1,12 +1,12 @@
 QBShared = QBShared or {}
 QBShared.Gangs = {
-    none = { label = 'No Gang', grades = { ['0'] = { name = 'Unaffiliated' } } },
+    none = { label = 'Sem gang', grades = { ['0'] = { name = 'Sem afiliação' } } },
     lostmc = {
         label = 'The Lost MC',
         grades = {
             ['0'] = { name = 'Recruit' },
             ['1'] = { name = 'Enforcer' },
-            ['2'] = { name = 'Shot Caller' },
+            ['2'] = { name = 'Braço direito' },
             ['3'] = { name = 'Boss', isboss = true },
         },
     },
@@ -15,7 +15,7 @@ QBShared.Gangs = {
         grades = {
             ['0'] = { name = 'Recruit' },
             ['1'] = { name = 'Enforcer' },
-            ['2'] = { name = 'Shot Caller' },
+            ['2'] = { name = 'Braço direito' },
             ['3'] = { name = 'Boss', isboss = true },
         },
     },
@@ -24,7 +24,7 @@ QBShared.Gangs = {
         grades = {
             ['0'] = { name = 'Recruit' },
             ['1'] = { name = 'Enforcer' },
-            ['2'] = { name = 'Shot Caller' },
+            ['2'] = { name = 'Braço direito' },
             ['3'] = { name = 'Boss', isboss = true },
         },
     },
@@ -33,7 +33,7 @@ QBShared.Gangs = {
         grades = {
             ['0'] = { name = 'Recruit' },
             ['1'] = { name = 'Enforcer' },
-            ['2'] = { name = 'Shot Caller' },
+            ['2'] = { name = 'Braço direito' },
             ['3'] = { name = 'Boss', isboss = true },
         },
     },
@@ -42,7 +42,7 @@ QBShared.Gangs = {
         grades = {
             ['0'] = { name = 'Recruit' },
             ['1'] = { name = 'Enforcer' },
-            ['2'] = { name = 'Shot Caller' },
+            ['2'] = { name = 'Braço direito' },
             ['3'] = { name = 'Boss', isboss = true },
         },
     },
@@ -51,7 +51,7 @@ QBShared.Gangs = {
         grades = {
             ['0'] = { name = 'Recruit' },
             ['1'] = { name = 'Enforcer' },
-            ['2'] = { name = 'Shot Caller' },
+            ['2'] = { name = 'Braço direito' },
             ['3'] = { name = 'Boss', isboss = true },
         },
     }

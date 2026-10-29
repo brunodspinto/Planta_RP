@@ -148,9 +148,9 @@ local lastTalkingStatus = false
 local lastRadioStatus = false
 local voiceState = "proximity"
 CreateThread(function()
-	TriggerEvent('chat:addSuggestion', '/muteply', 'Mutes the player with the specified id', {
-		{ name = "player id", help = "the player to toggle mute" },
-		{ name = "duration",  help = "(opt) the duration the mute in seconds (default: 900)" }
+	TriggerEvent('chat:addSuggestion', '/muteply', 'Silencia o jogador com o id indicado', {
+		{ name = "id do jogador", help = "o jogador a silenciar/dessilenciar" },
+		{ name = "duração",  help = "(opcional) duração do silêncio em segundos (predefinição: 900)" }
 	})
 	while true do
 		-- wait for mumble to reconnect

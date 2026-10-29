@@ -1,16 +1,16 @@
 const MONTH_NAMES = [
-	'January',
-	'February',
-	'March',
-	'April',
-	'May',
-	'June',
-	'July',
-	'August',
-	'September',
-	'October',
-	'November',
-	'December',
+	'janeiro',
+	'fevereiro',
+	'março',
+	'abril',
+	'maio',
+	'junho',
+	'julho',
+	'agosto',
+	'setembro',
+	'outubro',
+	'novembro',
+	'dezembro',
 ]
 
 function getFormattedDate(date, prefomattedDate = false, hideYear = false) {
@@ -25,30 +25,30 @@ function getFormattedDate(date, prefomattedDate = false, hideYear = false) {
 	}
 
 	if (prefomattedDate) {
-		return `${prefomattedDate} at ${hours}:${minutes}`
+		return `${prefomattedDate} às ${hours}:${minutes}`
 	}
 
 	if (hideYear) {
-		return `${day}. ${month} at ${hours}:${minutes}`
+		return `${day} de ${month} às ${hours}:${minutes}`
 	}
 
-	return `${day}. ${month} ${year}. at ${hours}:${minutes}`
+	return `${day} de ${month} de ${year} às ${hours}:${minutes}`
 }
 
 export function timeAgo(dateParam) {
 	if (!dateParam) {
-		return 'Unknown'
+		return 'Desconhecido'
 	}
 
 	let date
 	try {
 		date = typeof dateParam === 'object' ? dateParam : new Date(dateParam)
 	} catch (e) {
-		return 'Invalid date'
+		return 'Data inválida'
 	}
 
 	if (isNaN(date)) {
-		return 'Invalid date'
+		return 'Data inválida'
 	}
 	const DAY_IN_MS = 86400000
 	const today = new Date()
@@ -60,17 +60,17 @@ export function timeAgo(dateParam) {
 	const isThisYear = today.getFullYear() === date.getFullYear()
 
 	if (seconds < 5) {
-		return 'Just Now'
+		return 'Agora mesmo'
 	} else if (seconds < 60) {
-		return `${seconds} Seconds ago`
+		return `Há ${seconds} segundos`
 	} else if (seconds < 90) {
-		return 'A minute ago'
+		return 'Há um minuto'
 	} else if (minutes < 60) {
-		return `${minutes} Minutes ago`
+		return `Há ${minutes} minutos`
 	} else if (isToday) {
-		return getFormattedDate(date, 'Today')
+		return getFormattedDate(date, 'Hoje')
 	} else if (isYesterday) {
-		return getFormattedDate(date, 'Yesterday')
+		return getFormattedDate(date, 'Ontem')
 	} else if (isThisYear) {
 		return getFormattedDate(date, false, true)
 	}

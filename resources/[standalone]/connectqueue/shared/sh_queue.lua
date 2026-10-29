@@ -516,7 +516,7 @@ local function playerConnect(name, setKickReason, deferrals)
         if reason then
             -- prevent joining
             allow = false
-            done(reason and tostring(reason) or "You were blocked from joining")
+            done(reason and tostring(reason) or "Foste impedido de entrar")
             Queue:RemoveFromQueue(ids)
             Queue:RemoveFromConnecting(ids)
             Queue:DebugPrint(string_format("%s[%s] was blocked from joining; Reason: %s", name, ids[1], reason))
@@ -614,7 +614,7 @@ local function playerConnect(name, setKickReason, deferrals)
         end
 
         if not data or not data.deferrals or not data.source or not pos then
-            remove("[Queue] Removed from queue, queue data invalid :(")
+            remove("[Fila] Removido da fila, dados da fila inválidos :(")
             Queue:DebugPrint(tostring(name .. "[" .. ids[1] .. "] was removed from the queue because they had invalid data"))
             return
         end

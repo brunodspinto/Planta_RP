@@ -72,7 +72,7 @@ CreateThread(function()
 				TaskStartScenarioInPlace(dealer, "WORLD_HUMAN_AA_SMOKE", 0, false)
 			end
 			if dist <= 2.0 then
-				DrawText3D(Config.MissionMarker.x, Config.MissionMarker.y, Config.MissionMarker.z, "~b~[E]~w~ To accept mission")
+				DrawText3D(Config.MissionMarker.x, Config.MissionMarker.y, Config.MissionMarker.z, "~b~[E]~w~ Aceitar a missão")
 				if IsControlJustPressed(0, 38) then
 					TriggerServerEvent("AttackTransport:akceptujto")
 					sleep = 500
@@ -107,7 +107,7 @@ RegisterNetEvent('AttackTransport:InfoForLspd', function(x, y, z)
 			SetBlipScale(blip, 1.0)
 			SetBlipColour(blip, 2)
 			BeginTextCommandSetBlipName("STRING")
-			AddTextComponentSubstringPlayerName('Assault on the transport of cash')
+			AddTextComponentSubstringPlayerName('Assalto ao transporte de valores')
 			EndTextCommandSetBlipName(blip)
 			SetNewWaypoint(x, y)
 			Wait(10000)
@@ -123,7 +123,7 @@ RegisterNetEvent('AttackTransport:InfoForLspd', function(x, y, z)
 				Wait(100)
 			end
 			if SilenceAlarm == 0 then
-				hintToDisplay('Press ~INPUT_DETONATE~ to silence the alarm')
+				hintToDisplay('Carrega em ~INPUT_DETONATE~ para silenciar o alarme')
 				SilenceAlarm = 1
 			end
 			if IsControlPressed(0, 47) and GuardsDead == 1 then
@@ -154,11 +154,11 @@ end)
 
 RegisterNetEvent('qb-armoredtruckheist:client:robberyCall', function(streetLabel, coords)
 	if PlayerJob.name == "police" then
-		local store = "Armored Truck"
+		local store = "Carrinha blindada"
 		PlaySound(-1, "Lose_1st", "GTAO_FM_Events_Soundset", 0, 0, 1)
 		TriggerEvent('qb-policealerts:client:AddPoliceAlert', {
 			timeOut = 10000,
-			alertTitle = "Armored Truck Robbery Attempt",
+			alertTitle = "Tentativa de assalto a carrinha blindada",
 			coords = {
 				x = coords.x,
 				y = coords.y,
@@ -185,7 +185,7 @@ RegisterNetEvent('qb-armoredtruckheist:client:robberyCall', function(streetLabel
 		SetBlipScale(blip, 1.2)
 		SetBlipFlashes(blip, true)
 		BeginTextCommandSetBlipName('STRING')
-		AddTextComponentSubstringPlayerName("10-90: Armored Truck Robbery")
+		AddTextComponentSubstringPlayerName("10-90: Assalto a carrinha blindada")
 		EndTextCommandSetBlipName(blip)
 		while transG ~= 0 do
 			Wait(180 * 4)
@@ -203,9 +203,9 @@ end)
 function MissionNotification()
 	Wait(2000)
 	TriggerServerEvent('qb-phone:server:sendNewMail', {
-		sender = "The Boss",
-		subject = "New Target",
-		message = "So you are intrested in making some money? good... go get yourself a Gun and make it happen... sending you the location now.",
+		sender = "O Chefe",
+		subject = "Novo alvo",
+		message = "Então queres ganhar algum dinheiro? Ótimo... arranja uma arma e trata do assunto... vou mandar-te a localização agora.",
 	})
 end
 ---
@@ -238,7 +238,7 @@ RegisterNetEvent('AttackTransport:Pozwolwykonac', function()
 				SetBlipColour(TruckBlip, 1)
 				SetBlipFlashes(TruckBlip, true)
 				BeginTextCommandSetBlipName("STRING")
-				AddTextComponentSubstringPlayerName('Van with Cash')
+				AddTextComponentSubstringPlayerName('Carrinha de valores')
 				EndTextCommandSetBlipName(TruckBlip)
 				--
 				RequestModel("s_m_m_security_01")
@@ -337,7 +337,7 @@ function startMission()
 				if warning == 0 then
 					warning = 1
 					stopAndBeAngry()
-					QBCore.Functions.Notify("Get rid of the guards before you place the bomb.", "error")
+					QBCore.Functions.Notify("Livra-te dos guardas antes de colocares a bomba.", "error")
 					AlertPolice()
 				end
 
@@ -347,7 +347,7 @@ function startMission()
 
 				if dist <= 7 and BlownUp == 0 and PlayerJob.name ~= 'police' then
 					if BlowBackdoor == 0 then
-						hintToDisplay('Press [G] to blow up the back door and take the money')
+						hintToDisplay('Carrega no [G] para rebentar a porta traseira e levar o dinheiro')
 						if IsControlJustPressed(0, 47) then
 							BlowBackdoor = 1
 							CheckVehicleInformation()
@@ -382,7 +382,7 @@ function CheckVehicleInformation()
 				DetachEntity(prop)
 				AttachEntityToEntity(prop, transport, GetEntityBoneIndexByName(transport, 'door_pside_r'), -0.7, 0.0, 0.0, 0.0, 0.0, 0.0, true, true, false, true, 1, true)
 				hideLastHint()
-				QBCore.Functions.Notify('The load will be detonated in '..Config.TimeToBlow ..' seconds.', "error")
+				QBCore.Functions.Notify('A carga vai rebentar daqui a '..Config.TimeToBlow ..' segundos.', "error")
 				FreezeEntityPosition(PlayerPedId(), false)
 				Wait(Config.TimeToBlow*1000)
 				local transCoords = GetEntityCoords(transport)
@@ -392,16 +392,16 @@ function CheckVehicleInformation()
 				-- ApplyForceToEntity(transport, 0, transCoords.x,transCoords.y,transCoords.z, 0.0, 0.0, 0.0, 1, false, true, true, true, true)
 				BlownUp = 1
 				lootable = 1
-				QBCore.Functions.Notify('You can start collecting cash.', "success")
+				QBCore.Functions.Notify('Podes começar a apanhar o dinheiro.', "success")
 				RemoveBlip(TruckBlip)
 			else
-				QBCore.Functions.Notify('Get out of the water', "error")
+				QBCore.Functions.Notify('Sai da água', "error")
 			end
 		else
-			QBCore.Functions.Notify('The vehicle must be empty to place the load', "error")
+			QBCore.Functions.Notify('O veículo tem de estar vazio para colocares a carga', "error")
 		end
 	else
-		QBCore.Functions.Notify('You can not rob a vehicle that is moving.', "error")
+		QBCore.Functions.Notify('Não podes assaltar um veículo em andamento.', "error")
 	end
 end
 
@@ -415,7 +415,7 @@ CreateThread(function()
             local dist = #(plyCoords - transCoords)
 			if dist <= 4.5 then
 				sleep = 0
-				hintToDisplay('Press [E] to take the money')
+				hintToDisplay('Carrega no [E] para levar o dinheiro')
 				if IsControlJustPressed(0, 38) or IsDisabledControlJustPressed(0, 38) then
 					lootable = 0
 					TakingMoney()
@@ -454,14 +454,14 @@ function TakingMoney()
 	AttachEntityToEntity(bag, PlayerPedId(), GetPedBoneIndex(PlayerPedId(), 57005), 0.0, 0.0, -0.16, 250.0, -30.0, 0.0, false, false, false, false, 2, true)
 	TaskPlayAnim(PlayerPedId(), "anim@heists@ornate_bank@grab_cash_heels", "grab", 8.0, -8.0, -1, 1, 0, false, false, false)
 	FreezeEntityPosition(PlayerPedId(), true)
-	QBCore.Functions.Notify('You are packing cash into a bag', "success")
+	QBCore.Functions.Notify('Estás a meter o dinheiro num saco', "success")
 	local _time = GetGameTimer()
 	while GetGameTimer() - _time < 20000 do
 		if IsControlPressed(0, 47) then
 			hideLastHint()
 			break
 		end
-		hintToDisplay('Hold [G] to bail out')
+		hintToDisplay('Mantém o [G] para desistir')
 		Wait(0)
 	end
 	LootTime = GetGameTimer() - _time

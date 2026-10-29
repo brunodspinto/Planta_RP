@@ -10,7 +10,7 @@
 			// console.log($ALL_ACTIONS)
 		}}
 	>
-		All Actions
+		Todas as ações
 	</button>
 	<button
 		class="w-full h-full hover:bg-tertiary rounded-[0.5vh] border-[0.2vh] border-tertiary {!$ALL_ACTIONS ? 'bg-tertiary' : ' '}"
@@ -19,6 +19,6 @@
 			// console.log($ALL_ACTIONS)
 		}}
 	>
-		Favorites
+		Favoritos
 	</button>
 </div>

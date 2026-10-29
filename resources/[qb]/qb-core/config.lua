@@ -53,7 +53,7 @@ QBConfig.Player.PlayerDefaults = {
     },
     gang = {
         name = 'none',
-        label = 'No Gang Affiliation',
+        label = 'Sem gang',
         isboss = false,
         grade = {
             name = 'none',
@@ -106,7 +106,7 @@ QBConfig.Player.PlayerDefaults = {
 
 QBConfig.Server = {}                                    -- General server config
 QBConfig.Server.Closed = false                          -- Set server closed (no one can join except people with ace permission 'qbadmin.join')
-QBConfig.Server.ClosedReason = 'Server Closed'          -- Reason message to display when people can't join the server
+QBConfig.Server.ClosedReason = 'Servidor fechado'          -- Reason message to display when people can't join the server
 QBConfig.Server.Uptime = 0                              -- Time the server has been up.
 QBConfig.Server.Whitelist = false                       -- Enable or disable whitelist on the server
 QBConfig.Server.WhitelistPermission = 'admin'           -- Permission that's able to enter the server when the whitelist is on

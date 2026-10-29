@@ -434,7 +434,7 @@ function Init()
                 SetVehicleDoorsLocked(veh, 3)
                 SetEntityHeading(veh, Config.Shops[k]['ShowroomVehicles'][i].coords.w)
                 FreezeEntityPosition(veh, true)
-                SetVehicleNumberPlateText(veh, 'BUY ME')
+                SetVehicleNumberPlateText(veh, 'A VENDA')
                 if Config.UsingTarget then createVehZones(k, veh) end
             end
             if not Config.UsingTarget then createVehZones(k) end
@@ -766,7 +766,7 @@ RegisterNetEvent('qb-vehicleshop:client:swapVehicle', function(data)
         SetEntityHeading(veh, Config.Shops[shopName]['ShowroomVehicles'][data.ClosestVehicle].coords.w)
         SetVehicleDoorsLocked(veh, 3)
         FreezeEntityPosition(veh, true)
-        SetVehicleNumberPlateText(veh, 'BUY ME')
+        SetVehicleNumberPlateText(veh, 'A VENDA')
         if Config.UsingTarget then createVehZones(shopName, veh) end
     end
 end)

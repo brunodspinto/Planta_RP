@@ -23,5 +23,5 @@ RegisterCommand(Config.HandsUp.command, function()
     LocalPlayer.state:set('handsup', handsUp, true)
 end, false)
 
-RegisterKeyMapping(Config.HandsUp.command, 'Hands Up', 'keyboard', Config.HandsUp.keybind)
+RegisterKeyMapping(Config.HandsUp.command, 'Mãos no ar', 'keyboard', Config.HandsUp.keybind)
 exports('getHandsup', function() return handsUp end)

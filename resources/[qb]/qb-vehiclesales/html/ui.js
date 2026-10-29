@@ -28,10 +28,10 @@ var app = new Vue({
                     fetch("https://qb-vehiclesales/sellVehicle", requestOptions);
                     this.close();
                 } else {
-                    this.errors.push("Price must be a numeric value only");
+                    this.errors.push("O preço tem de ser só um número");
                 }
             } else {
-                this.errors.push("Sale price required")
+                this.errors.push("Tens de indicar o preço de venda")
             }
         },
         buy() {

@@ -1,21 +1,21 @@
 local Translations = {
     notifications = {
         ["char_deleted"] = "Personagem apagada!",
-        ["deleted_other_char"] = "Apagou com successo, a personagem com Identificação: %{citizenid}.",
-        ["forgot_citizenid"] = "Esqueceu-se de inserir a identificação do cidadão!",
+        ["deleted_other_char"] = "Apagaste com sucesso a personagem com o ID de cidadão %{citizenid}.",
+        ["forgot_citizenid"] = "Esqueceste-te de indicar o ID de cidadão!",
         },
 
     commands = {
         -- /deletechar
-        ["deletechar_description"] = "Apaga o personagem de outro jogador",
-        ["citizenid"] = "Identificação do cidadão",
-        ["citizenid_help"] = "O ID do cidadão do personagem que deseja remover",
+        ["deletechar_description"] = "Apaga a personagem de outro jogador",
+        ["citizenid"] = "ID de cidadão",
+        ["citizenid_help"] = "O ID de cidadão da personagem que queres apagar",
 
         -- /logout
-        ["logout_description"] = "Logout à personagem (Admin Only)",
+        ["logout_description"] = "Sair da personagem (só admin)",
 
         -- /closeNUI
-        ["closeNUI_description"] = "Fechar Multiplos NUIs"
+        ["closeNUI_description"] = "Fechar várias NUIs"
     },
 
     misc = {
@@ -24,50 +24,50 @@ local Translations = {
 
     ui = {
         -- Main
-        characters_header = "Minhas personagens",
-        emptyslot = "Slot Vazia",
-        play_button = "Acordar",
-        create_button = "Criar Personagem",
-        delete_button = "Apagar Personagem",
+        characters_header = "As minhas personagens",
+        emptyslot = "Espaço vazio",
+        play_button = "Jogar",
+        create_button = "Criar personagem",
+        delete_button = "Apagar personagem",
 
         -- Character Information
         charinfo_header = "Informação da personagem",
-        charinfo_description = "Seleccione uma personagem, para ver as suas informações.",
+        charinfo_description = "Escolhe uma personagem para veres as informações dela.",
         name = "Nome",
         male = "Homem",
         female = "Mulher",
         firstname = "Nome",
-        lastname = "Sobrenome",
-        nationality = "Nationalidade",
-        gender = "Genero",
-        birthdate = "Aniversário",
+        lastname = "Apelido",
+        nationality = "Nacionalidade",
+        gender = "Género",
+        birthdate = "Data de nascimento",
         job = "Profissão",
         jobgrade = "Cargo",
         cash = "Dinheiro",
         bank = "Banco",
-        phonenumber = "Contacto",
-        accountnumber = "Numero da Conta",
+        phonenumber = "Telemóvel",
+        accountnumber = "Número de conta",
 
         chardel_header = "Registo de personagem",
 
         -- Delete character
         deletechar_header = "Apagar personagem",
-        deletechar_description = "Tem a certeza, que quer apagar a sua personagem?",
+        deletechar_description = "Tens a certeza de que queres apagar esta personagem?",
 
         -- Buttons
         cancel = "Cancelar",
         confirm = "Confirmar",
 
         -- Loading Text
-        retrieving_playerdata = "Carregando dados do joagador",
-        validating_playerdata = "Validando dados do joagador",
-        retrieving_characters = "Carregando personagens",
-        validating_characters = "Validando personagens",
+        retrieving_playerdata = "A obter os dados do jogador",
+        validating_playerdata = "A validar os dados do jogador",
+        retrieving_characters = "A obter as personagens",
+        validating_characters = "A validar as personagens",
 
         -- Notifications
-        ran_into_issue = "Encontramos um problema",
-        profanity = "Parece que está tentando usar algum tipo de palavrão / palavrões no seu nome ou nacionalidade!",
-        forgotten_field = "Parece que se esqueceu de inserir um ou vários dos campos!"
+        ran_into_issue = "Ocorreu um problema",
+        profanity = "Parece que estás a tentar usar palavrões no nome ou na nacionalidade!",
+        forgotten_field = "Parece que te esqueceste de preencher um ou mais campos!"
         }
 }
 

@@ -24,7 +24,7 @@ Config.Blip = {
     Scale = 0.7,
     Display = 4,
     ShortRange = true,
-    Text = 'Gas Station'
+    Text = 'Bomba de gasolina'
 }
 
 -- All known pump models in game (I think)

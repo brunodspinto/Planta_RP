@@ -9,8 +9,8 @@ local Translations = {
         ['hired'] = 'Contratar Civis próximos',
         ['storage'] = 'Acesso ao Armazenamento',
         ['storaged'] = 'Abrir Armazenamento',
-        ['outfits'] = 'Fatos',
-        ['outfitsd'] = 'Ver Fatos Salvos',
+        ['outfits'] = 'Roupas',
+        ['outfitsd'] = 'Ver roupas guardadas',
         ['money'] = 'Gestão de Dinheiro',
         ['moneyd'] = 'Verificar o Saldo da Empresa',
         ['mempl'] = 'Gerir Funcionários - ',
@@ -73,7 +73,7 @@ local Translations = {
         ['label'] = '[E] Abrir Gestão Gang',
     },
     targetgang = {
-        ['label'] = 'Gang Menu',
+        ['label'] = 'Menu da gang',
     }
 }
 

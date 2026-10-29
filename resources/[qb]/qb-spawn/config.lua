@@ -10,7 +10,7 @@ QB.Spawns = {
     policedp = {
         coords = vector4(428.23, -984.28, 29.76, 3.5),
         location = 'policedp',
-        label = 'Police Department',
+        label = 'Esquadra da polícia',
     },
 
     paleto = {

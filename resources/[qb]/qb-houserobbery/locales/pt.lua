@@ -1,5 +1,6 @@
 local Translations = {
     error = {
+        not_allowed_time = 'Não podes fazer isso a esta hora do dia.',
         ['missing_something'] = 'Parece que te está a faltar algo...',
         ['not_enough_police'] = 'Policia Insuficiente...',
         ['door_open'] = 'Esta porta já está aberta...',
@@ -19,13 +20,13 @@ local Translations = {
         ['hsempty'] = 'Vazio..',
     },
     searching = {
-        ['search_bcabinet'] = 'Search Bedside Cabinet',
-        ['search_closet'] = 'Search Closet',
-        ['search_chest'] = 'Search Chest',
-        ['search_drawer'] = 'Search Drawers',
-        ['search_cabinet'] = 'Night Stand Cabinet',
-        ['search_kcabinet'] = 'Search through the kitchen cabinets',
-        ['search_shelves'] = 'Search through shelves',
+        ['search_bcabinet'] = 'Revistar mesa de cabeceira',
+        ['search_closet'] = 'Revistar roupeiro',
+        ['search_chest'] = 'Revistar baú',
+        ['search_drawer'] = 'Revistar gavetas',
+        ['search_cabinet'] = 'Revistar mesinha de cabeceira',
+        ['search_kcabinet'] = 'Revistar os armários da cozinha',
+        ['search_shelves'] = 'Revistar as prateleiras',
     }
 }
 

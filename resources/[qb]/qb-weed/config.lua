@@ -10,13 +10,13 @@ QBWeed.GrowthTick = 9.6  -- Amount of time (in mins) to increase plant growth & 
 QBWeed.FoodUsage = 1     -- Amount of food to use per-tick
 
 QBWeed.StageLabels = {
-    [1] = 'Germination',
-    [2] = 'Seedling',
-    [3] = 'Vegetative',
-    [4] = 'Budding',
-    [5] = 'Pre-flowering',
-    [6] = 'Flowering',
-    [7] = 'Ready for harvest',
+    [1] = 'Germinação',
+    [2] = 'Plântula',
+    [3] = 'Vegetativa',
+    [4] = 'Formação de botões',
+    [5] = 'Pré-floração',
+    [6] = 'Floração',
+    [7] = 'Pronta para colher',
 }
 
 QBWeed.DefaultProps = {

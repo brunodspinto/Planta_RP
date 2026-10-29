@@ -47,4 +47,4 @@ RegisterCommand('togglecrouch', function()
 end, false)
 
 -- Optional: Register a keybind so they can press CTRL (36) to toggle
-RegisterKeyMapping('togglecrouch', 'Toggle Crouch', 'keyboard', 'LCONTROL')
+RegisterKeyMapping('togglecrouch', 'Agachar', 'keyboard', 'LCONTROL')

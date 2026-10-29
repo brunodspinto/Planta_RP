@@ -49,7 +49,7 @@ local function createBlip(options)
     SetBlipColour(blip, options.colour or 1)
     SetBlipAsShortRange(blip, options.shortRange or false)
     BeginTextCommandSetBlipName('STRING')
-    AddTextComponentSubstringPlayerName(options.title or 'No Title Given')
+    AddTextComponentSubstringPlayerName(options.title or 'Sem título')
     EndTextCommandSetBlipName(blip)
     return blip
 end
@@ -99,25 +99,25 @@ end
 local function openCityhallMenu()
     local mainMenu = {
         {
-            header = 'City Hall',
+            header = 'Câmara Municipal',
             isMenuHeader = true
         },
         {
-            header = 'ID Card',
-            txt = 'Get your ID Card',
+            header = 'Cartão de cidadão',
+            txt = 'Pede o teu cartão de cidadão',
             params = {
                 event = 'qb-cityhall:client:openIdentityMenu'
             }
         },
         {
-            header = 'Job Center',
-            txt = 'Available Jobs',
+            header = 'Centro de emprego',
+            txt = 'Empregos disponíveis',
             params = {
                 event = 'qb-cityhall:client:openJobMenu'
             }
         },
         {
-            header = 'Close Menu',
+            header = 'Fechar menu',
             txt = '',
             params = {
                 event = 'qb-menu:client:closeMenu'
@@ -136,7 +136,7 @@ local function openIdentityMenu()
                 isMenuHeader = true
             },
             {
-                header = '← Go Back',
+                header = '← Voltar',
                 params = {
                     event = 'qb-cityhall:client:openCityhallMenu'
                 }
@@ -165,11 +165,11 @@ local function openJobMenu()
     QBCore.Functions.TriggerCallback('qb-cityhall:server:receiveJobs', function(jobs)
         local jobMenu = {
             {
-                header = 'Job Center',
+                header = 'Centro de emprego',
                 isMenuHeader = true
             },
             {
-                header = '← Go Back',
+                header = '← Voltar',
                 params = {
                     event = 'qb-cityhall:client:openCityhallMenu'
                 }
@@ -179,7 +179,7 @@ local function openJobMenu()
         for jobName, jobData in pairs(jobs) do
             table.insert(jobMenu, {
                 header = jobData.label,
-                txt = 'Apply for this job',
+                txt = 'Candidatar-te a este emprego',
                 params = {
                     event = 'qb-cityhall:client:applyJob',
                     args = {
@@ -212,7 +212,7 @@ local function spawnPeds()
             local opts = nil
             if current.drivingschool then
                 opts = {
-                    label = 'Take Driving Lessons',
+                    label = 'Tirar aulas de condução',
                     icon = 'fa-solid fa-car-side',
                     action = function()
                         TriggerServerEvent('qb-cityhall:server:sendDriverTest', Config.DrivingSchools[closestDrivingSchool].instructors)
@@ -220,7 +220,7 @@ local function spawnPeds()
                 }
             elseif current.cityhall then
                 opts = {
-                    label = 'Open Cityhall',
+                    label = 'Abrir câmara municipal',
                     icon = 'fa-solid fa-city',
                     action = function()
                         inRangeCityhall = true
@@ -249,10 +249,10 @@ local function spawnPeds()
                         if inside then
                             if current.drivingschool then
                                 inRangeDrivingSchool = true
-                                exports['qb-core']:DrawText('[E] Take Driving Lessons')
+                                exports['qb-core']:DrawText('[E] Tirar aulas de condução')
                             elseif current.cityhall then
                                 inRangeCityhall = true
-                                exports['qb-core']:DrawText('[E] Open Cityhall')
+                                exports['qb-core']:DrawText('[E] Abrir câmara municipal')
                             end
                         else
                             exports['qb-core']:HideText()
@@ -320,7 +320,7 @@ RegisterNetEvent('qb-cityhall:client:requestId', function(data)
         local license = Config.Cityhalls[closestCityhall].licenses[data.type]
         if license and data.cost == license.cost then
             TriggerServerEvent('qb-cityhall:server:requestId', data.type, closestCityhall)
-            QBCore.Functions.Notify(('You have received your %s for $%s'):format(license.label, data.cost), 'success', 3500)
+            QBCore.Functions.Notify(('Recebeste o teu %s por $%s'):format(license.label, data.cost), 'success', 3500)
         else
             QBCore.Functions.Notify(Lang:t('error.not_in_range'), 'error')
         end

@@ -19,7 +19,7 @@
 			on:input={onSearchInput}
 			bind:value={search}
 			type="text"
-			placeholder="Search"
+			placeholder="Pesquisar"
 			class="h-full px-[1vh] bg-transparent text-[1.7vh] {hasLargeMenu ? $MENU_WIDE ? 'w-[94%]' : 'w-[80%]' : 'w-[80%]'}"
 		/>
 	</div>

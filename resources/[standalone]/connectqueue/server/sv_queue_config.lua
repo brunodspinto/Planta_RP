@@ -38,7 +38,7 @@ Config.GraceTime = 480
 
 Config.AntiSpam = false
 Config.AntiSpamTimer = 30
-Config.PleaseWait = "Please wait %f seconds. The connection will start automatically!"
+Config.PleaseWait = "Aguarda %f segundos. A ligação vai começar automaticamente!"
 
 -- on resource start, players can join the queue but will not let them join for __ milliseconds
 -- this will let the queue settle and lets other resources finish initializing
@@ -49,13 +49,13 @@ Config.ShowTemp = false
 
 -- simple localization
 Config.Language = {
-    joining = "\xF0\x9F\x8E\x89Joining...",
-    connecting = "\xE2\x8F\xB3Connecting...",
-    idrr = "\xE2\x9D\x97[Queue] Error: Couldn't retrieve any of your id's, try restarting.",
-    err = "\xE2\x9D\x97[Queue] There was an error",
-    pos = "\xF0\x9F\x90\x8CYou are %d/%d in queue \xF0\x9F\x95\x9C%s",
-    connectingerr = "\xE2\x9D\x97[Queue] Error: Error adding you to connecting list",
-    timedout = "\xE2\x9D\x97[Queue] Error: Timed out?",
-    wlonly = "\xE2\x9D\x97[Queue] You must be whitelisted to join this server",
-    steam = "\xE2\x9D\x97 [Queue] Error: Steam must be running"
+    joining = "\xF0\x9F\x8E\x89A entrar...",
+    connecting = "\xE2\x8F\xB3A ligar...",
+    idrr = "\xE2\x9D\x97[Fila] Erro: não foi possível obter os teus identificadores, tenta reiniciar o jogo.",
+    err = "\xE2\x9D\x97[Fila] Ocorreu um erro",
+    pos = "\xF0\x9F\x90\x8CEstás em %d/%d na fila \xF0\x9F\x95\x9C%s",
+    connectingerr = "\xE2\x9D\x97[Fila] Erro: não foi possível adicionar-te à lista de ligação",
+    timedout = "\xE2\x9D\x97[Fila] Erro: tempo esgotado",
+    wlonly = "\xE2\x9D\x97[Fila] Tens de estar na whitelist para entrar neste servidor",
+    steam = "\xE2\x9D\x97 [Fila] Erro: o Steam tem de estar aberto"
 }

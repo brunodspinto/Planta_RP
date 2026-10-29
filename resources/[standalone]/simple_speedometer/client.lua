@@ -57,10 +57,10 @@ CreateThread(function()
 
                 -- Cores do Cinto (Verde = Seguro / Vermelho = Perigo)
                 local beltColorR, beltColorG, beltColorB = 255, 50, 50 -- Vermelho por defeito
-                local beltText = "CINTO OFF"
+                local beltText = "SEM CINTO"
                 if seatbeltOn then 
                     beltColorR, beltColorG, beltColorB = 50, 255, 50 -- Verde
-                    beltText = "CINTO ON"
+                    beltText = "COM CINTO"
                 end
 
                 -- === DESENHO NO ECRÃ === --

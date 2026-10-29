@@ -101,7 +101,7 @@ $(document).on('click', '.phone-recent-call', function(e){
                 if (status.CanCall) {
                     if (!status.InCall) {
                         if (QB.Phone.Data.AnonymousCall) {
-                            QB.Phone.Notifications.Add("fas fa-phone", "Phone", "Iniciaste uma chamada anónima!");
+                            QB.Phone.Notifications.Add("fas fa-phone", "Telemóvel", "Iniciaste uma chamada anónima!");
                         }
                         $(".phone-call-outgoing").css({"display":"block"});
                         $(".phone-call-incoming").css({"display":"none"});
@@ -120,16 +120,16 @@ $(document).on('click', '.phone-recent-call', function(e){
 
                         QB.Phone.Data.currentApplication = "phone-call";
                     } else {
-                        QB.Phone.Notifications.Add("fas fa-phone", "Phone", "Já estás numa chamada!");
+                        QB.Phone.Notifications.Add("fas fa-phone", "Telemóvel", "Já estás numa chamada!");
                     }
                 } else {
-                    QB.Phone.Notifications.Add("fas fa-phone", "Phone", "Esta pessoa está ocupada!");
+                    QB.Phone.Notifications.Add("fas fa-phone", "Telemóvel", "Esta pessoa está ocupada!");
                 }
             } else {
-                QB.Phone.Notifications.Add("fas fa-phone", "Phone", "Esta pessoa não está disponível!");
+                QB.Phone.Notifications.Add("fas fa-phone", "Telemóvel", "Esta pessoa não está disponível!");
             }
         } else {
-            QB.Phone.Notifications.Add("fas fa-phone", "Phone", "Não te podes ligar a ti mesmo!");
+            QB.Phone.Notifications.Add("fas fa-phone", "Telemóvel", "Não te podes ligar a ti mesmo!");
         }
     });
 });
@@ -169,16 +169,16 @@ $(document).on('click', ".phone-keypad-key-call", function(e){
 
                         QB.Phone.Data.currentApplication = "phone-call";
                     } else {
-                        QB.Phone.Notifications.Add("fas fa-phone", "Phone", "Já estás numa chamada!");
+                        QB.Phone.Notifications.Add("fas fa-phone", "Telemóvel", "Já estás numa chamada!");
                     }
                 } else {
-                    QB.Phone.Notifications.Add("fas fa-phone", "Phone", "Esta pessoa está ocupada!");
+                    QB.Phone.Notifications.Add("fas fa-phone", "Telemóvel", "Esta pessoa está ocupada!");
                 }
             } else {
-                QB.Phone.Notifications.Add("fas fa-phone", "Phone", "Esta pessoa não está disponível!");
+                QB.Phone.Notifications.Add("fas fa-phone", "Telemóvel", "Esta pessoa não está disponível!");
             }
         } else {
-            QB.Phone.Notifications.Add("fas fa-phone", "Phone", "Não te podes ligar a ti mesmo!");
+            QB.Phone.Notifications.Add("fas fa-phone", "Telemóvel", "Não te podes ligar a ti mesmo!");
         }
     });
 });
@@ -259,7 +259,7 @@ $(document).on('click', '#new-chat-phone', function(e){
             });
         }, 400)
     } else {
-        QB.Phone.Notifications.Add("fa fa-phone-alt", "Phone", "Não podes enviar WhatsApp a ti mesmo..", "default", 3500);
+        QB.Phone.Notifications.Add("fa fa-phone-alt", "Telemóvel", "Não podes enviar WhatsApp a ti mesmo..", "default", 3500);
     }
 });
 
@@ -457,7 +457,7 @@ $(document).on('click', '#add-contact-save', function(e){
             if ((amount - 1) === 0) {
                 amount = 0
             }
-            $(".amount-of-suggested-contacts").html(amount + " contacts");
+            $(".amount-of-suggested-contacts").html(amount + " contactos");
         }
     } else {
         QB.Phone.Notifications.Add("fas fa-exclamation-circle", "Adicionar contacto", "Preenche todos os campos!");
@@ -510,16 +510,16 @@ SetupCall = function(cData) {
 
                         QB.Phone.Data.currentApplication = "phone-call";
                     } else {
-                        QB.Phone.Notifications.Add("fas fa-phone", "Phone", "Já estás numa chamada!");
+                        QB.Phone.Notifications.Add("fas fa-phone", "Telemóvel", "Já estás numa chamada!");
                     }
                 } else {
-                    QB.Phone.Notifications.Add("fas fa-phone", "Phone", "Esta pessoa está numa chamada!");
+                    QB.Phone.Notifications.Add("fas fa-phone", "Telemóvel", "Esta pessoa está numa chamada!");
                 }
             } else {
-                QB.Phone.Notifications.Add("fas fa-phone", "Phone", "Esta pessoa não está disponível!");
+                QB.Phone.Notifications.Add("fas fa-phone", "Telemóvel", "Esta pessoa não está disponível!");
             }
         } else {
-            QB.Phone.Notifications.Add("fas fa-phone", "Phone", "Não podes ligar para o teu próprio número!");
+            QB.Phone.Notifications.Add("fas fa-phone", "Telemóvel", "Não podes ligar para o teu próprio número!");
         }
     });
 }

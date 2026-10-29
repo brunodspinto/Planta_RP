@@ -11,9 +11,9 @@ local Translations = {
         bank_already_open = "O banco já se encontra aberto...",
         minimum_police_required = "Minimo de %{police} policia necessário",
         security_lock_active = "A trava de segurança está ativa, não é possível abrir a porta no momento",
-        wrong_type = "%{receiver} did not receive the right type for argument '%{argument}'\nreceived type: %{receivedType}\nreceived value: %{receivedValue}\n expected type: %{expected}",
-        fuses_already_blown = "The fuses are already blown...",
-        event_trigger_wrong = "%{event}%{extraInfo} was triggered when some conditions weren't met, source: %{source}",
+        wrong_type = "%{receiver} não recebeu o tipo certo para o argumento '%{argument}'\ntipo recebido: %{receivedType}\nvalor recebido: %{receivedValue}\n tipo esperado: %{expected}",
+        fuses_already_blown = "Os fusíveis já estão queimados...",
+        event_trigger_wrong = "%{event}%{extraInfo} foi acionado sem as condições necessárias, origem: %{source}",
         missing_ignition_source = "Precisa de uma fonte de ignição"
     },
     general = {

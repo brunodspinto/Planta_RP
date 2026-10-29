@@ -16,7 +16,7 @@ RegisterNetEvent('ps-adminmenu:client:ToggleGodmode', function(data)
     godmode = not godmode
 
     if godmode then
-        QBCore.Functions.Notify(locale("godmode", "enabled"), 'primary')
+        QBCore.Functions.Notify(locale("godmode", locale("enabled")), 'primary')
         CreateThread(function()
             while godmode do
                 Wait(100)
@@ -25,7 +25,7 @@ RegisterNetEvent('ps-adminmenu:client:ToggleGodmode', function(data)
                 end
             end
             SetPlayerInvincible(cache.playerId, false)
-            QBCore.Functions.Notify(locale("godmode", "disabled"), 'primary')
+            QBCore.Functions.Notify(locale("godmode", locale("disabled")), 'primary')
         end)
     end
 end)

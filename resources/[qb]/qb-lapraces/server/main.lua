@@ -151,8 +151,8 @@ RegisterNetEvent('qb-lapraces:server:FinishPlayer', function(RaceData, TotalTime
             }
             MySQL.update('UPDATE lapraces SET records = ? WHERE raceid = ?',
                 {json.encode(Races[RaceData.RaceId].Records), RaceData.RaceId})
-            TriggerClientEvent('qb-phone:client:RaceNotify', src, 'You have won the WR from ' .. RaceData.RaceName ..
-                ' disconnected with a time of: ' .. SecondsToClock(BLap) .. '!')
+            TriggerClientEvent('qb-phone:client:RaceNotify', src, 'Bateste o recorde de ' .. RaceData.RaceName ..
+                ' (desconectado) com o tempo de: ' .. SecondsToClock(BLap) .. '!')
         end
     else
         Races[RaceData.RaceId].Records = {
@@ -164,8 +164,8 @@ RegisterNetEvent('qb-lapraces:server:FinishPlayer', function(RaceData, TotalTime
         }
         MySQL.update('UPDATE lapraces SET records = ? WHERE raceid = ?',
             {json.encode(Races[RaceData.RaceId].Records), RaceData.RaceId})
-        TriggerClientEvent('qb-phone:client:RaceNotify', src, 'You have won the WR from ' .. RaceData.RaceName ..
-            ' put down with a time of: ' .. SecondsToClock(BLap) .. '!')
+        TriggerClientEvent('qb-phone:client:RaceNotify', src, 'Bateste o recorde de ' .. RaceData.RaceName ..
+            ' com o tempo de: ' .. SecondsToClock(BLap) .. '!')
     end
     AvailableRaces[AvailableKey].RaceData = Races[RaceData.RaceId]
     TriggerClientEvent('qb-lapraces:client:PlayerFinishs', -1, RaceData.RaceId, PlayersFinished, Player)
@@ -202,10 +202,10 @@ RegisterNetEvent('qb-lapraces:server:CreateLapRace', function(RaceName)
         if IsNameAvailable(RaceName) then
             TriggerClientEvent('qb-lapraces:client:StartRaceEditor', source, RaceName)
         else
-            TriggerClientEvent('QBCore:Notify', source, 'There is already a race with this name.', 'error')
+            TriggerClientEvent('QBCore:Notify', source, 'Já existe uma corrida com este nome.', 'error')
         end
     else
-        TriggerClientEvent('QBCore:Notify', source, 'You have not been authorized to race\'s to create.', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'Não tens autorização para criar corridas.', 'error')
     end
 end)
 
@@ -227,7 +227,7 @@ RegisterNetEvent('qb-lapraces:server:JoinRace', function(RaceData)
             Races[CurrentRace].Started = false
             Races[CurrentRace].Waiting = false
             table.remove(AvailableRaces, PreviousRaceKey)
-            TriggerClientEvent('QBCore:Notify', src, 'You were the only one in the race, the race had ended', 'error')
+            TriggerClientEvent('QBCore:Notify', src, 'Eras o único na corrida, por isso a corrida terminou', 'error')
             TriggerClientEvent('qb-lapraces:client:LeaveRace', src, Races[CurrentRace])
         else
             AvailableRaces[PreviousRaceKey].RaceData = Races[CurrentRace]
@@ -249,7 +249,7 @@ RegisterNetEvent('qb-lapraces:server:JoinRace', function(RaceData)
     if creatorsource ~= Player.PlayerData.source then
         TriggerClientEvent('qb-phone:client:RaceNotify', creatorsource,
             string.sub(Player.PlayerData.charinfo.firstname, 1, 1) .. '. ' .. Player.PlayerData.charinfo.lastname ..
-                ' the race has been joined!')
+                ' entrou na corrida!')
     end
 end)
 
@@ -269,7 +269,7 @@ RegisterNetEvent('qb-lapraces:server:LeaveRace', function(RaceData)
     if creatorsource ~= Player.PlayerData.source then
         TriggerClientEvent('qb-phone:client:RaceNotify', creatorsource,
             string.sub(Player.PlayerData.charinfo.firstname, 1, 1) .. '. ' .. Player.PlayerData.charinfo.lastname ..
-                ' the race has been delivered!')
+                ' saiu da corrida!')
     end
     local AmountOfRacers = 0
     for _, _ in pairs(Races[RaceData.RaceId].Racers) do
@@ -327,7 +327,7 @@ RegisterNetEvent('qb-lapraces:server:LeaveRace', function(RaceData)
         Races[RaceId].Started = false
         Races[RaceId].Waiting = false
         table.remove(AvailableRaces, AvailableKey)
-        TriggerClientEvent('QBCore:Notify', src, 'You were the only one in the race.The race had ended.', 'error')
+        TriggerClientEvent('QBCore:Notify', src, 'Eras o único na corrida, por isso a corrida terminou.', 'error')
         TriggerClientEvent('qb-lapraces:client:LeaveRace', src, Races[RaceId])
         LastRaces[RaceId] = nil
         NotFinished[RaceId] = nil
@@ -371,13 +371,13 @@ RegisterNetEvent('qb-lapraces:server:SetupRace', function(RaceId, Laps)
                     end
                 end)
             else
-                TriggerClientEvent('QBCore:Notify', source, 'The race is already running', 'error')
+                TriggerClientEvent('QBCore:Notify', source, 'A corrida já começou', 'error')
             end
         else
-            TriggerClientEvent('QBCore:Notify', source, 'The race is already running', 'error')
+            TriggerClientEvent('QBCore:Notify', source, 'A corrida já começou', 'error')
         end
     else
-        TriggerClientEvent('QBCore:Notify', source, 'This race does not exist :(', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'Esta corrida não existe :(', 'error')
     end
 end)
 
@@ -386,7 +386,7 @@ RegisterNetEvent('qb-lapraces:server:CancelRace', function(raceId)
     local Player = QBCore.Functions.GetPlayer(source)
     local AvailableKey = GetOpenedRaceKey(raceId)
 
-    TriggerClientEvent('QBCore:Notify', src, 'Stopping the race: ' .. raceId, 'error')
+    TriggerClientEvent('QBCore:Notify', src, 'A parar a corrida: ' .. raceId, 'error')
 
     if AvailableKey ~= nil then
         if AvailableRaces[AvailableKey].SetupCitizenId == Player.PlayerData.citizenid then
@@ -406,7 +406,7 @@ RegisterNetEvent('qb-lapraces:server:CancelRace', function(raceId)
             TriggerClientEvent('qb-phone:client:UpdateLapraces', -1)
         end
     else
-        TriggerClientEvent('QBCore:Notify', src, 'Race not open: ' .. raceId, 'error')
+        TriggerClientEvent('QBCore:Notify', src, 'Corrida não está aberta: ' .. raceId, 'error')
     end
 end)
 
@@ -444,10 +444,10 @@ RegisterNetEvent('qb-lapraces:server:StartRace', function(RaceId)
             end
             TriggerClientEvent('qb-phone:client:UpdateLapraces', -1)
         else
-            TriggerClientEvent('QBCore:Notify', src, 'You are not the creator of the race..', 'error')
+            TriggerClientEvent('QBCore:Notify', src, 'Não és o criador da corrida..', 'error')
         end
     else
-        TriggerClientEvent('QBCore:Notify', src, 'You are not in a race..', 'error')
+        TriggerClientEvent('QBCore:Notify', src, 'Não estás numa corrida..', 'error')
     end
 end)
 
@@ -526,7 +526,7 @@ end)
 
 -- Commands
 
-QBCore.Commands.Add("cancelrace", "Cancel going race..", {}, false, function(source, args)
+QBCore.Commands.Add("cancelrace", "Cancelar a corrida em curso..", {}, false, function(source, args)
     local Player = QBCore.Functions.GetPlayer(source)
 
     if IsWhitelisted(Player.PlayerData.citizenid) then
@@ -549,26 +549,26 @@ QBCore.Commands.Add("cancelrace", "Cancel going race..", {}, false, function(sou
                 LastRaces[RaceId] = nil
                 TriggerClientEvent('qb-phone:client:UpdateLapraces', -1)
             else
-                TriggerClientEvent('QBCore:Notify', source, 'This race has not started yet.', 'error')
+                TriggerClientEvent('QBCore:Notify', source, 'Esta corrida ainda não começou.', 'error')
             end
         end
     else
-        TriggerClientEvent('QBCore:Notify', source, 'You have not been authorized to do this.', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'Não tens autorização para fazer isto.', 'error')
     end
 end)
 
-QBCore.Commands.Add("togglesetup", "Turn on / off racing setup", {}, false, function(source, _)
+QBCore.Commands.Add("togglesetup", "Ligar/desligar a configuração de corridas", {}, false, function(source, _)
     local Player = QBCore.Functions.GetPlayer(source)
 
     if IsWhitelisted(Player.PlayerData.citizenid) then
         Config.RaceSetupAllowed = not Config.RaceSetupAllowed
         if not Config.RaceSetupAllowed then
-            TriggerClientEvent('QBCore:Notify', source, 'No more races can be created!', 'error')
+            TriggerClientEvent('QBCore:Notify', source, 'Não é possível criar mais corridas!', 'error')
         else
-            TriggerClientEvent('QBCore:Notify', source, 'Races can be created again!', 'success')
+            TriggerClientEvent('QBCore:Notify', source, 'Já é possível voltar a criar corridas!', 'success')
         end
     else
-        TriggerClientEvent('QBCore:Notify', source, 'You have not been authorized to do this.', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'Não tens autorização para fazer isto.', 'error')
     end
 end)
 

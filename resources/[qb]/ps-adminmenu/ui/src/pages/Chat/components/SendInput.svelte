@@ -29,7 +29,7 @@
 >
 	<input
 		type="text"
-		placeholder="Your message here"
+		placeholder="Escreve a tua mensagem"
 		on:keydown={(e) => {
 			if (e.key === "Enter") {
 				sendMessage();

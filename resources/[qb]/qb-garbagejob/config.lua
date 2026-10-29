@@ -43,18 +43,18 @@ Config.Peds = {
 
 Config.Locations = {
     ["main"] = {
-        label = "Garbage Depot",
+        label = "Depósito do lixo",
         coords = vector3(-313.84, -1522.82, 27.56),
     },
     ["vehicle"] = {
-        label = "Garbage Truck Storage",
+        label = "Garagem dos camiões do lixo",
         coords = { -- parking spot locations to spawn garbage
             [1] = vector4(-333.84, -1527.28, 27.28, 1.97),
             [2] = vector4(-327.55, -1527.69, 27.25, 359.43),
         },
     },
     ["paycheck"] = {
-        label = "Payslip Collection",
+        label = "Recolha do recibo de vencimento",
         coords = vector3(-321.45, -1545.86, 31.02),
     },
     ["trashcan"] ={

@@ -2,7 +2,7 @@ local Translations = {
     weather = {
         now_frozen = 'Clima congelado.',
         now_unfrozen = 'Clima descongelado.',
-        invalid_syntax = 'Sintaxe inválida, a sintaxe correta é: /weather <weathertype> ',
+        invalid_syntax = 'Sintaxe inválida, a sintaxe correta é: /weather <tipodetempo> ',
         invalid_syntaxc = 'Sintaxe inválida. Usa /weather <weatherType>!',
         updated = 'Clima atualizado.',
         invalid = 'Tipo de clima inválido, os tipos de clima válidos são: \nEXTRASUNNY CLEAR NEUTRAL SMOG FOGGY OVERCAST CLOUDS CLEARING RAIN THUNDER SNOW BLIZZARD SNOWLIGHT XMAS HALLOWEEN ',
@@ -39,7 +39,7 @@ local Translations = {
     },
     help = {
         weathercommand = 'Alterar o clima.',
-        weathertype = 'weathertype',
+        weathertype = 'tipodetempo',
         availableweather = 'Climas disponíveis: extrasunny, clear, neutral, smog, foggy, overcast, clouds, clearing, rain, thunder, snow, blizzard, snowlight, xmas & halloween',
         timecommand = 'Alterar o tempo.',
         timehname = 'horas',

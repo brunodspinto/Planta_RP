@@ -291,9 +291,9 @@ AddPoliceAlert = function(data) {
     var randId = Math.floor((Math.random() * 10000) + 1);
     var AlertElement = '';
     if (data.alert.coords != undefined && data.alert.coords != null) {
-        AlertElement = '<div class="meos-alert" id="alert-'+randId+'"> <span class="meos-alert-new" style="margin-bottom: 1vh;">NEW</span> <p class="meos-alert-type">Alert: '+data.alert.title+'</p> <p class="meos-alert-description">'+data.alert.description+'</p> <hr> <div class="meos-location-button">LOCATION</div> </div>';
+        AlertElement = '<div class="meos-alert" id="alert-'+randId+'"> <span class="meos-alert-new" style="margin-bottom: 1vh;">NOVO</span> <p class="meos-alert-type">Alerta: '+data.alert.title+'</p> <p class="meos-alert-description">'+data.alert.description+'</p> <hr> <div class="meos-location-button">LOCATION</div> </div>';
     } else {
-        AlertElement = '<div class="meos-alert" id="alert-'+randId+'"> <span class="meos-alert-new" style="margin-bottom: 1vh;">NEW</span> <p class="meos-alert-type">Alert: '+data.alert.title+'</p> <p class="meos-alert-description">'+data.alert.description+'</p></div>';
+        AlertElement = '<div class="meos-alert" id="alert-'+randId+'"> <span class="meos-alert-new" style="margin-bottom: 1vh;">NOVO</span> <p class="meos-alert-type">Alerta: '+data.alert.title+'</p> <p class="meos-alert-description">'+data.alert.description+'</p></div>';
     }
     $(".meos-recent-alerts").html('<div class="meos-recent-alert" id="recent-alert-'+randId+'"><span class="meos-recent-alert-title">Alert: '+data.alert.title+'</span><p class="meos-recent-alert-description">'+data.alert.description+'</p></div>');
     if (data.alert.title == "Assistance colleague") {
@@ -332,7 +332,7 @@ $(document).on('click', '.meos-location-button', function(e){
 
 $(document).on('click', '.meos-clear-alerts', function(e){
     $(".meos-alerts").html("");
-    $(".meos-recent-alerts").html('<div class="meos-recent-alert"> <span class="meos-recent-alert-title">You don\'t have any alerts!</span></div>');
+    $(".meos-recent-alerts").html('<div class="meos-recent-alert"> <span class="meos-recent-alert-title">Não tens alertas!</span></div>');
     QB.Phone.Notifications.Add("politie", "MDT", "Todos os alertas foram apagados!");
 });
 

@@ -36,21 +36,21 @@ if Config.UseableItems then
     end)
 
 else
-    QBCore.Commands.Add('newscam', 'Grab a news camera', {}, false, function(source, _)
+    QBCore.Commands.Add('newscam', 'Pegar numa câmara de reportagem', {}, false, function(source, _)
         local Player = QBCore.Functions.GetPlayer(source)
         if not Player or Player.PlayerData.job.name ~= 'reporter' then return end
 
         TriggerClientEvent('Cam:ToggleCam', source)
     end)
 
-    QBCore.Commands.Add('newsmic', 'Grab a news microphone', {}, false, function(source, _)
+    QBCore.Commands.Add('newsmic', 'Pegar num microfone de reportagem', {}, false, function(source, _)
         local Player = QBCore.Functions.GetPlayer(source)
         if not Player or Player.PlayerData.job.name ~= 'reporter' then return end
                 
         TriggerClientEvent('Mic:ToggleMic', source)
     end)
 
-    QBCore.Commands.Add('newsbmic', 'Grab a Boom microphone', {}, false, function(source, _)
+    QBCore.Commands.Add('newsbmic', 'Pegar num microfone de vara', {}, false, function(source, _)
         local Player = QBCore.Functions.GetPlayer(source)
         if not Player or Player.PlayerData.job.name ~= 'reporter' then return end
                 

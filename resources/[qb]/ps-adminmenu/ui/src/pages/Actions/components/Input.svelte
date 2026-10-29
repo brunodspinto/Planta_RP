@@ -22,8 +22,8 @@
             placeholder={data.label} 
             bind:value={input}
             on:input={e => input = e.target.value}
-            on:blur={() => selectData(data.label, input)}
-            on:click={() => selectData(data.label, input)}
+            on:blur={() => selectData(data.id ?? data.label, input)}
+            on:click={() => selectData(data.id ?? data.label, input)}
             class="h-full w-[90%] bg-transparent" 
         />
     </div>

@@ -10,7 +10,7 @@ Config.Vehicles = {
 
 Config.Locations = {
     ["main"] = {
-        label = "Towing HQ",
+        label = "Sede dos reboques",
         coords = vector4(471.39, -1311.03, 29.21, 114.5),
     },
     ["vehicle"] = {
@@ -18,7 +18,7 @@ Config.Locations = {
         coords = vector4(489.65, -1331.82, 29.33, 306.5),
     },
     ["dropoff"] = {
-        label = "Vehicle Drop Off Location",
+        label = "Local de entrega de veículos",
         coords = vector3(491.00, -1314.69, 29.25)
     },
     ["towspots"] = {

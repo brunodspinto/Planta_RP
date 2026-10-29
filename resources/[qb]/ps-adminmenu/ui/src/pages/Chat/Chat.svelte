@@ -7,7 +7,7 @@
 </script>
 
 <div class="h-full w-full px-[2vh] pb-[2vh] flex flex-col ">
-    <Header title={"Staff Chat"}/>
+    <Header title={"Chat da staff"}/>
     <div id='chatList' class="w-full h-[84%] overflow-auto">
         <RecieveInput />
     </div>

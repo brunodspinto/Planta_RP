@@ -11,10 +11,10 @@ RegisterCommand('setvoiceintent', function(source, args)
 		LocalPlayer.state:set('voiceIntent', intent, true)
 	end
 end)
-TriggerEvent('chat:addSuggestion', '/setvoiceintent', 'Sets the players voice intent', {
+TriggerEvent('chat:addSuggestion', '/setvoiceintent', 'Define o modo de voz do jogador', {
 	{
 		name = "intent",
-		help = "speech is default and enables noise suppression & high pass filter, music disables both of these."
+		help = "speech é o modo predefinido e ativa a supressão de ruído e o filtro passa-alto; music desativa ambos."
 	},
 })
 
@@ -23,8 +23,8 @@ RegisterCommand('vol', function(_, args)
 	if not args[1] then return end
 	setVolume(tonumber(args[1]))
 end)
-TriggerEvent('chat:addSuggestion', '/vol', 'Sets the radio/phone volume', {
-	{ name = "volume", help = "A range between 1-100 on how loud you want them to be" },
+TriggerEvent('chat:addSuggestion', '/vol', 'Define o volume do rádio/telemóvel', {
+	{ name = "volume", help = "Valor entre 1 e 100 para o volume" },
 })
 
 exports('setAllowProximityCycleState', function(state)
@@ -79,5 +79,5 @@ RegisterCommand('cycleproximity', function()
 	TriggerEvent('pma-voice:setTalkingMode', mode)
 end, false)
 if gameVersion == 'fivem' then
-	RegisterKeyMapping('cycleproximity', 'Cycle Proximity', 'keyboard', GetConvar('voice_defaultCycle', 'F11'))
+	RegisterKeyMapping('cycleproximity', 'Mudar alcance da voz', 'keyboard', GetConvar('voice_defaultCycle', 'F11'))
 end

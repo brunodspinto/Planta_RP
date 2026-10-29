@@ -179,10 +179,10 @@ CreateThread(function()
                     inRange = true
                     if securityLockdown then
                         sleep = 0
-                        DrawText3D(Gates[k].coords.x, Gates[k].coords.y, Gates[k].coords.z, '~r~SYSTEM LOCKDOWN')
+                        DrawText3D(Gates[k].coords.x, Gates[k].coords.y, Gates[k].coords.z, '~r~SISTEMA BLOQUEADO')
                     elseif Gates[k].hit then
                         sleep = 0
-                        DrawText3D(Gates[k].coords.x, Gates[k].coords.y, Gates[k].coords.z, 'SYSTEM BREACH')
+                        DrawText3D(Gates[k].coords.x, Gates[k].coords.y, Gates[k].coords.z, 'FALHA NO SISTEMA')
                     elseif not requiredItemsShowed then
                         requiredItemsShowed = true
                         TriggerEvent('qb-inventory:client:requiredItems', requiredItems, true)

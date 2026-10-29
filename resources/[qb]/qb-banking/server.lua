@@ -93,7 +93,7 @@ end
 exports('CreateBankStatement', CreateBankStatement)
 
 local function AddMoney(accountName, amount, reason)
-    if not reason then reason = 'External Deposit' end
+    if not reason then reason = Lang:t('reason.external_deposit') end
     local newStatement = {
         amount = amount,
         reason = reason,
@@ -115,7 +115,7 @@ exports('AddMoney', AddMoney)
 exports('AddGangMoney', AddMoney)
 
 local function RemoveMoney(accountName, amount, reason)
-    if not reason then reason = 'External Withdrawal' end
+    if not reason then reason = Lang:t('reason.external_withdrawal') end
     local newStatement = {
         amount = amount,
         reason = reason,
@@ -253,7 +253,7 @@ QBCore.Functions.CreateCallback('qb-banking:server:withdraw', function(source, c
     local accountName = data.accountName
     local withdrawAmount = parseAmount(data.amount)
     if not withdrawAmount then return cb({ success = false, message = Lang:t('error.money') }) end
-    local reason = (data.reason ~= '' and data.reason) or 'Bank Withdrawal'
+    local reason = (data.reason ~= '' and data.reason) or 'Levantamento bancário'
     if accountName == 'checking' then
         local accountBalance = Player.PlayerData.money.bank
         if accountBalance < withdrawAmount then return cb({ success = false, message = Lang:t('error.money') }) end
@@ -280,7 +280,7 @@ QBCore.Functions.CreateCallback('qb-banking:server:deposit', function(source, cb
     local accountName = data.accountName
     local depositAmount = parseAmount(data.amount)
     if not depositAmount then return cb({ success = false, message = Lang:t('error.money') }) end
-    local reason = (data.reason ~= '' and data.reason) or 'Bank Deposit'
+    local reason = (data.reason ~= '' and data.reason) or 'Depósito bancário'
     if accountName == 'checking' then
         local accountBalance = Player.PlayerData.money.cash
         if accountBalance < depositAmount then return cb({ success = false, message = Lang:t('error.money') }) end
@@ -397,8 +397,8 @@ QBCore.Functions.CreateCallback('qb-banking:server:openAccount', function(source
     if Player.PlayerData.money.bank < initialAmount then return cb({ success = false, message = Lang:t('error.money') }) end
     if initialAmount > 0 and not Player.Functions.RemoveMoney('bank', initialAmount, 'Opened account ' .. accountName) then return cb({ success = false, message = Lang:t('error.money') }) end
     if not CreatePlayerAccount(src, accountName, initialAmount, json.encode({})) then return cb({ success = false, message = Lang:t('error.error') }) end
-    if not CreateBankStatement(src, accountName, initialAmount, 'Initial deposit', 'deposit', 'shared') then return cb({ success = false, message = Lang:t('error.error') }) end
-    if not CreateBankStatement(src, 'checking', initialAmount, 'Initial deposit for ' .. accountName, 'withdraw', 'player') then return cb({ success = false, message = Lang:t('error.error') }) end
+    if not CreateBankStatement(src, accountName, initialAmount, Lang:t('reason.initial_deposit'), 'deposit', 'shared') then return cb({ success = false, message = Lang:t('error.error') }) end
+    if not CreateBankStatement(src, 'checking', initialAmount, Lang:t('reason.initial_deposit_for', { account = accountName }), 'withdraw', 'player') then return cb({ success = false, message = Lang:t('error.error') }) end
     TriggerEvent('qb-log:server:CreateLog', 'banking', 'Account Opened', 'green', string.format('**%s** opened account **%s** with an initial deposit of **$%s**', GetPlayerName(src), accountName, initialAmount))
     cb({ success = true, message = Lang:t('success.account') })
 end)
@@ -528,7 +528,7 @@ end)
 
 -- Commands
 
-QBCore.Commands.Add('givecash', 'Give Cash', { { name = 'id', help = 'Player ID' }, { name = 'amount', help = 'Amount' } }, true, function(source, args)
+QBCore.Commands.Add('givecash', Lang:t('commands.givecash'), { { name = 'id', help = Lang:t('commands.player_id') }, { name = 'amount', help = Lang:t('commands.amount') } }, true, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if not Player then return end

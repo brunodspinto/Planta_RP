@@ -1,6 +1,6 @@
 -- Commands
 
-QBCore.Commands.Add('giveitem', 'Give An Item (Admin Only)', { { name = 'id', help = 'Player ID' }, { name = 'item', help = 'Name of the item (not a label)' }, { name = 'amount', help = 'Amount of items' } }, false, function(source, args)
+QBCore.Commands.Add('giveitem', Lang:t('commands.giveitem'), { { name = 'id', help = Lang:t('commands.player_id') }, { name = 'item', help = Lang:t('commands.item_name') }, { name = 'amount', help = Lang:t('commands.item_amount') } }, false, function(source, args)
     local id = tonumber(args[1])
     local player = QBCore.Functions.GetPlayer(id)
     local amount = tonumber(args[3]) or 1
@@ -20,7 +20,7 @@ QBCore.Commands.Add('giveitem', 'Give An Item (Admin Only)', { { name = 'id', he
                 info.firstname = player.PlayerData.charinfo.firstname
                 info.lastname = player.PlayerData.charinfo.lastname
                 info.birthdate = player.PlayerData.charinfo.birthdate
-                info.type = 'Class C Driver License'
+                info.type = 'Carta de condução de categoria B'
             elseif itemData['type'] == 'weapon' then
                 amount = 1
                 info.serie = tostring(QBCore.Shared.RandomInt(2) .. QBCore.Shared.RandomStr(3) .. QBCore.Shared.RandomInt(1) .. QBCore.Shared.RandomStr(2) .. QBCore.Shared.RandomInt(3) .. QBCore.Shared.RandomStr(4))
@@ -48,7 +48,7 @@ QBCore.Commands.Add('giveitem', 'Give An Item (Admin Only)', { { name = 'id', he
     end
 end, 'admin')
 
-QBCore.Commands.Add('randomitems', 'Receive random items', {}, false, function(source)
+QBCore.Commands.Add('randomitems', Lang:t('commands.randomitems'), {}, false, function(source)
     local player = QBCore.Functions.GetPlayer(source)
     local playerInventory = player.PlayerData.items
     local filteredItems = {}
@@ -82,7 +82,7 @@ QBCore.Commands.Add('randomitems', 'Receive random items', {}, false, function(s
     end
 end, 'god')
 
-QBCore.Commands.Add('clearinv', 'Clear Inventory (Admin Only)', { { name = 'id', help = 'Player ID' } }, false, function(source, args)
+QBCore.Commands.Add('clearinv', Lang:t('commands.clearinv'), { { name = 'id', help = Lang:t('commands.player_id') } }, false, function(source, args)
     local id = tonumber(args[1])
     if not id then
         ClearInventory(source)

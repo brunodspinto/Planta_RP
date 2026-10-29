@@ -1,5 +1,7 @@
 local Translations = {
     error = {
+        not_in_veh = 'Não estás num veículo!',
+        not_for_sale = 'Este veículo NÃO está à venda!',
         not_your_vehicle = 'Este não é o teu veículo...',
         vehicle_does_not_exist = 'Veículo não existe',
         not_enough_money = 'Não tens dinheiro suficiente',
@@ -33,7 +35,16 @@ local Translations = {
         sender = 'Vendas RV',
         subject = 'Vendeste um veículo!',
         message = 'Fizeste $%{value} na venda do teu %{value2}.'
-    }
+    },
+    menu = {
+        view_contract_int = '[E] Ver contrato',
+        view_contract = 'Ver contrato',
+        sell_vehicle_help = 'Vende o veículo a outros cidadãos!',
+        sell_vehicle = 'Vender veículo',
+        sell_back_help = 'Vende o teu carro diretamente por um preço reduzido!',
+        sell_back = 'Vender de volta ao stand!',
+        interaction = '[E] Vender veículo',
+    },
 }
 
 if GetConvar('qb_locale', 'en') == 'pt' then

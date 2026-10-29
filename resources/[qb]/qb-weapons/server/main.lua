@@ -198,7 +198,7 @@ end)
 
 -- Commands
 
-QBCore.Commands.Add('repairweapon', 'Repair Weapon (God Only)', { { name = 'hp', help = Lang:t('info.hp_of_weapon') } }, true, function(source, args)
+QBCore.Commands.Add('repairweapon', 'Reparar arma (só god)', { { name = 'hp', help = Lang:t('info.hp_of_weapon') } }, true, function(source, args)
     TriggerClientEvent('qb-weapons:client:SetWeaponQuality', source, tonumber(args[1]))
 end, 'god')
 
@@ -235,7 +235,7 @@ local function EquipWeaponTint(source, tintIndex, item, isMK2)
     local selectedWeaponHash = GetSelectedPedWeapon(ped)
 
     if selectedWeaponHash == `WEAPON_UNARMED` then
-        TriggerClientEvent('QBCore:Notify', source, 'You have no weapon selected.', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'Não tens nenhuma arma selecionada.', 'error')
         return
     end
 
@@ -243,7 +243,7 @@ local function EquipWeaponTint(source, tintIndex, item, isMK2)
     if not weaponName then return end
 
     if isMK2 and not IsMK2Weapon(selectedWeaponHash) then
-        TriggerClientEvent('QBCore:Notify', source, 'This tint is only for MK2 weapons', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'Esta pintura é só para armas MK2', 'error')
         return
     end
 
@@ -251,7 +251,7 @@ local function EquipWeaponTint(source, tintIndex, item, isMK2)
     if not weaponSlot then return end
 
     if weaponSlot.info.tint == tintIndex then
-        TriggerClientEvent('QBCore:Notify', source, 'This tint is already applied to your weapon.', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'A tua arma já tem esta pintura.', 'error')
         return
     end
 
@@ -302,7 +302,7 @@ local function EquipWeaponAttachment(src, item)
     if not weaponName then return end
     local attachmentComponent = DoesWeaponTakeWeaponComponent(item, weaponName)
     if not attachmentComponent then
-        TriggerClientEvent('QBCore:Notify', src, 'This attachment is not valid for the selected weapon.', 'error')
+        TriggerClientEvent('QBCore:Notify', src, 'Este acessório não serve para a arma selecionada.', 'error')
         return
     end
     local Player = QBCore.Functions.GetPlayer(src)

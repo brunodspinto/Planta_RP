@@ -857,7 +857,7 @@ RegisterNetEvent('qb-ambulancejob:checkin', function()
         if distance < 3 then
             if doctorCount >= Config.MinimalDoctors then
                 TriggerServerEvent('hospital:server:SendDoctorAlert', Config.Locations['hospital'][i]['name'])
-                QBCore.Functions.Notify('Called a Doctor', 'primary')
+                QBCore.Functions.Notify('Chamaste um médico', 'primary')
             else
                 TriggerEvent('animations:client:EmoteCommandStart', { 'notepad' })
                 QBCore.Functions.Progressbar('hospital_checkin', Lang:t('progress.checking_in'), 2000, false, true, {
@@ -921,7 +921,7 @@ if Config.UseTarget then
                         type = 'client',
                         icon = 'fa fa-clipboard',
                         event = 'qb-ambulancejob:checkin',
-                        label = 'Check In',
+                        label = 'Dar entrada',
                     }
                 },
                 distance = 1.5
@@ -943,7 +943,7 @@ if Config.UseTarget then
                             type = 'client',
                             event = 'qb-ambulancejob:beds',
                             icon = 'fas fa-bed',
-                            label = 'Layin Bed',
+                            label = 'Deitar na cama',
                         }
                     },
                     distance = 1.5

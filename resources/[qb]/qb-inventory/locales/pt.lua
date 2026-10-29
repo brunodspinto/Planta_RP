@@ -1,0 +1,73 @@
+local Translations = {
+    progress = {
+        ['snowballs'] = 'A apanhar bolas de neve..',
+    },
+    notify = {
+        ['failed'] = 'Falhou',
+        ['canceled'] = 'Cancelado',
+        ['vlocked'] = 'Veículo trancado',
+        ['notowned'] = 'Não és dono deste item!',
+        ['missitem'] = 'Não tens este item!',
+        ['nonb'] = 'Ninguém por perto!',
+        ['noaccess'] = 'Sem acesso',
+        ['nosell'] = 'Não podes vender este item..',
+        ['itemexist'] = 'O item não existe',
+        ['notencash'] = 'Não tens dinheiro suficiente..',
+        ['noitem'] = 'Não tens os itens certos..',
+        ['gsitem'] = 'Não podes dar um item a ti próprio!',
+        ['tftgitem'] = 'Estás demasiado longe para dar itens!',
+        ['infound'] = 'O item que tentaste dar não foi encontrado!',
+        ['iifound'] = 'Item incorreto, tenta novamente!',
+        ['gitemrec'] = 'Recebeste ',
+        ['gitemfrom'] = ' de ',
+        ['gitemyg'] = 'Deste ',
+        ['gitinvfull'] = 'O inventário do outro jogador está cheio!',
+        ['giymif'] = 'O teu inventário está cheio!',
+        ['gitydhei'] = 'Não tens quantidade suficiente deste item',
+        ['gitydhitt'] = 'Não tens itens suficientes para transferir',
+        ['navt'] = 'Tipo inválido..',
+        ['anfoc'] = 'Argumentos mal preenchidos..',
+        ['yhg'] = 'Deste ',
+        ['cgitem'] = 'Não é possível dar o item!',
+        ['idne'] = 'O item não existe',
+        ['pdne'] = 'O jogador não está online',
+        ['gun_and_bag'] = 'Não podes segurar uma arma e um saco ao mesmo tempo!',
+        ['holding_bag'] = 'Já estás a segurar um saco, larga-o primeiro!',
+        ['inv_in_use'] = 'Este inventário está a ser usado por outra pessoa',
+        ['no_stock'] = 'Não há stock suficiente para essa quantidade',
+        ['cannot_hold'] = 'Não tens espaço para este item',
+    },
+    inf_mapping = {
+        ['opn_inv'] = 'Abrir inventário',
+        ['tog_slots'] = 'Mostrar/esconder os atalhos',
+        ['use_item'] = 'Usa o item do espaço ',
+    },
+    menu = {
+        ['vending'] = 'Máquina de venda',
+        ['bin'] = 'Abrir contentor do lixo',
+        ['craft'] = 'Fabricar',
+        ['o_bag'] = 'Abrir saco',
+        ['pickup_bag'] = 'Apanhar o saco',
+        ['drop'] = 'Chão',
+    },
+    interaction = {
+        ['drop_bag'] = 'Carrega em [G] para largar o saco',
+        ['craft'] = '~g~E~w~ - Fabricar',
+    },
+    commands = {
+        ['giveitem'] = 'Dar um item (só admin)',
+        ['randomitems'] = 'Receber itens aleatórios',
+        ['clearinv'] = 'Limpar inventário (só admin)',
+        ['player_id'] = 'ID do jogador',
+        ['item_name'] = 'Nome do item (não a label)',
+        ['item_amount'] = 'Quantidade',
+    },
+}
+
+if GetConvar('qb_locale', 'en') == 'pt' then
+    Lang = Locale:new({
+        phrases = Translations,
+        warnOnMissing = true,
+        fallbackLang = Lang,
+    })
+end

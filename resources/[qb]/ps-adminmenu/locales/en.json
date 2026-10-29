@@ -93,5 +93,13 @@
     "vehicle_not_driver": "Not in the drivers seat",
     "warned": "You have been warned ",
     "warngiven": "Warned: ",
-    "weatherType": "Weather is changed to: %s"
+    "weatherType": "Weather is changed to: %s",
+    "enabled": "enabled",
+    "disabled": "disabled",
+    "not_on_duty": "You are not on admin duty",
+    "invalid_job": "Not a valid job",
+    "invalid_grade": "Not a valid grade",
+    "invalid_gang": "Not a valid gang",
+    "not_admin": "You are not Admin or God.",
+    "invcleared_offline": "Player's inventory cleared"
 }

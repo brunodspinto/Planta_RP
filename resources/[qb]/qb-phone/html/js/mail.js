@@ -86,7 +86,7 @@ QB.Phone.Functions.SetupMails = function(Mails) {
                 $("#mail-"+mail.mailid).data('MailData', mail);
             });
         } else {
-            $(".mail-list").html('<p class="nomails">You don\'t have any mails..</p>');
+            $(".mail-list").html('<p class="nomails">Não tens emails..</p>');
         }
 
     }

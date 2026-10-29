@@ -159,7 +159,7 @@ $(document).on('click', '.lawyer-list-call', function(e){
                 if (status.CanCall) {
                     if (!status.InCall) {
                         if (QB.Phone.Data.AnonymousCall) {
-                            QB.Phone.Notifications.Add("fas fa-phone", "Phone", "Iniciaste uma chamada anónima!");
+                            QB.Phone.Notifications.Add("fas fa-phone", "Telemóvel", "Iniciaste uma chamada anónima!");
                         }
                         $(".phone-call-outgoing").css({"display":"block"});
                         $(".phone-call-incoming").css({"display":"none"});
@@ -178,16 +178,16 @@ $(document).on('click', '.lawyer-list-call', function(e){
                     
                         QB.Phone.Data.currentApplication = "phone-call";
                     } else {
-                        QB.Phone.Notifications.Add("fas fa-phone", "Phone", "Já estás ligado a uma chamada!");
+                        QB.Phone.Notifications.Add("fas fa-phone", "Telemóvel", "Já estás ligado a uma chamada!");
                     }
                 } else {
-                    QB.Phone.Notifications.Add("fas fa-phone", "Phone", "Esta pessoa já está numa chamada");
+                    QB.Phone.Notifications.Add("fas fa-phone", "Telemóvel", "Esta pessoa já está numa chamada");
                 }
             } else {
-                QB.Phone.Notifications.Add("fas fa-phone", "Phone", "Esta pessoa não está disponível!");
+                QB.Phone.Notifications.Add("fas fa-phone", "Telemóvel", "Esta pessoa não está disponível!");
             }
         } else {
-            QB.Phone.Notifications.Add("fas fa-phone", "Phone", "Não podes ligar para o teu próprio número!");
+            QB.Phone.Notifications.Add("fas fa-phone", "Telemóvel", "Não podes ligar para o teu próprio número!");
         }
     });
 });

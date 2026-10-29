@@ -1,5 +1,6 @@
 local Translations = {
     error = {
+        all_occupied = 'Todos os lugares de estacionamento estão ocupados',
         ["cancled"] = "Cancelado",
         ["no_truck"] = "Não tens camião!",
         ["not_enough"] = "Dinheiro insuficiente (%{value} necessário)",

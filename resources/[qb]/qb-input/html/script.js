@@ -8,7 +8,7 @@ const OpenMenu = (data) => {
 
     $(`.main-wrapper`).fadeIn(0);
 
-    let form = ["<form id='qb-input-form'>", `<div class="heading">${data.header != null ? data.header : "Form Title"}</div>`];
+    let form = ["<form id='qb-input-form'>", `<div class="heading">${data.header != null ? data.header : "Formulário"}</div>`];
 
     data.inputs.forEach((item, index) => {
         switch (item.type) {
@@ -37,7 +37,7 @@ const OpenMenu = (data) => {
                 form.push(`<div class="label">${item.text}</div>`);
         }
     });
-    form.push(`<div class="footer"><button type="submit" class="btn btn-success" id="submit">${data.submitText ? data.submitText : "Submit"}</button></div>`);
+    form.push(`<div class="footer"><button type="submit" class="btn btn-success" id="submit">${data.submitText ? data.submitText : "Confirmar"}</button></div>`);
 
     form.push("</form>");
 
